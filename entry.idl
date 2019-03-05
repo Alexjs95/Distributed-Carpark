@@ -1,0 +1,39 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\froman\fcharset0 Times-Roman;\f2\fswiss\fcharset0 Helvetica;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #ifndef ENTRYIDL\
+#define ENTRYIDL\
+\
+module EntryGate \{\
+	struct DateStructure \{ \
+		short Day;\
+		short Month;\
+		short Year; \
+	\};\
+\
+	struct TimeStructure \{ \
+		short Hour;\
+		short Minute;\
+		short Second;\
+	\};\
+\
+	interface EntryGate \{ \
+		\cf2 \expnd0\expndtw0\kerning0
+readonly attribute string machine_name; \
+		void register_gate(in string machine_name);\
+		void turn_on();\uc0\u8232 		void turn_off();\u8232 		void reset(); \
+		void vehicle_entered(in \cf0 \kerning1\expnd0\expndtw0 DateStructure\cf2 \expnd0\expndtw0\kerning0
+ date, in \cf0 \kerning1\expnd0\expndtw0 TimeStructure\cf2 \expnd0\expndtw0\kerning0
+ time, in string registration)\
+	\};\
+\pard\pardeftab720\sl360\sa240\partightenfactor0
+\cf2 \}; 
+\f1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f2 \cf0 \kerning1\expnd0\expndtw0 		}
