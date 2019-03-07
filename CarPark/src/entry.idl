@@ -1,0 +1,17 @@
+#ifndef ENTRYIDL
+#define ENTRYIDL
+
+module EntryGate {
+	interface EntryGate { 	
+		readonly attribute string machine_name; 
+		void register_gate(in string machine_name);
+		void turn_on(); 		
+		void turn_off();
+		void reset(); 
+		void vehicle_entered(in long date, in long time, in string registration);
+	};
+}; 
+
+
+
+
