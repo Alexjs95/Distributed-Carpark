@@ -126,7 +126,7 @@ public class _EntryGateStub extends org.omg.CORBA.portable.ObjectImpl implements
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:CarPark/EntryGate:1.0"};
+    "IDL:CarPark/EntryGateClient:1.0"};
 
   public String[] _ids ()
   {

@@ -36,7 +36,7 @@ public abstract class EntryGatePOA extends org.omg.PortableServer.Servant
 
     switch (__method.intValue ())
     {
-       case 0:  // CarPark/EntryGate/_get_machine_name
+       case 0:  // CarPark/EntryGateClient/_get_machine_name
        {
          String $result = null;
          $result = this.machine_name ();
@@ -45,7 +45,7 @@ public abstract class EntryGatePOA extends org.omg.PortableServer.Servant
          break;
        }
 
-       case 1:  // CarPark/EntryGate/register_gate
+       case 1:  // CarPark/EntryGateClient/register_gate
        {
          String machine_name = in.read_string ();
          this.register_gate (machine_name);
@@ -53,28 +53,28 @@ public abstract class EntryGatePOA extends org.omg.PortableServer.Servant
          break;
        }
 
-       case 2:  // CarPark/EntryGate/turn_on
+       case 2:  // CarPark/EntryGateClient/turn_on
        {
          this.turn_on ();
          out = $rh.createReply();
          break;
        }
 
-       case 3:  // CarPark/EntryGate/turn_off
+       case 3:  // CarPark/EntryGateClient/turn_off
        {
          this.turn_off ();
          out = $rh.createReply();
          break;
        }
 
-       case 4:  // CarPark/EntryGate/reset
+       case 4:  // CarPark/EntryGateClient/reset
        {
          this.reset ();
          out = $rh.createReply();
          break;
        }
 
-       case 5:  // CarPark/EntryGate/vehicle_entered
+       case 5:  // CarPark/EntryGateClient/vehicle_entered
        {
          int date = in.read_long ();
          int time = in.read_long ();
@@ -93,7 +93,7 @@ public abstract class EntryGatePOA extends org.omg.PortableServer.Servant
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:CarPark/EntryGate:1.0"};
+    "IDL:CarPark/EntryGateClient:1.0"};
 
   public String[] _all_interfaces (org.omg.PortableServer.POA poa, byte[] objectId)
   {

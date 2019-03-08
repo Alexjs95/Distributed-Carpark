@@ -10,7 +10,7 @@ package CarPark;
 
 abstract public class EntryGateHelper
 {
-  private static String  _id = "IDL:CarPark/EntryGate:1.0";
+  private static String  _id = "IDL:CarPark/EntryGateClient:1.0";
 
   public static void insert (org.omg.CORBA.Any a, CarPark.EntryGate that)
   {
@@ -30,7 +30,7 @@ abstract public class EntryGateHelper
   {
     if (__typeCode == null)
     {
-      __typeCode = org.omg.CORBA.ORB.init ().create_interface_tc (CarPark.EntryGateHelper.id (), "EntryGate");
+      __typeCode = org.omg.CORBA.ORB.init ().create_interface_tc (CarPark.EntryGateHelper.id (), "EntryGateClient");
     }
     return __typeCode;
   }
