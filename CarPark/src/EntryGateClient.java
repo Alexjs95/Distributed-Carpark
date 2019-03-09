@@ -1,3 +1,4 @@
+import CarPark.Date;
 import CarPark.EntryGate;
 import CarPark.EntryGateHelper;
 import org.omg.CORBA.ORB;
@@ -9,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class EntryGateClient extends JFrame {
     public static JTextField txtReg;
@@ -65,13 +66,21 @@ public class EntryGateClient extends JFrame {
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("button clicked");
+                    LocalDateTime currDate = LocalDateTime.now();
 
-                    gate.vehicle_entered(1, 2, txtReg.getText());
+                    CarPark.Date date = new CarPark.Date();
+                    date.days = currDate.getDayOfMonth();
+                    date.months = currDate.getMonthValue();
+                    date.years = currDate.getYear();
+
+                    CarPark.Time time = new CarPark.Time();
+                    time.hours = currDate.getHour();
+                    time.minutes = currDate.getMinute();
+                    time.seconds = currDate.getSecond();
+
+                    gate.vehicle_entered(date, time, txtReg.getText());
                 }
             });
-
-
 
         } catch (Exception e) {
             System.err.println("Exception");

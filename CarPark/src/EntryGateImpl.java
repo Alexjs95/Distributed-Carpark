@@ -1,4 +1,6 @@
+import CarPark.Date;
 import CarPark.EntryGatePOA;
+import CarPark.Time;
 
 public class EntryGateImpl extends EntryGatePOA {
     @Override
@@ -17,6 +19,11 @@ public class EntryGateImpl extends EntryGatePOA {
     }
 
     @Override
+    public void vehicle_entered(Date date, Time time, String registration) {
+        System.out.println("Vehicle entered with registration: " + registration + " at " + date.days + "/" + date.months + "/" + date.years + "   " + time.hours + ":" + time.minutes + ":" + time.seconds);
+    }
+
+    @Override
     public void turn_off() {
 
     }
@@ -24,10 +31,5 @@ public class EntryGateImpl extends EntryGatePOA {
     @Override
     public void reset() {
 
-    }
-
-    @Override
-    public void vehicle_entered(int date, int time, String registration) {
-        System.out.println("Vehicle entered with registration: " + registration);
     }
 }

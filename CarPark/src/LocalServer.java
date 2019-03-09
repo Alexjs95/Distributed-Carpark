@@ -24,7 +24,6 @@ public class LocalServer {
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(entry);
             EntryGate cref = EntryGateHelper.narrow(ref);
 
-
             // Get a reference to the Naming service
             org.omg.CORBA.Object nameServiceObj =
                     orb.resolve_initial_references ("NameService");
