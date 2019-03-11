@@ -26,6 +26,7 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.registration_number = registration;
         vehicleEvent.date = date;
         vehicleEvent.time = time;
+        vehicleEvent.operation = "Entered";
 
         LocalServerImpl impl = new LocalServerImpl();
         impl.vehicle_in(vehicleEvent);

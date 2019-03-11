@@ -2,8 +2,10 @@ import CarPark.LocalServerPOA;
 import CarPark.Log_of_vehicle_eventsHelper;
 import CarPark.Log_of_vehicle_eventsHolder;
 import CarPark.VehicleEvent;
+import org.omg.CORBA.Any;
 
 public class LocalServerImpl extends LocalServerPOA {
+
     @Override
     public String location() {
         return null;
@@ -17,13 +19,33 @@ public class LocalServerImpl extends LocalServerPOA {
     @Override
     public void vehicle_in(VehicleEvent event) {
         System.out.println(event.registration_number + "   " + event.time +  "    " + event.date);
-        //Log_of_vehicle_eventsHelper.write();
-        //Log_of_vehicle_eventsHelper.write(a, event);
 
+        Any a = org.omg.CORBA.ORB.init().create_any();
+        VehicleEvent[] events = new VehicleEvent[1];
+        events[0] = event;
+
+        Log_of_vehicle_eventsHelper.insert(a, events);
+
+
+        System.out.println(Log_of_vehicle_eventsHelper.read(a.create_input_stream())[0].registration_number);
+
+
+
+
+
+
+//        for (int i = 0; i <= events.length; i++) {
+//            System.out.println(log()[0].registration_number);
+//        }
     }
 
     @Override
     public void vehicle_out(VehicleEvent event) {
+
+    }
+
+    @Override
+    public void vehicle_paid(VehicleEvent event) {
 
     }
 
@@ -44,7 +66,6 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public void add_entry_gate(String gate_name, String gate_ior) {
-
     }
 
     @Override

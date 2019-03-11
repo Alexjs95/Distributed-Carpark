@@ -16,6 +16,7 @@ module CarPark {
     	Time time;
     	Date date;
     	string registration_number;
+    	string operation;
     };
 
     typedef sequence<VehicleEvent> Log_of_vehicle_events;
@@ -45,7 +46,7 @@ module CarPark {
      	void turn_off();
      	void reset();
     	boolean check_vehicle(in string registration);
-    	string pay(in string registration, in short duration);
+    	string pay(in string registration, in Date datePaid, in Time timePaid, in short duration);
     	long return_cash_total();
     };
 
@@ -54,6 +55,7 @@ module CarPark {
     	readonly attribute Log_of_vehicle_events log;
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
+    	void vehicle_paid(in VehicleEvent event);
     	boolean vehicle_in_car_park(in string registration_number);
     	long return_cash_total();
     	Log_of_vehicle_events return_log();
