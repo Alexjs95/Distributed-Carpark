@@ -21,6 +21,14 @@ public class EntryGateImpl extends EntryGatePOA {
     @Override
     public void vehicle_entered(Date date, Time time, String registration) {
         System.out.println("Vehicle entered with registration: " + registration + " at " + date.days + "/" + date.months + "/" + date.years + "   " + time.hours + ":" + time.minutes + ":" + time.seconds);
+        CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
+
+        vehicleEvent.registration_number = registration;
+        vehicleEvent.date = date;
+        vehicleEvent.time = time;
+
+        LocalServerImpl impl = new LocalServerImpl();
+        impl.vehicle_in(vehicleEvent);
     }
 
     @Override
