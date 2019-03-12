@@ -36,25 +36,27 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public String pay(String registration, Date datePaid, Time timePaid, short duration) {
+    public String pay(String registration, Date datePaid, Time timePaid, short duration, String operation) {
         LocalServerImpl impl = new LocalServerImpl();
 
-        boolean found = impl.vehicle_in_car_park(registration);
+        //boolean found = impl.vehicle_in_car_park(registration);
 
-        if (found == true) {
+       // if (found == true) {
             CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
             vehicleEvent.registration_number = registration;
             vehicleEvent.date = datePaid;
             vehicleEvent.time = timePaid;
+            vehicleEvent.duration = duration;
             vehicleEvent.operation = "Paid";
 
             impl.vehicle_paid(vehicleEvent);
-        } else {
-            System.out.println("Car not found in carPark");
-        }
 
-        return null;
+//        } else {
+//            System.out.println("Car not found in carPark");
+//        }
+
+        return "paid";
     }
 
     @Override

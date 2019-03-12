@@ -15,7 +15,9 @@
       <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGateHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGateHelper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGateHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGateHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGateOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGateOperations.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGateOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGateOperations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGatePOA.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGatePOA.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/EntryGatePOA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/EntryGatePOA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/ExitGate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/ExitGate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/ExitGateHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/ExitGateHelper.java" afterDir="false" />
@@ -25,9 +27,7 @@
       <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServerHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServerHelper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServerHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServerHolder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServerOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServerOperations.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServerOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServerOperations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServerPOA.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServerPOA.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/LocalServerPOA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/LocalServerPOA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/Log_of_vehicle_eventsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/Log_of_vehicle_eventsHelper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/Log_of_vehicle_eventsHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/Log_of_vehicle_eventsHolder.java" afterDir="false" />
@@ -47,17 +47,26 @@
       <change beforePath="$PROJECT_DIR$/src/CarPark/VehicleEventHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/VehicleEventHelper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/VehicleEventHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/VehicleEventHolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/_CompanyHQStub.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_CompanyHQStub.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CarPark/_EntryGateStub.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_EntryGateStub.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/_EntryGateStub.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_EntryGateStub.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/_ExitGateStub.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_ExitGateStub.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CarPark/_LocalServerStub.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_LocalServerStub.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/_LocalServerStub.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_LocalServerStub.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/_PayStationStub.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_PayStationStub.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CarPark/_PayStationStub.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CarPark/_PayStationStub.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EntryGateClient$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/EntryGateClient$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EntryGateClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/EntryGateClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EntryGateClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EntryGateClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EntryGateImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/EntryGateImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EntryGateImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EntryGateImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LocalServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/LocalServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LocalServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LocalServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/LocalServerImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/LocalServerImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/LocalServerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LocalServerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PayStationClient$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/PayStationClient$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PayStationClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/PayStationClient.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PayStationClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PayStationClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PayStationImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/PayStationImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PayStationImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PayStationImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CompanyHQ/CompanyHQ.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../CompanyHQ/CompanyHQHelper.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../CompanyHQ/CompanyHQHolder.java" beforeDir="false" />
@@ -113,45 +122,45 @@
     <session id="-954837453">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="6" />
+          <entry key="project.closed" value="7" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.open.time.4" value="3" />
+          <entry key="project.open.time.4" value="4" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="8" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="class" value="4" />
+          <entry key="class" value="5" />
           <entry key="form" value="1" />
-          <entry key="idl" value="16" />
-          <entry key="java" value="42" />
+          <entry key="idl" value="17" />
+          <entry key="java" value="53" />
           <entry key="sh" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="4" />
+          <entry key="CLASS" value="5" />
           <entry key="GUI_DESIGNER_FORM" value="1" />
-          <entry key="IDL" value="16" />
-          <entry key="JAVA" value="42" />
+          <entry key="IDL" value="17" />
+          <entry key="JAVA" value="53" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="6" />
-          <entry key="idl" value="316" />
-          <entry key="java" value="4291" />
+          <entry key="idl" value="355" />
+          <entry key="java" value="4548" />
           <entry key="sh" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="IDL" value="316" />
-          <entry key="JAVA" value="4291" />
+          <entry key="IDL" value="355" />
+          <entry key="JAVA" value="4548" />
           <entry key="PLAIN_TEXT" value="20" />
         </counts>
       </usages-collector>
@@ -159,11 +168,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CarPark.idl">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/LocalServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="57" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="57" />
+            <state relative-caret-position="441">
+              <caret line="65" column="12" lean-forward="true" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="12" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/LocalServerImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="48" column="23" selection-start-line="48" selection-end-line="49" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#273#274#0" expanded="true" />
+                <element signature="e#300#301#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -171,8 +197,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/EntryGateClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="68" column="60" selection-start-line="68" selection-start-column="60" selection-end-line="68" selection-end-column="60" />
+            <state relative-caret-position="411">
+              <caret line="86" column="34" selection-start-line="86" selection-start-column="34" selection-end-line="86" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -183,8 +209,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/EntryGateImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="31" selection-start-line="31" selection-end-line="31" />
+            <state relative-caret-position="169">
+              <caret line="18" column="5" lean-forward="true" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -192,61 +218,26 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/LocalServerImpl.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/PayStationClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="29" column="107" selection-start-line="29" selection-start-column="107" selection-end-line="29" selection-end-column="107" />
+            <state relative-caret-position="517">
+              <caret line="136" selection-start-line="136" selection-end-line="136" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#246#247#0" expanded="true" />
-                <element signature="e#273#274#0" expanded="true" />
-                <element signature="e#322#323#0" expanded="true" />
-                <element signature="e#364#365#0" expanded="true" />
-                <element signature="e#792#793#0" expanded="true" />
-                <element signature="e#820#821#0" expanded="true" />
-                <element signature="e#872#873#0" expanded="true" />
-                <element signature="e#896#897#0" expanded="true" />
-                <element signature="e#952#953#0" expanded="true" />
-                <element signature="e#994#995#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CarPark/Log_of_vehicle_eventsHolder.java">
+        <entry file="file://$PROJECT_DIR$/src/PayStationImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+            <state relative-caret-position="480">
+              <caret line="61" column="13" lean-forward="true" selection-start-line="61" selection-start-column="13" selection-end-line="64" selection-end-column="5" />
               <folding>
-                <element signature="e#691#692#0" expanded="true" />
-                <element signature="e#753#754#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHolder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
-              <folding>
-                <element signature="e#422#423#0" expanded="true" />
-                <element signature="e#452#453#0" expanded="true" />
-                <element signature="e#634#635#0" expanded="true" />
-                <element signature="e#686#687#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="49" column="56" selection-start-line="49" selection-start-column="56" selection-end-line="49" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -264,6 +255,7 @@
     <findStrings>
       <find>long</find>
       <find>pay</find>
+      <find>cref</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -284,19 +276,19 @@
         <option value="$PROJECT_DIR$/src/main.java" />
         <option value="$PROJECT_DIR$/src/EntryGate.java" />
         <option value="$PROJECT_DIR$/startup.sh" />
-        <option value="$PROJECT_DIR$/src/LocalServer.java" />
         <option value="$PROJECT_DIR$/src/CarPark/EntryGatePOA.java" />
         <option value="$PROJECT_DIR$/src/EntryGateClient.java" />
         <option value="$PROJECT_DIR$/src/PayStationClient.java" />
-        <option value="$PROJECT_DIR$/src/CarPark.idl" />
-        <option value="$PROJECT_DIR$/src/PayStationImpl.java" />
         <option value="$PROJECT_DIR$/src/EntryGateImpl.java" />
         <option value="$PROJECT_DIR$/src/LocalServerImpl.java" />
+        <option value="$PROJECT_DIR$/src/PayStationImpl.java" />
+        <option value="$PROJECT_DIR$/src/CarPark.idl" />
+        <option value="$PROJECT_DIR$/src/LocalServer.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="67" />
+    <option name="x" value="993" />
     <option name="y" value="25" />
     <option name="width" value="927" />
     <option name="height" value="1055" />
@@ -307,7 +299,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
       <pane id="Scope" />
       <pane id="ProjectPane">
@@ -322,20 +313,15 @@
               <item name="CarPark" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="CarPark" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CarPark" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="CarPark" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552315950752" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552316085716" />
     <property name="last_opened_file_path" value="/media/u1550203/usb/DCSS/Term 2/DCSS/week19/RelayDemoWithGUIs" />
   </component>
   <component name="RecentsManager">
@@ -417,7 +403,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18926397" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15052573" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -431,7 +417,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32972974" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.26162162" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32108107" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.32972974" />
@@ -539,16 +525,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/LocalServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CarPark/PayStationHelper.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-90" />
@@ -565,40 +541,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CarPark/PayStationPOA.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="65" selection-start-line="19" selection-start-column="65" selection-end-line="19" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHelper.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-360" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PayStationImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="48" column="35" selection-start-line="48" selection-start-column="35" selection-end-line="48" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#172#173#0" expanded="true" />
-            <element signature="e#199#200#0" expanded="true" />
-            <element signature="e#710#711#0" expanded="true" />
-            <element signature="e#734#735#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PayStationClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CarPark/Log_of_vehicle_eventsHelper.java">
@@ -608,53 +553,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/EntryGateClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="68" column="60" selection-start-line="68" selection-start-column="60" selection-end-line="68" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHolder.class">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
-          <folding>
-            <element signature="e#422#423#0" expanded="true" />
-            <element signature="e#452#453#0" expanded="true" />
-            <element signature="e#634#635#0" expanded="true" />
-            <element signature="e#686#687#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
+        <state relative-caret-position="645">
           <caret line="49" column="56" selection-start-line="49" selection-start-column="56" selection-end-line="49" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CarPark.idl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="57" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/EntryGateImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -669,22 +574,103 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/LocalServerImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/CarPark/LocalServerHolder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="29" column="107" selection-start-line="29" selection-start-column="107" selection-end-line="29" selection-end-column="107" />
+        <state relative-caret-position="390">
+          <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
+          <folding>
+            <element signature="e#422#423#0" expanded="true" />
+            <element signature="e#452#453#0" expanded="true" />
+            <element signature="e#634#635#0" expanded="true" />
+            <element signature="e#686#687#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EntryGateClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-630" />
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/com/sun/corba/se/impl/logging/ORBUtilSystemException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="1126" selection-start-line="1126" selection-end-line="1126" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CarPark/PayStationPOA.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="573">
+          <caret line="119" column="34" lean-forward="true" selection-start-line="119" selection-start-column="34" selection-end-line="119" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PayStationClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="517">
+          <caret line="136" selection-start-line="136" selection-end-line="136" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#246#247#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PayStationImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="61" column="13" lean-forward="true" selection-start-line="61" selection-start-column="13" selection-end-line="64" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EntryGateClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="86" column="34" selection-start-line="86" selection-start-column="34" selection-end-line="86" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/LocalServerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="48" column="23" selection-start-line="48" selection-end-line="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#273#274#0" expanded="true" />
-            <element signature="e#322#323#0" expanded="true" />
-            <element signature="e#364#365#0" expanded="true" />
-            <element signature="e#792#793#0" expanded="true" />
-            <element signature="e#820#821#0" expanded="true" />
-            <element signature="e#872#873#0" expanded="true" />
-            <element signature="e#896#897#0" expanded="true" />
-            <element signature="e#952#953#0" expanded="true" />
-            <element signature="e#994#995#0" expanded="true" />
+            <element signature="e#300#301#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EntryGateImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="18" column="5" lean-forward="true" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CarPark.idl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="58" column="49" lean-forward="true" selection-start-line="58" selection-start-column="49" selection-end-line="58" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/LocalServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="65" column="12" lean-forward="true" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

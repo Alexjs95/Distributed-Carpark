@@ -59,7 +59,7 @@ public class EntryGateClient extends JFrame {
                 return;
             }
 
-            String name = "countName";
+            String name = "EntryGate";
             EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(name));
 
 
@@ -78,7 +78,7 @@ public class EntryGateClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
-                    gate.vehicle_entered(date, time, txtReg.getText());
+                    gate.vehicle_entered(date, time, txtReg.getText(), "Entered");
                 }
             });
 

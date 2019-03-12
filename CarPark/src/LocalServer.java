@@ -1,5 +1,7 @@
 import CarPark.EntryGate;
 import CarPark.EntryGateHelper;
+import CarPark.PayStation;
+import CarPark.PayStationHelper;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -21,8 +23,17 @@ public class LocalServer {
             EntryGateImpl entry = new EntryGateImpl();
 
             // get object reference from the servant
-            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(entry);
-            EntryGate cref = EntryGateHelper.narrow(ref);
+            org.omg.CORBA.Object entryRef = rootpoa.servant_to_reference(entry);
+            EntryGate crefEntry = EntryGateHelper.narrow(entryRef);
+
+
+            // Create the Pay Station servant object
+            PayStationImpl pay = new PayStationImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(pay);
+            PayStation crefPay = PayStationHelper.narrow(ref);
+
 
             // Get a reference to the Naming service
             org.omg.CORBA.Object nameServiceObj =
@@ -41,13 +52,17 @@ public class LocalServer {
             }
 
             // bind the Count object in the Naming service
-            String name = "countName";
-            NameComponent[] countName = nameService.to_name(name);
-            nameService.rebind(countName, cref);
+            String entryName = "EntryGate";
+            NameComponent[] entrygateName = nameService.to_name(entryName);
+            nameService.rebind(entrygateName, crefEntry);
+
+            // bind the Count object in the Naming service
+            String payName = "PayStation";
+            NameComponent[] paystationName = nameService.to_name(payName);
+            nameService.rebind(paystationName, crefPay);
 
             //  wait for invocations from clients
             orb.run();
-
 
         } catch(Exception e) {
             System.err.println(e);

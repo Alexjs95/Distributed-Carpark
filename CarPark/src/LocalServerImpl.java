@@ -18,7 +18,7 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public void vehicle_in(VehicleEvent event) {
-        System.out.println(event.registration_number + "   " + event.time +  "    " + event.date);
+        System.out.println(event.registration_number + "   " + event.time +  "    " + event.date+ "    " + event.operation);
 
         Any a = org.omg.CORBA.ORB.init().create_any();
         VehicleEvent[] events = new VehicleEvent[1];
@@ -46,6 +46,7 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public void vehicle_paid(VehicleEvent event) {
+        System.out.println(event.registration_number + "   " + event.time +  "    " + event.date + "    " + event.operation);
 
     }
 

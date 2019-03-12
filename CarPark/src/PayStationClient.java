@@ -96,8 +96,7 @@ public class PayStationClient extends JFrame {
             ORB orb = ORB.init(args, null);
 
             // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObj =
-                    orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object nameServiceObj = orb.resolve_initial_references("NameService");
             if (nameServiceObj == null) {
                 System.out.println("nameServiceObj = null");
                 return;
@@ -111,7 +110,8 @@ public class PayStationClient extends JFrame {
                 return;
             }
 
-            String name = "countName";
+            String name = "PayStation";
+            org.omg.CORBA.Object obj = nameService.resolve_str(name);
             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
 
 
@@ -120,8 +120,7 @@ public class PayStationClient extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // TODO: Validation on registration.
-
-
+                    System.out.println("test");
                     LocalDateTime currDate = LocalDateTime.now();
                     CarPark.Date date = new CarPark.Date();
                     date.days = currDate.getDayOfMonth();
@@ -132,14 +131,17 @@ public class PayStationClient extends JFrame {
                     time.hours = currDate.getHour();
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
+                    System.out.println("test2");
 
-                    payStation.pay(txtReg.getText(), date, time, duration);
+                    payStation.pay(txtReg.getText(), date, time, duration, "Paid");
+
                 }
             });
 
         } catch (Exception e) {
+            System.out.println(e);
             System.err.println("Exception");
-            System.err.println(e);
+            //System.err.println(e);
         }
     }
 }
