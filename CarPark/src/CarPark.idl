@@ -47,7 +47,7 @@ module CarPark {
      	void turn_off();
      	void reset();
     	boolean check_vehicle(in string registration);
-    	string pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in string operation);
+    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in string operation);
     	long return_cash_total();
     };
 
@@ -56,7 +56,7 @@ module CarPark {
     	readonly attribute Log_of_vehicle_events log;
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
-    	void vehicle_paid(in VehicleEvent event);
+    	boolean vehicle_paid(in VehicleEvent event);
     	boolean vehicle_in_car_park(in string registration_number);
     	long return_cash_total();
     	Log_of_vehicle_events return_log();
