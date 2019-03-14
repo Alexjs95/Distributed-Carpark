@@ -36,7 +36,7 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public String pay(String registration, Date datePaid, Time timePaid, short duration, String operation) {
+    public boolean pay(String registration, Date datePaid, Time timePaid, short duration, String operation) {
         LocalServerImpl impl = new LocalServerImpl();
 
         //boolean found = impl.vehicle_in_car_park(registration);
@@ -56,7 +56,7 @@ public class PayStationImpl extends PayStationPOA {
 //            System.out.println("Car not found in carPark");
 //        }
 
-        return "paid";
+        return true;
     }
 
     @Override

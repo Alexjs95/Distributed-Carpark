@@ -45,9 +45,10 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public void vehicle_paid(VehicleEvent event) {
+    public boolean vehicle_paid(VehicleEvent event) {
         System.out.println(event.registration_number + "   " + event.time +  "    " + event.date + "    " + event.operation);
 
+        return true;
     }
 
     @Override
@@ -67,6 +68,7 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public void add_entry_gate(String gate_name, String gate_ior) {
+
     }
 
     @Override
