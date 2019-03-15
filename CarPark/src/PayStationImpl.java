@@ -4,6 +4,9 @@ import CarPark.Time;
 import CarPark.VehicleEvent;
 
 public class PayStationImpl extends PayStationPOA {
+
+    LocalServerImpl impl = new LocalServerImpl();
+
     @Override
     public String machine_name() {
         return null;
@@ -31,15 +34,14 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public boolean check_vehicle(String registration) {
-
-        return false;
+        boolean found = impl.vehicle_in_car_park(registration);
+        return found;
     }
 
     @Override
     public boolean pay(String registration, Date datePaid, Time timePaid, short duration, String operation) {
-        LocalServerImpl impl = new LocalServerImpl();
 
-        //boolean found = impl.vehicle_in_car_park(registration);
+        //boolean found = check_vehicle(registration);
 
        // if (found == true) {
             CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();

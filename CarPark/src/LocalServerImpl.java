@@ -1,10 +1,14 @@
 import CarPark.LocalServerPOA;
-import CarPark.Log_of_vehicle_eventsHelper;
-import CarPark.Log_of_vehicle_eventsHolder;
 import CarPark.VehicleEvent;
-import org.omg.CORBA.Any;
+
+import java.util.ArrayList;
 
 public class LocalServerImpl extends LocalServerPOA {
+    private ArrayList<VehicleEvent> events;
+
+    public LocalServerImpl() {
+        events = new ArrayList<VehicleEvent>();
+    }
 
     @Override
     public String location() {
@@ -13,30 +17,18 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public VehicleEvent[] log() {
-        return new VehicleEvent[0];
+        return (VehicleEvent[])events.toArray();        // Returns arraylist as an array.
     }
 
     @Override
     public void vehicle_in(VehicleEvent event) {
         System.out.println(event.registration_number + "   " + event.time +  "    " + event.date+ "    " + event.operation);
 
-        Any a = org.omg.CORBA.ORB.init().create_any();
-        VehicleEvent[] events = new VehicleEvent[1];
-        events[0] = event;
+        events.add(event);
 
-        Log_of_vehicle_eventsHelper.insert(a, events);
-
-
-        System.out.println(Log_of_vehicle_eventsHelper.read(a.create_input_stream())[0].registration_number);
-
-
-
-
-
-
-//        for (int i = 0; i <= events.length; i++) {
-//            System.out.println(log()[0].registration_number);
-//        }
+        for (int i = 0; i < events.size(); i++) {
+            System.out.println(events.get(i).registration_number);
+        }
     }
 
     @Override
@@ -53,7 +45,15 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public boolean vehicle_in_car_park(String registration_number) {
-        return false;
+        boolean found = false;
+
+        for (int i = 0; i < events.size(); i++) {
+            if ((registration_number == events.get(i).registration_number) && (events.get(i).operation == "Entered")) {
+                found = true;
+            }
+        }
+
+        return found;
     }
 
     @Override
