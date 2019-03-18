@@ -4,6 +4,7 @@ import CarPark.Time;
 import CarPark.VehicleEvent;
 
 public class PayStationImpl extends PayStationPOA {
+    public static final String OPERATION = "Paid";
 
     LocalServerImpl impl = new LocalServerImpl();
 
@@ -34,31 +35,28 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public boolean check_vehicle(String registration) {
-        boolean found = impl.vehicle_in_car_park(registration);
-        return found;
+        return impl.vehicle_in_car_park(registration);
     }
 
     @Override
     public boolean pay(String registration, Date datePaid, Time timePaid, short duration, String operation) {
+        boolean found = check_vehicle(registration);
 
-        //boolean found = check_vehicle(registration);
-
-       // if (found == true) {
+        if (found == true) {
             CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
             vehicleEvent.registration_number = registration;
             vehicleEvent.date = datePaid;
             vehicleEvent.time = timePaid;
             vehicleEvent.duration = duration;
-            vehicleEvent.operation = "Paid";
+            vehicleEvent.operation = OPERATION;
 
             impl.vehicle_paid(vehicleEvent);
 
-//        } else {
-//            System.out.println("Car not found in carPark");
-//        }
-
-        return true;
+        } else {
+            System.out.println("Car not found in carPark");
+        }
+        return found;
     }
 
     @Override

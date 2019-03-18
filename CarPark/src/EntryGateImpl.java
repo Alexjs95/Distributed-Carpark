@@ -5,6 +5,7 @@ import CarPark.Time;
 public class EntryGateImpl extends EntryGatePOA {
 
     LocalServerImpl impl = new LocalServerImpl();
+    public static final String OPERATION = "Entered";
 
     @Override
     public String machine_name() {
@@ -29,7 +30,7 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.registration_number = registration;
         vehicleEvent.date = date;
         vehicleEvent.time = time;
-        vehicleEvent.operation = "Entered";
+        vehicleEvent.operation = OPERATION;
 
 
         impl.vehicle_in(vehicleEvent);

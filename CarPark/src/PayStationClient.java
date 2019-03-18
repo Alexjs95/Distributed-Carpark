@@ -31,6 +31,8 @@ public class PayStationClient extends JFrame {
     private JLabel lblCost;
 
     public static JButton btnPay;
+    public static JButton btnReset;
+
     public static JComboBox<String> cbbDuration;
 
 
@@ -51,6 +53,7 @@ public class PayStationClient extends JFrame {
         lblCost = new JLabel("Cost: ");
         btnPay = new JButton("Pay");
         txtTicket = new JTextArea(5, 10);
+        btnReset = new JButton("Next Customer");
 
         panel.add(lblReg);
         panel.add(txtReg);
@@ -61,11 +64,13 @@ public class PayStationClient extends JFrame {
         panel.add(lblCost);
         panel.add(btnPay);
         panel.add(txtTicket);
+        panel.add(btnReset);
         frame.add(panel);
 
         lblCustDuration.setVisible(false);
         txtCustDuration.setVisible(false);
         txtTicket.setVisible(false);
+        btnReset.setVisible(false);
 
         frame.setVisible(true);
 
@@ -128,8 +133,7 @@ public class PayStationClient extends JFrame {
             org.omg.CORBA.Object obj = nameService.resolve_str(name);
             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
 
-
-
+            
             btnPay.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -173,6 +177,7 @@ public class PayStationClient extends JFrame {
                             writer.close();
 
                             txtTicket.setVisible(true);
+                            btnReset.setVisible(true);
 
                             try {
                                 File file = new File(directoryName + "/" + reg + ".txt");
@@ -186,8 +191,6 @@ public class PayStationClient extends JFrame {
                                 e1.printStackTrace();
                             }
 
-
-
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -195,6 +198,13 @@ public class PayStationClient extends JFrame {
                     } else {
                         // TODO: Error message
                     }
+                }
+            });
+
+            btnPay.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    reset();
                 }
             });
 
@@ -208,5 +218,15 @@ public class PayStationClient extends JFrame {
         String dateTime;
         dateTime = date.days + "-" + date.months + "-" + date.years + " " + time.hours + ":" + time.minutes + ":" + time.seconds;
         return dateTime;
+    }
+
+    public static void reset() {
+        txtReg.setText("");
+        cbbDuration.setSelectedIndex(0);
+        txtCustDuration.setText("");
+        txtTicket.selectAll();
+        txtTicket.replaceSelection("");
+        txtTicket.setVisible(false);
+        btnReset.setVisible(false);
     }
 }

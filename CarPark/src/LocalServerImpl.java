@@ -4,7 +4,7 @@ import CarPark.VehicleEvent;
 import java.util.ArrayList;
 
 public class LocalServerImpl extends LocalServerPOA {
-    private ArrayList<VehicleEvent> events;
+    public static ArrayList<VehicleEvent> events;
 
     public LocalServerImpl() {
         events = new ArrayList<VehicleEvent>();
@@ -23,7 +23,6 @@ public class LocalServerImpl extends LocalServerPOA {
     @Override
     public void vehicle_in(VehicleEvent event) {
         System.out.println(event.registration_number + "   " + event.time +  "    " + event.date+ "    " + event.operation);
-
         events.add(event);
 
         for (int i = 0; i < events.size(); i++) {
@@ -39,21 +38,26 @@ public class LocalServerImpl extends LocalServerPOA {
     @Override
     public boolean vehicle_paid(VehicleEvent event) {
         System.out.println(event.registration_number + "   " + event.time +  "    " + event.date + "    " + event.operation);
+        events.add(event);
+
+        for (int i = 0; i < events.size(); i++) {
+            System.out.println(events.get(i).registration_number + "   " + events.get(i).operation);
+        }
 
         return true;
     }
 
     @Override
     public boolean vehicle_in_car_park(String registration_number) {
-        boolean found = false;
 
         for (int i = 0; i < events.size(); i++) {
-            if ((registration_number == events.get(i).registration_number) && (events.get(i).operation == "Entered")) {
-                found = true;
+            System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
+
+            if ((registration_number.equals(events.get(i).registration_number) ) && (events.get(i).operation.equals("Entered"))) {
+               return true;
             }
         }
-
-        return found;
+        return false;
     }
 
     @Override

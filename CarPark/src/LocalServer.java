@@ -64,6 +64,9 @@ public class LocalServer {
             //  wait for invocations from clients
             orb.run();
 
+            LocalServerImpl impl = new LocalServerImpl();
+
+
         } catch(Exception e) {
             System.err.println(e);
         }
