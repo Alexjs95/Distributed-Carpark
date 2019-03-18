@@ -4,7 +4,6 @@ import CarPark.Time;
 import CarPark.VehicleEvent;
 
 public class PayStationImpl extends PayStationPOA {
-    public static final String OPERATION = "Paid";
 
     LocalServerImpl impl = new LocalServerImpl();
 
@@ -39,7 +38,7 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public boolean pay(String registration, Date datePaid, Time timePaid, short duration, String operation) {
+    public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost, String operation) {
         boolean found = check_vehicle(registration);
 
         if (found == true) {
@@ -49,7 +48,8 @@ public class PayStationImpl extends PayStationPOA {
             vehicleEvent.date = datePaid;
             vehicleEvent.time = timePaid;
             vehicleEvent.duration = duration;
-            vehicleEvent.operation = OPERATION;
+            vehicleEvent.cost = cost;
+            vehicleEvent.operation = operation;
 
             impl.vehicle_paid(vehicleEvent);
 
@@ -58,6 +58,8 @@ public class PayStationImpl extends PayStationPOA {
         }
         return found;
     }
+
+
 
     @Override
     public int return_cash_total() {

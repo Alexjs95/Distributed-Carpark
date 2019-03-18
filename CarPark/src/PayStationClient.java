@@ -7,6 +7,8 @@ import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +22,9 @@ import java.util.Arrays;
 
 public class PayStationClient extends JFrame {
     String[] durations = {"", "1 Hour", "2 Hours", "3 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours", "11 Hours", "12 Hours", "Custom"};
+    public static final double COSTPERHOUR = 1.00;
+    public static final String OPERATION = "Paid";
+
 
     public static JTextField txtReg;
     public static JTextField txtCustDuration;
@@ -35,9 +40,8 @@ public class PayStationClient extends JFrame {
 
     public static JComboBox<String> cbbDuration;
 
-
-
     public static short duration;
+    public static double cost;
 
     public PayStationClient() {
         JFrame frame = new JFrame("Pay Station");
@@ -87,7 +91,8 @@ public class PayStationClient extends JFrame {
                         txtCustDuration.setVisible(false);
                         item = item.replaceAll("[^\\d.]", "");
                         duration = Short.parseShort(item);
-                        lblCost.setText("Cost: £" + duration);
+                        cost = duration * COSTPERHOUR;
+                        lblCost.setText("Cost: £" + cost);
                     } else {
                         lblCost.setText("Cost: ");
                     }
@@ -95,14 +100,31 @@ public class PayStationClient extends JFrame {
             }
         });
 
+        txtCustDuration.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String custDuration = txtCustDuration.getText();
 
-        txtCustDuration.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               String duration = txtCustDuration.getText();
-               // TODO: Check if string is an integer
+                try {
+                    duration = Short.parseShort(custDuration);
+                    cost = duration * COSTPERHOUR;
+                    lblCost.setText("Cost: £" + cost);
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(panel,"Custom duration not whole number");
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
             }
         });
-
     }
 
 
@@ -133,7 +155,7 @@ public class PayStationClient extends JFrame {
             org.omg.CORBA.Object obj = nameService.resolve_str(name);
             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
 
-            
+
             btnPay.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -151,7 +173,7 @@ public class PayStationClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
-                    boolean paid = payStation.pay(reg, date, time, duration, "Paid");
+                    boolean paid = payStation.pay(reg, date, time, duration, cost, OPERATION);
 
                     if (paid == true) {
                         System.out.println("Paid");

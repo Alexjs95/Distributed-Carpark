@@ -17,6 +17,7 @@ module CarPark {
     	Date date;
     	string registration_number;
     	short duration;
+    	double cost;
     	string operation;
     };
 
@@ -47,7 +48,7 @@ module CarPark {
      	void turn_off();
      	void reset();
     	boolean check_vehicle(in string registration);
-    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in string operation);
+    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost, in string operation);
     	long return_cash_total();
     };
 

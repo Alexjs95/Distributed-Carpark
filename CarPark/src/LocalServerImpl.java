@@ -62,6 +62,12 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public int return_cash_total() {
+        for (int i = 0; i < events.size(); i++) {
+            System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
+
+
+        }
+
         return 0;
     }
 
