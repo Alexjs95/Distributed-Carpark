@@ -1,4 +1,5 @@
 import CarPark.LocalServerPOA;
+import CarPark.Machines;
 import CarPark.VehicleEvent;
 
 import java.time.LocalDateTime;
@@ -7,10 +8,14 @@ import java.util.Date;
 
 public class LocalServerImpl extends LocalServerPOA {
     public static ArrayList<VehicleEvent> events;
+    public static ArrayList<Machines> machines;
 
     public LocalServerImpl() {
         events = new ArrayList<VehicleEvent>();
+        machines = new ArrayList<Machines>();
     }
+
+
 
     @Override
     public String location() {
@@ -18,8 +23,13 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public VehicleEvent[] log() {
+    public VehicleEvent[] events_log() {
         return (VehicleEvent[])events.toArray();        // Returns arraylist as an array.
+    }
+
+    @Override
+    public Machines[] machine_log() {
+        return (Machines[])machines.toArray();
     }
 
     @Override
@@ -51,7 +61,6 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public boolean vehicle_in_car_park(String registration_number) {
-
         for (int i = 0; i < events.size(); i++) {
             System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
 
@@ -69,15 +78,10 @@ public class LocalServerImpl extends LocalServerPOA {
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i).operation.equals("Paid")) {
                 LocalDateTime currDate = LocalDateTime.now();
-                int currDay = currDate.getDayOfMonth();
 
-                int day = events.get(i).date.days;
-
-                if (currDay == day) {
+                if ((currDate.getDayOfMonth() == events.get(i).date.days) && (currDate.getMonthValue() == events.get(i).date.months) && (currDate.getYear() == events.get(i).date.years)) {
                     total = total + events.get(i).cost;
                 }
-
-
             }
             System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
         }
@@ -91,17 +95,22 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public void add_entry_gate(String gate_name, String gate_ior) {
-
+    public Machines[] return_machines() {
+        return new Machines[0];
     }
 
     @Override
-    public void add_exit_gate(String gate_name, String gate_ior) {
-
+    public void add_entry_gate(Machines machine) {
+        machines.add(machine);
     }
 
     @Override
-    public void add_pay_station(String station_name, String station_ior) {
+    public void add_exit_gate(Machines machine) {
+        machines.add(machine);
+    }
 
+    @Override
+    public void add_pay_station(Machines machine) {
+        machines.add(machine);
     }
 }

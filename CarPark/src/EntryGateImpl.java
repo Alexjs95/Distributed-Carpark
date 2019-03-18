@@ -1,5 +1,6 @@
 import CarPark.Date;
 import CarPark.EntryGatePOA;
+import CarPark.Machines;
 import CarPark.Time;
 
 public class EntryGateImpl extends EntryGatePOA {
@@ -14,7 +15,11 @@ public class EntryGateImpl extends EntryGatePOA {
 
     @Override
     public void register_gate(String machine_name) {
-
+        Machines machines = new Machines();
+        machines.ior = "";
+        machines.machine_name = "";
+        machines.machine_type = "";
+        impl.add_entry_gate(machines);
     }
 
     @Override
