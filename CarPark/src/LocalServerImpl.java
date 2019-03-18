@@ -1,7 +1,9 @@
 import CarPark.LocalServerPOA;
 import CarPark.VehicleEvent;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class LocalServerImpl extends LocalServerPOA {
     public static ArrayList<VehicleEvent> events;
@@ -43,7 +45,7 @@ public class LocalServerImpl extends LocalServerPOA {
         for (int i = 0; i < events.size(); i++) {
             System.out.println(events.get(i).registration_number + "   " + events.get(i).operation);
         }
-
+        System.out.println(return_cash_total());
         return true;
     }
 
@@ -53,7 +55,8 @@ public class LocalServerImpl extends LocalServerPOA {
         for (int i = 0; i < events.size(); i++) {
             System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
 
-            if ((registration_number.equals(events.get(i).registration_number) ) && (events.get(i).operation.equals("Entered"))) {
+            if ((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Entered"))) {
+                System.out.println("FOUND");
                return true;
             }
         }
@@ -61,14 +64,25 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public int return_cash_total() {
+    public double return_cash_total() {
+        double total = 0;
         for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).operation.equals("Paid")) {
+                LocalDateTime currDate = LocalDateTime.now();
+                int currDay = currDate.getDayOfMonth();
+
+                int day = events.get(i).date.days;
+
+                if (currDay == day) {
+                    total = total + events.get(i).cost;
+                }
+
+
+            }
             System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
-
-
         }
 
-        return 0;
+        return total;
     }
 
     @Override

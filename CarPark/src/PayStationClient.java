@@ -93,8 +93,10 @@ public class PayStationClient extends JFrame {
                         duration = Short.parseShort(item);
                         cost = duration * COSTPERHOUR;
                         lblCost.setText("Cost: £" + cost);
+                        btnPay.setEnabled(true);
                     } else {
                         lblCost.setText("Cost: ");
+                        btnPay.setEnabled(false);
                     }
                 }
             }
@@ -107,9 +109,16 @@ public class PayStationClient extends JFrame {
 
                 try {
                     duration = Short.parseShort(custDuration);
-                    cost = duration * COSTPERHOUR;
-                    lblCost.setText("Cost: £" + cost);
+                    if (duration > 48) {        // limit duration to 48 hours to not exceed max short value.
+                        JOptionPane.showMessageDialog(panel,"You are not permitted to park for longer than 48 Hours");
+                        btnPay.setEnabled(false);
+                        lblCost.setText("Cost: INVALID");
 
+                    } else {
+                        cost = duration * COSTPERHOUR;
+                        lblCost.setText("Cost: £" + cost);
+                        btnPay.setEnabled(true);
+                    }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(panel,"Custom duration not whole number");
                 }
@@ -173,6 +182,8 @@ public class PayStationClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
+                    System.out.println("client Reg: " + reg);
+
                     boolean paid = payStation.pay(reg, date, time, duration, cost, OPERATION);
 
                     if (paid == true) {
@@ -223,7 +234,7 @@ public class PayStationClient extends JFrame {
                 }
             });
 
-            btnPay.addActionListener(new ActionListener() {
+            btnReset.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     reset();

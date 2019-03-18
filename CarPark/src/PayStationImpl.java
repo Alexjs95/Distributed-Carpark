@@ -39,6 +39,7 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost, String operation) {
+        System.out.println("Pay method: " + registration);
         boolean found = check_vehicle(registration);
 
         if (found == true) {

@@ -59,7 +59,7 @@ module CarPark {
     	void vehicle_out(in VehicleEvent event);
     	boolean vehicle_paid(in VehicleEvent event);
     	boolean vehicle_in_car_park(in string registration_number);
-    	long return_cash_total();
+    	double return_cash_total();
     	Log_of_vehicle_events return_log();
     	void add_entry_gate(in string gate_name, in string gate_ior);
     	void add_exit_gate(in string gate_name, in string gate_ior);
