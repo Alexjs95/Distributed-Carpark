@@ -1,20 +1,26 @@
-import CarPark.Date;
-import CarPark.PayStationPOA;
-import CarPark.Time;
-import CarPark.VehicleEvent;
+import CarPark.*;
 
 public class PayStationImpl extends PayStationPOA {
+    public static final String MACHINETYPE = "Pay Station";
+    public static final String OPERATION = "Paid";
+    private static String machine_name;
 
     LocalServerImpl impl = new LocalServerImpl();
 
     @Override
     public String machine_name() {
-        return null;
+        return machine_name;
     }
 
     @Override
-    public void register_station(String machine_name) {
+    public void register_station(String name) {
+        machine_name = name;
 
+        Machines machines = new Machines();
+        machines.ior = "";
+        machines.machine_name = name;
+        machines.machine_type = MACHINETYPE;
+        impl.add_entry_gate(machines);
     }
 
     @Override
@@ -38,7 +44,7 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost, String operation) {
+    public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost) {
         System.out.println("Pay method: " + registration);
         boolean found = check_vehicle(registration);
 
@@ -50,7 +56,7 @@ public class PayStationImpl extends PayStationPOA {
             vehicleEvent.time = timePaid;
             vehicleEvent.duration = duration;
             vehicleEvent.cost = cost;
-            vehicleEvent.operation = operation;
+            vehicleEvent.operation = OPERATION;
 
             impl.vehicle_paid(vehicleEvent);
 

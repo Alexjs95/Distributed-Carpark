@@ -1,4 +1,5 @@
 import CarPark.LocalServerPOA;
+import CarPark.LocalServers;
 import CarPark.Machines;
 import CarPark.VehicleEvent;
 
@@ -7,19 +8,21 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class LocalServerImpl extends LocalServerPOA {
+    private static String serverLocation;
+
     public static ArrayList<VehicleEvent> events;
     public static ArrayList<Machines> machines;
+
+    HeadquartersImpl impl = new HeadquartersImpl();
 
     public LocalServerImpl() {
         events = new ArrayList<VehicleEvent>();
         machines = new ArrayList<Machines>();
     }
 
-
-
     @Override
     public String location() {
-        return null;
+        return serverLocation;
     }
 
     @Override
@@ -100,17 +103,30 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
+    public void register_server(String location) {
+        serverLocation = location;
+
+        LocalServers servers = new LocalServers();
+        servers.ior = "";
+        servers.location = serverLocation;
+        impl.register_local_server(servers);
+    }
+
+    @Override
     public void add_entry_gate(Machines machine) {
         machines.add(machine);
+        System.out.println("Machine registered: " + machine.machine_name + "  " + machine.machine_type);
     }
 
     @Override
     public void add_exit_gate(Machines machine) {
         machines.add(machine);
+        System.out.println("Machine registered: " + machine.machine_name + "  " + machine.machine_type);
     }
 
     @Override
     public void add_pay_station(Machines machine) {
         machines.add(machine);
+        System.out.println("Machine registered: " + machine.machine_name + "  " + machine.machine_type);
     }
 }

@@ -10,7 +10,15 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
 public class LocalServer {
+    public static String serverName;
+
     static public void main(String[] args) {
+        for (int i = 0; i < args.length; i ++) {
+            if ((!args[i].equals("-ORBInitialPort")) && (!args[i].matches("^[0-9]*$"))) {
+                serverName = args[i];
+            }
+        }
+
         try {
             // Initialize the ORB
             ORB orb = ORB.init(args, null);
@@ -64,8 +72,9 @@ public class LocalServer {
             //  wait for invocations from clients
             orb.run();
 
-            LocalServerImpl impl = new LocalServerImpl();
+            LocalServerImpl server = new LocalServerImpl();
 
+            server.register_server(serverName);
 
         } catch(Exception e) {
             System.err.println(e);

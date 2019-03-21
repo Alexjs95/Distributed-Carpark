@@ -17,10 +17,25 @@ module CarPark {
     	Date date;
     	string registration_number;
     	short duration;
+    	double cost;
     	string operation;
     };
 
+    struct Machines {
+        string machine_name;
+        string machine_type;
+        string ior;
+    };
+
+    struct LocalServers {
+        string server_name;
+        string location;
+        string ior;
+    };
+
     typedef sequence<VehicleEvent> Log_of_vehicle_events;
+    typedef sequence<Machines> Log_of_machines;
+    typedef sequence<LocalServers> Log_of_local_servers;
 
 	interface EntryGate {
 		readonly attribute string machine_name;
@@ -47,26 +62,28 @@ module CarPark {
      	void turn_off();
      	void reset();
     	boolean check_vehicle(in string registration);
-    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in string operation);
+    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost, in string operation);
     	long return_cash_total();
     };
 
     interface LocalServer {
     	readonly attribute string location;
-    	readonly attribute Log_of_vehicle_events log;
+    	readonly attribute Log_of_vehicle_events events_log;
+    	readonly attribute Log_of_machines machine_log;
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
     	boolean vehicle_paid(in VehicleEvent event);
     	boolean vehicle_in_car_park(in string registration_number);
-    	long return_cash_total();
+    	double return_cash_total();
     	Log_of_vehicle_events return_log();
-    	void add_entry_gate(in string gate_name, in string gate_ior);
-    	void add_exit_gate(in string gate_name, in string gate_ior);
-    	void add_pay_station(in string station_name, in string station_ior);
+    	Log_of_machines return_machines();
+    	void add_entry_gate(in Machines machine);
+    	void add_exit_gate(in Machines machine);
+    	void add_pay_station(in Machines machine);
     };
 
     interface CompanyHQ {
     	void raise_alarm(in VehicleEvent event);
-    	void register_local_server(in string server_name, in string server_ior);
+    	void register_local_server(in LocalServers server);
     };
 };

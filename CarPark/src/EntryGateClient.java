@@ -17,6 +17,7 @@ public class EntryGateClient extends JFrame {
     public static JButton btnSubmit;
     private JLabel lblReg;
 
+    public static String entryGateName;
 
     public EntryGateClient() {
         JFrame frame = new JFrame("Entry Gate");
@@ -37,6 +38,12 @@ public class EntryGateClient extends JFrame {
 
     public static void main(String[] args) {
         EntryGateClient gateClient = new EntryGateClient();
+
+        for (int i = 0; i < args.length; i ++) {
+            if ((!args[i].equals("-ORBInitialPort")) && (!args[i].matches("^[0-9]*$"))) {
+                entryGateName = args[i];
+            }
+        }
 
         try {
             // Initialize the ORB
@@ -62,6 +69,7 @@ public class EntryGateClient extends JFrame {
             String name = "EntryGate";
             EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(name));
 
+            gate.register_gate(entryGateName);
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
@@ -78,7 +86,7 @@ public class EntryGateClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
-                    gate.vehicle_entered(date, time, txtReg.getText(), "Entered");
+                    gate.vehicle_entered(date, time, txtReg.getText());
                 }
             });
 

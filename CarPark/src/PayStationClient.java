@@ -43,6 +43,9 @@ public class PayStationClient extends JFrame {
     public static short duration;
     public static double cost;
 
+    public static String payStationName;
+
+
     public PayStationClient() {
         JFrame frame = new JFrame("Pay Station");
         JPanel panel = new JPanel();
@@ -140,6 +143,12 @@ public class PayStationClient extends JFrame {
     public static void main(String[] args) {
         PayStationClient payClient = new PayStationClient();
 
+        for (int i = 0; i < args.length; i ++) {
+            if ((!args[i].equals("-ORBInitialPort")) && (!args[i].matches("^[0-9]*$"))) {
+                payStationName = args[i];
+            }
+        }
+
         try {
             // Initialize the ORB
             System.out.println("Initializing the ORB");
@@ -164,6 +173,8 @@ public class PayStationClient extends JFrame {
             org.omg.CORBA.Object obj = nameService.resolve_str(name);
             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
 
+            payStation.register_station(payStationName);
+
 
             btnPay.addActionListener(new ActionListener() {
                 @Override
@@ -184,11 +195,11 @@ public class PayStationClient extends JFrame {
 
                     System.out.println("client Reg: " + reg);
 
-                    boolean paid = payStation.pay(reg, date, time, duration, cost, OPERATION);
+                    boolean paid = payStation.pay(reg, date, time, duration, cost);
 
                     if (paid == true) {
                         System.out.println("Paid");
-                        // TODO: Print receipt
+
 
                         String directoryName = "Tickets";
                         File directory = new File(directoryName);
