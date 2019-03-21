@@ -8,6 +8,10 @@ public class HeadquartersImpl extends CompanyHQPOA {
 
     public static ArrayList<LocalServers> servers;
 
+    public HeadquartersImpl() {
+        servers = new ArrayList<LocalServers>();
+    }
+
     @Override
     public LocalServers[] server_log() {
         return new LocalServers[0];

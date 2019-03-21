@@ -1,7 +1,4 @@
-import CarPark.EntryGate;
-import CarPark.EntryGateHelper;
-import CarPark.PayStation;
-import CarPark.PayStationHelper;
+import CarPark.*;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -18,6 +15,8 @@ public class LocalServer {
                 serverName = args[i];
             }
         }
+
+        System.out.println(serverName);
 
         try {
             // Initialize the ORB
@@ -44,37 +43,59 @@ public class LocalServer {
 
 
             // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObj =
+            org.omg.CORBA.Object nameServiceObjMachines =
                     orb.resolve_initial_references ("NameService");
-            if (nameServiceObj == null) {
+            if (nameServiceObjMachines == null) {
                 System.out.println("nameServiceObj = null");
                 return;
             }
 
             // Use NamingContextExt which is part of the Interoperable
             // Naming Service (INS) specification.
-            NamingContextExt nameService = NamingContextExtHelper.narrow(nameServiceObj);
-            if (nameService == null) {
+            NamingContextExt nameServiceMachines = NamingContextExtHelper.narrow(nameServiceObjMachines);
+            if (nameServiceMachines == null) {
                 System.out.println("nameService = null");
                 return;
             }
 
             // bind the Count object in the Naming service
             String entryName = "EntryGate";
-            NameComponent[] entrygateName = nameService.to_name(entryName);
-            nameService.rebind(entrygateName, crefEntry);
+            NameComponent[] entrygateName = nameServiceMachines.to_name(entryName);
+            nameServiceMachines.rebind(entrygateName, crefEntry);
 
             // bind the Count object in the Naming service
             String payName = "PayStation";
-            NameComponent[] paystationName = nameService.to_name(payName);
-            nameService.rebind(paystationName, crefPay);
+            NameComponent[] paystationName = nameServiceMachines.to_name(payName);
+            nameServiceMachines.rebind(paystationName, crefPay);
+
+
+
+            // Register local server as a client
+
+            // Get a reference to the Naming service
+            org.omg.CORBA.Object nameServiceObjServers = orb.resolve_initial_references("NameService");
+            if (nameServiceObjServers == null) {
+                System.out.println("nameServiceObjServers = null");
+                return;
+            }
+
+            // Use NamingContextExt instead of NamingContext. This is
+            // part of the Interoperable naming Service.
+            NamingContextExt nameServiceServers = NamingContextExtHelper.narrow(nameServiceObjServers);
+            if (nameServiceServers == null) {
+                System.out.println("nameServiceServers = null");
+                return;
+            }
+
+            String name = "Local Server";
+            CarPark.LocalServer localServer = LocalServerHelper.narrow(nameServiceServers.resolve_str(name));
+
+            localServer.register_server(serverName);
+            System.out.println(serverName);
+
 
             //  wait for invocations from clients
             orb.run();
-
-            LocalServerImpl server = new LocalServerImpl();
-
-            server.register_server(serverName);
 
         } catch(Exception e) {
             System.err.println(e);

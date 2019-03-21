@@ -1,4 +1,3 @@
-import CarPark.Date;
 import CarPark.EntryGate;
 import CarPark.EntryGateHelper;
 import org.omg.CORBA.ORB;
@@ -8,8 +7,6 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 public class EntryGateClient extends JFrame {

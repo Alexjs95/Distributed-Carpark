@@ -1,0 +1,4 @@
+Car Registration: asw
+Entered at: 18-3-2019 15:23:39
+Paid: £9
+Ticket expiry: 2019-03-19T00:23:39.881

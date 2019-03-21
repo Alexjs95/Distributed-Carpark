@@ -28,7 +28,6 @@ module CarPark {
     };
 
     struct LocalServers {
-        string server_name;
         string location;
         string ior;
     };
@@ -43,7 +42,7 @@ module CarPark {
 		void turn_on();
 		void turn_off();
 		void reset();
-		void vehicle_entered(in Date date, in Time time, in string registration, in string operation);
+		void vehicle_entered(in Date date, in Time time, in string registration);
 	};
 
 	interface ExitGate {
@@ -52,7 +51,7 @@ module CarPark {
     	void turn_on();
      	void turn_off();
      	void reset();
-    	void vehicle_exited(in Date date, in Time time, in string registration, in string operation);
+    	void vehicle_exited(in Date date, in Time time, in string registration);
     };
 
 	interface PayStation {
@@ -62,7 +61,7 @@ module CarPark {
      	void turn_off();
      	void reset();
     	boolean check_vehicle(in string registration);
-    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost, in string operation);
+    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost);
     	long return_cash_total();
     };
 
@@ -70,6 +69,7 @@ module CarPark {
     	readonly attribute string location;
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
+    	void register_server(in string location);
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
     	boolean vehicle_paid(in VehicleEvent event);
@@ -83,6 +83,7 @@ module CarPark {
     };
 
     interface CompanyHQ {
+        readonly attribute Log_of_local_servers server_log;
     	void raise_alarm(in VehicleEvent event);
     	void register_local_server(in LocalServers server);
     };
