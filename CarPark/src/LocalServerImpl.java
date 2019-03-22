@@ -5,7 +5,6 @@ import CarPark.VehicleEvent;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class LocalServerImpl extends LocalServerPOA {
     private static String serverLocation;
@@ -38,10 +37,12 @@ public class LocalServerImpl extends LocalServerPOA {
     @Override
     public void vehicle_in(VehicleEvent event) {
         System.out.println(event.registration_number + "   " + event.time +  "    " + event.date+ "    " + event.operation);
-        events.add(event);
-
-        for (int i = 0; i < events.size(); i++) {
-            System.out.println(events.get(i).registration_number);
+        boolean inCarPark = vehicle_in_car_park(event.registration_number);
+        if (inCarPark == false) {
+            events.add(event);
+            System.out.println(event.registration_number + " has entered the carpark");
+        } else {
+            System.out.println(event.registration_number + " already in carpark");
         }
     }
 
@@ -51,24 +52,32 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public boolean vehicle_paid(VehicleEvent event) {
-        System.out.println(event.registration_number + "   " + event.time +  "    " + event.date + "    " + event.operation);
-        events.add(event);
-
-        for (int i = 0; i < events.size(); i++) {
-            System.out.println(events.get(i).registration_number + "   " + events.get(i).operation);
+    public boolean vehicle_pay(VehicleEvent event) {
+        boolean paid = vehicle_paid_for(event.registration_number);
+        if (paid == false) {
+            events.add(event);
+            System.out.println(event.registration_number + " paid for");
+            return true;
+        } else {
+            System.out.println(event.registration_number + " already paid for");
+            return false;
         }
-        System.out.println(return_cash_total());
-        return true;
+    }
+
+    @Override
+    public boolean vehicle_paid_for(String registration_number) {
+        for (int i = 0; i < events.size(); i++) {
+            if((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Paid"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean vehicle_in_car_park(String registration_number) {
         for (int i = 0; i < events.size(); i++) {
-            System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
-
             if ((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Entered"))) {
-                System.out.println("FOUND");
                return true;
             }
         }
@@ -86,9 +95,7 @@ public class LocalServerImpl extends LocalServerPOA {
                     total = total + events.get(i).cost;
                 }
             }
-            System.out.println("vehicle in car park " + events.get(i).registration_number + "    " + events.get(i).operation);
         }
-
         return total;
     }
 

@@ -68,6 +68,11 @@ public class LocalServer {
             NameComponent[] paystationName = nameServiceMachines.to_name(payName);
             nameServiceMachines.rebind(paystationName, crefPay);
 
+//            java Headquarters -localservers 2 server001 server002
+//            java LocalServer -name server001 -entrygate 3 001 002 003 -exitgate 2 001 002 -paystation 4 002 004 005 005 -ORBINitial
+//                java EntryGateClient -name 001 -server server1
+//                java EntryGateClient -name 002 -server server001
+
 
 
             // Register local server as a client
@@ -105,6 +110,8 @@ public class LocalServer {
             orb.run();
 
         } catch(Exception e) {
+            System.err.println("LocalServer Exception");
+
             System.err.println(e);
         }
     }

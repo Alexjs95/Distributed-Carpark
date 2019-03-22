@@ -17,6 +17,7 @@ public class EntryGateClient extends JFrame {
     private JLabel lblReg;
 
     public static String entryGateName;
+    public static String serverName;
 
     public EntryGateClient() {
         JFrame frame = new JFrame("Entry Gate");
@@ -37,6 +38,15 @@ public class EntryGateClient extends JFrame {
 
     public static void main(String[] args) {
         EntryGateClient gateClient = new EntryGateClient();
+
+//        for (int i = 0; i < args.length; i ++) {
+//            if (args[i].equals("-name")) {
+//                entryGateName = args[i + 1];
+//            } else if (args[i].equals("-server")) {
+//                serverName = args[i + 1];
+//            }
+//        }
+
 
         for (int i = 0; i < args.length; i ++) {
             if ((!args[i].equals("-ORBInitialPort")) && (!args[i].matches("^[0-9]*$"))) {
@@ -101,7 +111,7 @@ public class EntryGateClient extends JFrame {
             });
 
         } catch (Exception e) {
-            System.err.println("Exception");
+            System.err.println("Entry Gate Exception");
             System.err.println(e);
         }
     }

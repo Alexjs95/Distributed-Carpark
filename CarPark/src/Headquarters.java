@@ -8,12 +8,14 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 
 public class Headquarters extends JFrame {
     JTable tblMachines;
+    public static DefaultTableModel model;
     public static JButton btnRefresh;
 
 
@@ -23,7 +25,15 @@ public class Headquarters extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,300);
 
+        String[] columnNames = {"Local Server", "LS IOR"};
 
+        model = new DefaultTableModel(null, columnNames);
+        tblMachines = new JTable(model);
+        btnRefresh = new JButton("Refresh");
+
+        JScrollPane sp = new JScrollPane(tblMachines);
+        panel.add(sp);
+        panel.add(btnRefresh);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -32,6 +42,8 @@ public class Headquarters extends JFrame {
 
     public static void main(String[] args) {
         Headquarters headquarters = new Headquarters();
+
+
 
         try {
             // Initialize the ORB
@@ -65,23 +77,26 @@ public class Headquarters extends JFrame {
                 return;
             }
 
-            // bind the Count object in the Naming service
+            // bind the Local server object in the Naming service
             String serverName = "Local Server";
             NameComponent[] lSeverName = nameService.to_name(serverName);
             nameService.rebind(lSeverName, crefServer);
 
-
-
-            //  wait for invocations from clients
-            orb.run();
-
-
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    model.setNumRows(0);
+                    for(int i = 0; i < HeadquartersImpl.servers.size(); i++) {
+                        for(int j = 0; j < LocalServerImpl.machines.size(); j++) {
+                            model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, LocalServerImpl.machines.get(j).machine_name });
+                        }
 
+                    }
                 }
             });
+
+            //  wait for invocations from clients
+            orb.run();
 
         } catch(Exception e) {
             System.err.println(e);

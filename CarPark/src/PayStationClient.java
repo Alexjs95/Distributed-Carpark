@@ -262,7 +262,7 @@ public class PayStationClient extends JFrame {
 
         } catch (Exception e) {
             System.out.println(e);
-            System.err.println("Exception");
+            System.err.println("Paystation Exception");
         }
     }
 

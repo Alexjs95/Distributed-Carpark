@@ -47,7 +47,7 @@ module CarPark {
 
 	interface ExitGate {
     	readonly attribute string machine_name;
-    	void register_gate(in string machine_name);
+    	void register_gate(in string machine_name, in string ior);
     	void turn_on();
      	void turn_off();
      	void reset();
@@ -56,7 +56,7 @@ module CarPark {
 
 	interface PayStation {
     	readonly attribute string machine_name;
-    	void register_station(in string machine_name);
+    	void register_station(in string machine_name, in string ior);
     	void turn_on();
      	void turn_off();
      	void reset();
@@ -69,10 +69,11 @@ module CarPark {
     	readonly attribute string location;
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
-    	void register_server(in string location);
+    	void register_server(in string location, in string ior);
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
-    	boolean vehicle_paid(in VehicleEvent event);
+    	boolean vehicle_pay(in VehicleEvent event);
+    	boolean vehicle_paid_for(in string registration_number);
     	boolean vehicle_in_car_park(in string registration_number);
     	double return_cash_total();
     	Log_of_vehicle_events return_log();

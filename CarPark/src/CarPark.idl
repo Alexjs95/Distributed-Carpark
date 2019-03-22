@@ -72,7 +72,8 @@ module CarPark {
     	void register_server(in string location, in string ior);
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
-    	boolean vehicle_paid(in VehicleEvent event);
+    	boolean vehicle_pay(in VehicleEvent event);
+    	boolean vehicle_paid_for(in string registration_number);
     	boolean vehicle_in_car_park(in string registration_number);
     	double return_cash_total();
     	Log_of_vehicle_events return_log();

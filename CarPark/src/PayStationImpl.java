@@ -61,14 +61,12 @@ public class PayStationImpl extends PayStationPOA {
 
             cashTaken += cost;
 
-            impl.vehicle_paid(vehicleEvent);
+            impl.vehicle_pay(vehicleEvent);
         } else {
             System.out.println("Car not found in carPark");
         }
         return found;
     }
-
-
 
     @Override
     public double return_cash_total() {
