@@ -16,13 +16,14 @@ public class EntryGateImpl extends EntryGatePOA {
     }
 
     @Override
-    public void register_gate(String name) {
+    public void register_gate(String name, String ior) {
         machine_name = name;
 
         Machines machines = new Machines();
-        machines.ior = "";
+        machines.ior = ior;
         machines.machine_name = name;
         machines.machine_type = MACHINETYPE;
+        System.out.println(ior);
         impl.add_entry_gate(machines);
     }
 

@@ -13,12 +13,20 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 
 public class Headquarters extends JFrame {
-
+    JTable tblMachines;
+    public static JButton btnRefresh;
 
 
     public Headquarters() {
+        JFrame frame = new JFrame("Headquarters");
+        JPanel panel = new JPanel();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300,300);
 
 
+
+        frame.add(panel);
+        frame.setVisible(true);
     }
 
 
@@ -66,6 +74,14 @@ public class Headquarters extends JFrame {
 
             //  wait for invocations from clients
             orb.run();
+
+
+            btnRefresh.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
 
         } catch(Exception e) {
             System.err.println(e);

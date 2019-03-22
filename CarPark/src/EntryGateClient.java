@@ -3,6 +3,8 @@ import CarPark.EntryGateHelper;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -48,8 +50,7 @@ public class EntryGateClient extends JFrame {
             ORB orb = ORB.init(args, null);
 
             // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObj =
-                    orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object nameServiceObj = orb.resolve_initial_references("NameService");
             if (nameServiceObj == null) {
                 System.out.println("nameServiceObj = null");
                 return;
@@ -66,7 +67,19 @@ public class EntryGateClient extends JFrame {
             String name = "EntryGate";
             EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(name));
 
-            gate.register_gate(entryGateName);
+
+            // get reference to rootpoa & activate the POAManager
+            POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+            rootpoa.the_POAManager().activate();
+
+            // create servant and register it with the ORB
+            EntryGateImpl entryImpl = new EntryGateImpl();
+
+            // Get the 'stringified IOR'
+            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(entryImpl);
+            String stringified_ior = orb.object_to_string(ref);
+
+            gate.register_gate(entryGateName, stringified_ior);
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override

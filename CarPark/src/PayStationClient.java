@@ -5,20 +5,16 @@ import CarPark.Time;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 public class PayStationClient extends JFrame {
     String[] durations = {"", "1 Hour", "2 Hours", "3 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours", "11 Hours", "12 Hours", "Custom"};
@@ -173,7 +169,19 @@ public class PayStationClient extends JFrame {
             org.omg.CORBA.Object obj = nameService.resolve_str(name);
             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
 
-            payStation.register_station(payStationName);
+
+            // get reference to rootpoa & activate the POAManager
+            POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+            rootpoa.the_POAManager().activate();
+
+            // create servant and register it with the ORB
+            PayStationImpl payImpl = new PayStationImpl();
+
+            // Get the 'stringified IOR'
+            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(payImpl);
+            String stringified_ior = orb.object_to_string(ref);
+
+            payStation.register_station(payStationName, stringified_ior);
 
 
             btnPay.addActionListener(new ActionListener() {

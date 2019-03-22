@@ -90,8 +90,15 @@ public class LocalServer {
             String name = "Local Server";
             CarPark.LocalServer localServer = LocalServerHelper.narrow(nameServiceServers.resolve_str(name));
 
-            localServer.register_server(serverName);
-            System.out.println(serverName);
+
+            // create servant and register it with the ORB
+            LocalServerImpl serverImpl = new LocalServerImpl();
+
+            // Get the 'stringified IOR'
+            org.omg.CORBA.Object serverRef = rootpoa.servant_to_reference(serverImpl);
+            String stringified_ior = orb.object_to_string(serverRef);
+
+            localServer.register_server(serverName, stringified_ior);
 
 
             //  wait for invocations from clients

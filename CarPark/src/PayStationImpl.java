@@ -4,6 +4,7 @@ public class PayStationImpl extends PayStationPOA {
     public static final String MACHINETYPE = "Pay Station";
     public static final String OPERATION = "Paid";
     private static String machine_name;
+    public double cashTaken;
 
     LocalServerImpl impl = new LocalServerImpl();
 
@@ -13,11 +14,11 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public void register_station(String name) {
+    public void register_station(String name, String ior) {
         machine_name = name;
 
         Machines machines = new Machines();
-        machines.ior = "";
+        machines.ior = ior;
         machines.machine_name = name;
         machines.machine_type = MACHINETYPE;
         impl.add_entry_gate(machines);
@@ -58,8 +59,9 @@ public class PayStationImpl extends PayStationPOA {
             vehicleEvent.cost = cost;
             vehicleEvent.operation = OPERATION;
 
-            impl.vehicle_paid(vehicleEvent);
+            cashTaken += cost;
 
+            impl.vehicle_paid(vehicleEvent);
         } else {
             System.out.println("Car not found in carPark");
         }
@@ -69,7 +71,7 @@ public class PayStationImpl extends PayStationPOA {
 
 
     @Override
-    public int return_cash_total() {
-        return 0;
+    public double return_cash_total() {
+        return cashTaken;
     }
 }

@@ -103,11 +103,11 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public void register_server(String location) {
+    public void register_server(String location, String ior) {
         serverLocation = location;
 
         LocalServers servers = new LocalServers();
-        servers.ior = "";
+        servers.ior = ior;
         servers.location = serverLocation;
         impl.register_local_server(servers);
     }
