@@ -140,8 +140,8 @@ public class PayStationClient extends JFrame {
         PayStationClient payClient = new PayStationClient();
 
         for (int i = 0; i < args.length; i ++) {
-            if ((!args[i].equals("-ORBInitialPort")) && (!args[i].matches("^[0-9]*$"))) {
-                payStationName = args[i];
+            if (args[i].equals("-name")) {
+                payStationName = args[i + 1];
             }
         }
 
@@ -165,7 +165,7 @@ public class PayStationClient extends JFrame {
                 return;
             }
 
-            String name = "PayStation";
+            String name = payStationName;
             org.omg.CORBA.Object obj = nameService.resolve_str(name);
             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
 

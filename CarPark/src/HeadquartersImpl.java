@@ -25,6 +25,6 @@ public class HeadquartersImpl extends CompanyHQPOA {
     @Override
     public void register_local_server(LocalServers server) {
         servers.add(server);
-        System.out.println("Machine registered: " + server.location);
+        System.out.println("local server registered: " + server.location);
     }
 }

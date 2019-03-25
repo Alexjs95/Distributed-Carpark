@@ -12,11 +12,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Headquarters extends JFrame {
     JTable tblMachines;
     public static DefaultTableModel model;
     public static JButton btnRefresh;
+
+    public static int numberOfServers;
+    static ArrayList<String> servers = new ArrayList<String>();
+    public static String hqName;
 
 
     public Headquarters() {
@@ -43,6 +48,24 @@ public class Headquarters extends JFrame {
     public static void main(String[] args) {
         Headquarters headquarters = new Headquarters();
 
+        for (int i = 0; i < args.length; i ++) {
+            if (args[i].equals("-name")) {
+                hqName = args[i + 1];
+            } else if (args[i].equals("-localservers")) {
+                numberOfServers = Integer.parseInt((args[i + 1]));
+                for (int j = i + 2; j <= i + 1 + numberOfServers; j++) {
+                    servers.add(args[j]);
+                }
+            }
+        }
+
+        System.out.println("hq nameL " +hqName);
+
+        System.out.println("num of servers" + numberOfServers);
+
+        for (int i = 0; i <servers.size(); i++) {
+            System.out.println("sever " + i + " is named " + servers.get(i));
+        }
 
 
         try {
@@ -77,20 +100,22 @@ public class Headquarters extends JFrame {
                 return;
             }
 
-            // bind the Local server object in the Naming service
-            String serverName = "Local Server";
-            NameComponent[] lSeverName = nameService.to_name(serverName);
-            nameService.rebind(lSeverName, crefServer);
+            for (int i = 0; i < servers.size(); i++) {
+                // bind the Count object in the Naming service
+                String serverName = servers.get(i);
+                NameComponent[] lSeverName = nameService.to_name(serverName);
+                nameService.rebind(lSeverName, crefServer);
+            }
 
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     model.setNumRows(0);
                     for(int i = 0; i < HeadquartersImpl.servers.size(); i++) {
-                        for(int j = 0; j < LocalServerImpl.machines.size(); j++) {
-                            model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, LocalServerImpl.machines.get(j).machine_name });
-                        }
-
+                        //for(int j = 0; j < LocalServerImpl.machines.size(); j++) {
+                        model.addRow(new String[]{HeadquartersImpl.servers.get(i).location});
+                            //model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, LocalServerImpl.machines.get(j).machine_name });
+                        //}
                     }
                 }
             });
@@ -105,3 +130,4 @@ public class Headquarters extends JFrame {
 
     }
 }
+

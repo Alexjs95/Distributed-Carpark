@@ -6,15 +6,68 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
+import java.util.ArrayList;
+
 public class LocalServer {
     public static String serverName;
+    public static int numberOfEntry;
+    public static int numberOfExit;
+    public static int numberOfPay;
+    static ArrayList<String> entryGates = new ArrayList<String>();
+    static ArrayList<String> exitGates = new ArrayList<String>();
+    static ArrayList<String> payStations = new ArrayList<String>();
+
 
     static public void main(String[] args) {
         for (int i = 0; i < args.length; i ++) {
-            if ((!args[i].equals("-ORBInitialPort")) && (!args[i].matches("^[0-9]*$"))) {
-                serverName = args[i];
+            if (args[i].equals("-name")) {
+                serverName = args[i + 1];
+            } else if (args[i].equals("-entrygate")) {
+                numberOfEntry = Integer.parseInt((args[i + 1]));
+                for (int j = i + 2; j <= i + 1+ numberOfEntry; j++) {
+                    entryGates.add(args[j]);
+                }
+            } else if (args[i].equals("-paystation")) {
+                numberOfPay = Integer.parseInt((args[i + 1]));
+                for (int j = i + 2; j <= i + 1 + numberOfPay; j++) {
+                    payStations.add(args[j]);
+                }
+            } else if (args[i].equals("-exitgate")) {
+                numberOfExit = Integer.parseInt((args[i + 1]));
+                for (int j = i + 2; j <= i + 1 + numberOfExit; j++) {
+                    exitGates.add(args[j]);
+                }
             }
         }
+        //java LocalServer -name server001 -entrygate 3 001 002 003 -exitgate 2 001 002 -paystation 4 002 004 005 005 -ORBInitialPort 1075
+
+        System.out.println("Server name " + serverName);
+
+        System.out.println("Number of entry gates" + numberOfEntry);
+        for (int i = 0; i <entryGates.size(); i++) {
+            System.out.println("Entry Gate " + i + " is named " + entryGates.get(i));
+        }
+
+
+        System.out.println("Number of exit gates" + numberOfExit);
+        for (int i = 0; i <exitGates.size(); i++) {
+            System.out.println("Exit Gate " + i + " is named " + exitGates.get(i));
+        }
+
+
+
+        System.out.println("Number of pay stations" + payStations);
+        for (int i = 0; i <payStations.size(); i++) {
+            System.out.println("paystation " + i + " is named " + payStations.get(i));
+        }
+
+
+        //            java Headquarters -localservers 2 server001 server002
+//            java LocalServer -name server001 -entrygate 001 -entrygate 002 003 -exitgate 2 001 002 -paystation 4 002 004 005 005 -ORBINitial
+//                java EntryGateClient -name 001
+//                java EntryGateClient -name 002
+
+
 
         System.out.println(serverName);
 
@@ -32,6 +85,13 @@ public class LocalServer {
             // get object reference from the servant
             org.omg.CORBA.Object entryRef = rootpoa.servant_to_reference(entry);
             EntryGate crefEntry = EntryGateHelper.narrow(entryRef);
+
+//            // Create the Exit gate servant object
+//            ExitGateImpl exit = new ExitGateImpl();
+//
+//            // get object reference from the servant
+//            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(exit);
+//            ExitGate crefExit = ExitGateHelper.narrow(ref);
 
 
             // Create the Pay Station servant object
@@ -58,21 +118,26 @@ public class LocalServer {
                 return;
             }
 
-            // bind the Count object in the Naming service
-            String entryName = "EntryGate";
-            NameComponent[] entrygateName = nameServiceMachines.to_name(entryName);
-            nameServiceMachines.rebind(entrygateName, crefEntry);
+            for (int i = 0; i < numberOfEntry; i++) {
+                // bind the entry gate objects in the Naming service
+                String entryName = entryGates.get(i);
+                NameComponent[] entrygateName = nameServiceMachines.to_name(entryName);
+                nameServiceMachines.rebind(entrygateName, crefEntry);
+            }
 
-            // bind the Count object in the Naming service
-            String payName = "PayStation";
-            NameComponent[] paystationName = nameServiceMachines.to_name(payName);
-            nameServiceMachines.rebind(paystationName, crefPay);
+//            for (int i = 0; i < numberOfExit; i++) {
+//                // bind the exit gate objects in the Naming service
+//                String entryName = exitGates.get(i);
+//                NameComponent[] exitgateName = nameServiceMachines.to_name(entryName);
+//                nameServiceMachines.rebind(exitgateName, crefEntry);
+//            }
 
-//            java Headquarters -localservers 2 server001 server002
-//            java LocalServer -name server001 -entrygate 3 001 002 003 -exitgate 2 001 002 -paystation 4 002 004 005 005 -ORBINitial
-//                java EntryGateClient -name 001 -server server1
-//                java EntryGateClient -name 002 -server server001
-
+            for (int i = 0; i < numberOfPay; i++) {
+                // bind the pay station objects in the Naming service
+                String entryName = payStations.get(i);
+                NameComponent[] paystationName = nameServiceMachines.to_name(entryName);
+                nameServiceMachines.rebind(paystationName, crefPay);
+            }
 
 
             // Register local server as a client
@@ -92,7 +157,8 @@ public class LocalServer {
                 return;
             }
 
-            String name = "Local Server";
+
+            String name = serverName;
             CarPark.LocalServer localServer = LocalServerHelper.narrow(nameServiceServers.resolve_str(name));
 
 
@@ -111,7 +177,6 @@ public class LocalServer {
 
         } catch(Exception e) {
             System.err.println("LocalServer Exception");
-
             System.err.println(e);
         }
     }
