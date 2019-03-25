@@ -1,19 +1,17 @@
 javac *.java
 
 java Headquarters -name HQ -localservers 1 server001 -ORBInitialPort 1075 &
-sleep .9
-java LocalServer -name server001 -entrygate 3 001 002 003 -exitgate 2 001 002 -paystation 4 010 011 012 013 -ORBInitialPort 1075 &
-sleep .9
-java EntryGateClient -name 001 -ORBInitialPort 1075 &
-sleep .9
-java EntryGateClient -name 002 -ORBInitialPort 1075 &
-sleep .9
-java EntryGateClient -name 003 -ORBInitialPort 1075 &
 sleep .5
-java PayStationClient -name 010 -ORBInitialPort 1075 &
+java LocalServer -name server001 -entrygate 2 Entry1 Entry2 -exitgate 2 Exit1 Exit2 -paystation 2 Pay1 Pay2 -ORBInitialPort 1075 &
 sleep .5
-java PayStationClient -name 011 -ORBInitialPort 1075 &
+java EntryGateClient -name Entry1 -ORBInitialPort 1075 &
 sleep .5
-java PayStationClient -name 012 -ORBInitialPort 1075 &
+java EntryGateClient -name Entry2 -ORBInitialPort 1075 &
 sleep .5
-java PayStationClient -name 013 -ORBInitialPort 1075 &
+java ExitGateClient -name Exit1 -ORBInitialPort 1075 &
+sleep .5
+java ExitGateClient -name Exit2 -ORBInitialPort 1075 &
+sleep .5
+java PayStationClient -name Pay1 -ORBInitialPort 1075 &
+sleep .5
+java PayStationClient -name Pay2 -ORBInitialPort 1075

@@ -1,5 +1,5 @@
-import CarPark.EntryGate;
-import CarPark.EntryGateHelper;
+import CarPark.ExitGate;
+import CarPark.ExitGateHelper;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
@@ -11,15 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 
-public class EntryGateClient extends JFrame {
+public class ExitGateClient extends JFrame {
     public static JTextField txtReg;
     public static JButton btnSubmit;
     private JLabel lblReg;
 
-    public static String entryGateName;
+    public static String exitGateName;
 
-    public EntryGateClient() {
-        JFrame frame = new JFrame("Entry Gate");
+    public ExitGateClient() {
+        JFrame frame = new JFrame("Exit Gate");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,300);
@@ -34,13 +34,12 @@ public class EntryGateClient extends JFrame {
         frame.setVisible(true);
     }
 
-
     public static void main(String[] args) {
-        EntryGateClient gateClient = new EntryGateClient();
+        ExitGateClient gateClient = new ExitGateClient();
 
         for (int i = 0; i < args.length; i ++) {
             if (args[i].equals("-name")) {
-                entryGateName = args[i + 1];
+                exitGateName = args[i + 1];
             }
         }
 
@@ -64,21 +63,21 @@ public class EntryGateClient extends JFrame {
                 return;
             }
 
-            String name = entryGateName;
-            EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(name));
+            String name = exitGateName;
+            ExitGate gate = ExitGateHelper.narrow(nameService.resolve_str(name));
 
             // get reference to rootpoa & activate the POAManager
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
             // create servant and register it with the ORB
-            EntryGateImpl entryImpl = new EntryGateImpl();
+            ExitGateImpl exitImpl = new ExitGateImpl();
 
             // Get the 'stringified IOR'
-            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(entryImpl);
+            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(exitImpl);
             String stringified_ior = orb.object_to_string(ref);
 
-            gate.register_gate(entryGateName, stringified_ior);
+            gate.register_gate(exitGateName, stringified_ior);
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
@@ -95,14 +94,13 @@ public class EntryGateClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
-                    gate.vehicle_entered(date, time, txtReg.getText());
+                    gate.vehicle_exited(date, time, txtReg.getText());
                 }
             });
 
         } catch (Exception e) {
-            System.err.println("Entry Gate Exception");
+            System.err.println("Exit Gate Exception");
             System.err.println(e);
         }
     }
 }
-

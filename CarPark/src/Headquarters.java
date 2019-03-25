@@ -28,7 +28,7 @@ public class Headquarters extends JFrame {
         JFrame frame = new JFrame("Headquarters");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300,300);
+        frame.setSize(600,600);
 
         String[] columnNames = {"Local Server", "LS IOR"};
 
@@ -107,15 +107,36 @@ public class Headquarters extends JFrame {
                 nameService.rebind(lSeverName, crefServer);
             }
 
+            // Register HQ as a client
+
+            // Get a reference to the Naming service
+            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
+            if (nameServiceObjHQ == null) {
+                System.out.println("nameServiceObjHQ = null");
+                return;
+            }
+
+            // Use NamingContextExt instead of NamingContext. This is
+            // part of the Interoperable naming Service.
+            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
+            if (nameServiceHQ == null) {
+                System.out.println("nameServiceHQ = null");
+                return;
+            }
+
+            String name = "HQ";
+            CompanyHQ companyHQ = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(name));
+
+            companyHQ.
+
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     model.setNumRows(0);
                     for(int i = 0; i < HeadquartersImpl.servers.size(); i++) {
-                        //for(int j = 0; j < LocalServerImpl.machines.size(); j++) {
-                        model.addRow(new String[]{HeadquartersImpl.servers.get(i).location});
-                            //model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, LocalServerImpl.machines.get(j).machine_name });
-                        //}
+                        for(int j = 0; j < companyHQ.return_machines().length; j++) {
+                            model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name});
+                        }
                     }
                 }
             });
@@ -126,8 +147,6 @@ public class Headquarters extends JFrame {
         } catch(Exception e) {
             System.err.println(e);
         }
-
-
     }
 }
 

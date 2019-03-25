@@ -61,14 +61,6 @@ public class LocalServer {
             System.out.println("paystation " + i + " is named " + payStations.get(i));
         }
 
-
-        //            java Headquarters -localservers 2 server001 server002
-//            java LocalServer -name server001 -entrygate 001 -entrygate 002 003 -exitgate 2 001 002 -paystation 4 002 004 005 005 -ORBINitial
-//                java EntryGateClient -name 001
-//                java EntryGateClient -name 002
-
-
-
         System.out.println(serverName);
 
         try {
@@ -86,20 +78,30 @@ public class LocalServer {
             org.omg.CORBA.Object entryRef = rootpoa.servant_to_reference(entry);
             EntryGate crefEntry = EntryGateHelper.narrow(entryRef);
 
-//            // Create the Exit gate servant object
-//            ExitGateImpl exit = new ExitGateImpl();
-//
-//            // get object reference from the servant
-//            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(exit);
-//            ExitGate crefExit = ExitGateHelper.narrow(ref);
+            // Create the Exit gate servant object
+            ExitGateImpl exit = new ExitGateImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object exitRef = rootpoa.servant_to_reference(exit);
+            ExitGate crefExit = ExitGateHelper.narrow(exitRef);
 
 
             // Create the Pay Station servant object
             PayStationImpl pay = new PayStationImpl();
 
             // get object reference from the servant
-            org.omg.CORBA.Object ref = rootpoa.servant_to_reference(pay);
-            PayStation crefPay = PayStationHelper.narrow(ref);
+            org.omg.CORBA.Object payRef = rootpoa.servant_to_reference(pay);
+            PayStation crefPay = PayStationHelper.narrow(payRef);
+
+
+            // Create the HQ servant object
+            HeadquartersImpl hq = new HeadquartersImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
+            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
+
+
 
 
             // Get a reference to the Naming service
@@ -120,24 +122,27 @@ public class LocalServer {
 
             for (int i = 0; i < numberOfEntry; i++) {
                 // bind the entry gate objects in the Naming service
-                String entryName = entryGates.get(i);
-                NameComponent[] entrygateName = nameServiceMachines.to_name(entryName);
+                String name = entryGates.get(i);
+                NameComponent[] entrygateName = nameServiceMachines.to_name(name);
                 nameServiceMachines.rebind(entrygateName, crefEntry);
             }
 
-//            for (int i = 0; i < numberOfExit; i++) {
-//                // bind the exit gate objects in the Naming service
-//                String entryName = exitGates.get(i);
-//                NameComponent[] exitgateName = nameServiceMachines.to_name(entryName);
-//                nameServiceMachines.rebind(exitgateName, crefEntry);
-//            }
+            for (int i = 0; i < numberOfExit; i++) {
+                // bind the exit gate objects in the Naming service
+                String name = exitGates.get(i);
+                NameComponent[] exitgateName = nameServiceMachines.to_name(name);
+                nameServiceMachines.rebind(exitgateName, crefExit);
+            }
 
             for (int i = 0; i < numberOfPay; i++) {
                 // bind the pay station objects in the Naming service
-                String entryName = payStations.get(i);
-                NameComponent[] paystationName = nameServiceMachines.to_name(entryName);
+                String name = payStations.get(i);
+                NameComponent[] paystationName = nameServiceMachines.to_name(name);
                 nameServiceMachines.rebind(paystationName, crefPay);
             }
+
+            NameComponent[] hqName = nameServiceMachines.to_name("HQ");
+            nameServiceMachines.rebind(hqName, crefHq);
 
 
             // Register local server as a client
@@ -156,7 +161,6 @@ public class LocalServer {
                 System.out.println("nameServiceServers = null");
                 return;
             }
-
 
             String name = serverName;
             CarPark.LocalServer localServer = LocalServerHelper.narrow(nameServiceServers.resolve_str(name));

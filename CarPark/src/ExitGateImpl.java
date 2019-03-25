@@ -1,11 +1,11 @@
 import CarPark.Date;
-import CarPark.EntryGatePOA;
+import CarPark.ExitGatePOA;
 import CarPark.Machines;
 import CarPark.Time;
 
-public class EntryGateImpl extends EntryGatePOA {
-    public static final String MACHINETYPE = "Entry Gate";
-    public static final String OPERATION = "Entered";
+public class ExitGateImpl extends ExitGatePOA {
+    public static final String MACHINETYPE = "Exit Gate";
+    public static final String OPERATION = "Exited";
     private static String machine_name;
 
     LocalServerImpl impl = new LocalServerImpl();
@@ -24,12 +24,12 @@ public class EntryGateImpl extends EntryGatePOA {
         machines.machine_name = name;
         machines.machine_type = MACHINETYPE;
         System.out.println(ior);
-        impl.add_entry_gate(machines);
+        impl.add_exit_gate(machines);
     }
 
     @Override
-    public void vehicle_entered(Date date, Time time, String registration) {
-        System.out.println("Vehicle entered with registration: " + registration + " at " + date.days + "/" + date.months + "/" + date.years + "   " + time.hours + ":" + time.minutes + ":" + time.seconds);
+    public void vehicle_exited(Date date, Time time, String registration) {
+        System.out.println("Vehicle exited with registration: " + registration + " at " + date.days + "/" + date.months + "/" + date.years + "   " + time.hours + ":" + time.minutes + ":" + time.seconds);
         CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
         vehicleEvent.registration_number = registration;
@@ -37,8 +37,7 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-
-        impl.vehicle_in(vehicleEvent);
+        impl.vehicle_out(vehicleEvent);
     }
 
     @Override
@@ -55,4 +54,6 @@ public class EntryGateImpl extends EntryGatePOA {
     public void reset() {
 
     }
+
+
 }

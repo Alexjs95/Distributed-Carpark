@@ -77,7 +77,7 @@ module CarPark {
     	boolean vehicle_in_car_park(in string registration_number);
     	double return_cash_total();
     	Log_of_vehicle_events return_log();
-    	Log_of_machines return_machines();
+
     	void add_entry_gate(in Machines machine);
     	void add_exit_gate(in Machines machine);
     	void add_pay_station(in Machines machine);
@@ -87,5 +87,6 @@ module CarPark {
         readonly attribute Log_of_local_servers server_log;
     	void raise_alarm(in VehicleEvent event);
     	void register_local_server(in LocalServers server);
+    	Log_of_machines return_machines();
     };
 };
