@@ -71,12 +71,16 @@ public class LocalServer {
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
+
+
             // Create the Entry servant object
             EntryGateImpl entry = new EntryGateImpl();
 
             // get object reference from the servant
             org.omg.CORBA.Object entryRef = rootpoa.servant_to_reference(entry);
             EntryGate crefEntry = EntryGateHelper.narrow(entryRef);
+
+
 
             // Create the Exit gate servant object
             ExitGateImpl exit = new ExitGateImpl();
@@ -86,12 +90,16 @@ public class LocalServer {
             ExitGate crefExit = ExitGateHelper.narrow(exitRef);
 
 
+
+
             // Create the Pay Station servant object
             PayStationImpl pay = new PayStationImpl();
 
             // get object reference from the servant
             org.omg.CORBA.Object payRef = rootpoa.servant_to_reference(pay);
             PayStation crefPay = PayStationHelper.narrow(payRef);
+
+
 
 
             // Create the HQ servant object
@@ -105,8 +113,7 @@ public class LocalServer {
 
 
             // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObjMachines =
-                    orb.resolve_initial_references ("NameService");
+            org.omg.CORBA.Object nameServiceObjMachines = orb.resolve_initial_references ("NameService");
             if (nameServiceObjMachines == null) {
                 System.out.println("nameServiceObj = null");
                 return;

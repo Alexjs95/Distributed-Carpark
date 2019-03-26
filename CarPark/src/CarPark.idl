@@ -25,6 +25,7 @@ module CarPark {
         string machine_name;
         string machine_type;
         string ior;
+        boolean enabled;
     };
 
     struct LocalServers {
@@ -77,7 +78,9 @@ module CarPark {
     	boolean vehicle_in_car_park(in string registration_number);
     	double return_cash_total();
     	Log_of_vehicle_events return_log();
-
+        boolean change_entry_gate_state(in string machine_name, in boolean state);
+        boolean change_exit_gate_state(in string machine_name, in boolean state);
+        boolean change_pay_station_state(in string machine_name, in boolean state);
     	void add_entry_gate(in Machines machine);
     	void add_exit_gate(in Machines machine);
     	void add_pay_station(in Machines machine);

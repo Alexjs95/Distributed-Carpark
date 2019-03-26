@@ -21,6 +21,8 @@ public class PayStationImpl extends PayStationPOA {
         machines.ior = ior;
         machines.machine_name = name;
         machines.machine_type = MACHINETYPE;
+        machines.enabled = true;
+
         impl.add_entry_gate(machines);
     }
 

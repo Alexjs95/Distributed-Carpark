@@ -1,8 +1,6 @@
-import CarPark.Date;
-import CarPark.PayStation;
-import CarPark.PayStationHelper;
-import CarPark.Time;
+import CarPark.*;
 import org.omg.CORBA.ORB;
+import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
@@ -182,6 +180,34 @@ public class PayStationClient extends JFrame {
             String stringified_ior = orb.object_to_string(ref);
 
             payStation.register_station(payStationName, stringified_ior);
+
+
+
+
+//            // Get a reference to the Naming service
+//            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
+//            if (nameServiceObjHQ == null) {
+//                System.out.println("nameServiceObj = null");
+//                return;
+//            }
+//
+//            // Use NamingContextExt instead of NamingContext. This is
+//            // part of the Interoperable naming Service.
+//            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
+//            if (nameServiceHQ == null) {
+//                System.out.println("nameService = null");
+//                return;
+//            }
+//
+//            // Create the HQ servant object
+//            HeadquartersImpl hq = new HeadquartersImpl();
+//
+//            // get object reference from the servant
+//            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
+//            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
+//
+//            NameComponent[] hqName = nameServiceHQ.to_name("HQ");
+//            nameServiceHQ.rebind(hqName, crefHq);
 
 
             btnPay.addActionListener(new ActionListener() {

@@ -15,30 +15,43 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Headquarters extends JFrame {
-    JTable tblMachines;
+    public static JTable tblMachines;
     public static DefaultTableModel model;
     public static JButton btnRefresh;
+    public static JButton btnTurnOn;
+    public static JButton btnTurnOff;
+    public static JButton btnReset;
+
 
     public static int numberOfServers;
     static ArrayList<String> servers = new ArrayList<String>();
     public static String hqName;
+
+    public static int row;
+    public static int col;
 
 
     public Headquarters() {
         JFrame frame = new JFrame("Headquarters");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600,600);
+        frame.setSize(500,600);
 
-        String[] columnNames = {"Local Server", "LS IOR"};
+        String[] columnNames = {"Local Server", "Connected Machine", "Machine Enabled"};
 
         model = new DefaultTableModel(null, columnNames);
         tblMachines = new JTable(model);
         btnRefresh = new JButton("Refresh");
+        btnTurnOn = new JButton("Turn on");
+        btnTurnOff = new JButton("Turn off");
+        btnReset = new JButton("Reset");
 
         JScrollPane sp = new JScrollPane(tblMachines);
         panel.add(sp);
         panel.add(btnRefresh);
+        panel.add(btnTurnOn);
+        panel.add(btnTurnOff);
+        panel.add(btnReset);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -85,8 +98,7 @@ public class Headquarters extends JFrame {
 
 
             // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObj =
-                    orb.resolve_initial_references ("NameService");
+            org.omg.CORBA.Object nameServiceObj = orb.resolve_initial_references ("NameService");
             if (nameServiceObj == null) {
                 System.out.println("nameServiceObj = null");
                 return;
@@ -127,7 +139,7 @@ public class Headquarters extends JFrame {
             String name = "HQ";
             CompanyHQ companyHQ = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(name));
 
-            companyHQ.
+
 
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
@@ -135,11 +147,68 @@ public class Headquarters extends JFrame {
                     model.setNumRows(0);
                     for(int i = 0; i < HeadquartersImpl.servers.size(); i++) {
                         for(int j = 0; j < companyHQ.return_machines().length; j++) {
-                            model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name});
+                            if (companyHQ.return_machines()[j].enabled == true) {
+                                model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name, "true"});
+                            } else {
+                                model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name, "false"});
+
+                            }
                         }
                     }
                 }
             });
+
+
+            tblMachines.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    row = tblMachines.getSelectedRow();
+                    col = tblMachines.getSelectedColumn();
+                    System.out.println("current row: " + tblMachines.getValueAt(row, col));
+                }
+            });
+
+
+            btnTurnOn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String machine_name = tblMachines.getValueAt(row, 2).toString();
+//                    System.out.println(tblMachines.getValueAt(row, 3).toString());
+                    try {
+                        EntryGate entryGate = EntryGateHelper.narrow(nameServiceHQ.resolve_str("HQ123"));
+                    } catch (Exception e1) {
+                        System.out.println(e1);
+                    }
+
+
+
+                    localServer.change_entry_gate_state(machine_name,true);
+                }
+            });
+
+            btnTurnOff.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String machine_name = tblMachines.getValueAt(row, 2).toString();
+
+                    localServer.change_entry_gate_state(machine_name, false);
+                }
+            });
+
+            btnReset.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String machine_name = tblMachines.getValueAt(row, 2).toString();
+                    try {
+                        localServer.change_entry_gate_state(machine_name, false);
+                        Thread.sleep(1000);
+                        localServer.change_entry_gate_state(machine_name, true);
+                    } catch (Exception e1) {
+                        System.out.println(e1);
+                    }
+                }
+            });
+
 
             //  wait for invocations from clients
             orb.run();
@@ -149,4 +218,3 @@ public class Headquarters extends JFrame {
         }
     }
 }
-

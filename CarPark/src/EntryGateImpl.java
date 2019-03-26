@@ -23,7 +23,8 @@ public class EntryGateImpl extends EntryGatePOA {
         machines.ior = ior;
         machines.machine_name = name;
         machines.machine_type = MACHINETYPE;
-        System.out.println(ior);
+        machines.enabled = true;
+
         impl.add_entry_gate(machines);
     }
 

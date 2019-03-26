@@ -1,6 +1,9 @@
+import CarPark.CompanyHQ;
+import CarPark.CompanyHQHelper;
 import CarPark.EntryGate;
 import CarPark.EntryGateHelper;
 import org.omg.CORBA.ORB;
+import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
@@ -80,6 +83,34 @@ public class EntryGateClient extends JFrame {
 
             gate.register_gate(entryGateName, stringified_ior);
 
+
+
+            // Get a reference to the Naming service
+            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
+            if (nameServiceObjHQ == null) {
+                System.out.println("nameServiceObj = null");
+                return;
+            }
+
+            // Use NamingContextExt instead of NamingContext. This is
+            // part of the Interoperable naming Service.
+            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
+            if (nameServiceHQ == null) {
+                System.out.println("nameService = null");
+                return;
+            }
+
+            // Create the HQ servant object
+            HeadquartersImpl hq = new HeadquartersImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
+            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
+
+            NameComponent[] hqName = nameServiceHQ.to_name("HQ123");
+            nameServiceHQ.rebind(hqName, crefHq);
+
+
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -98,11 +129,10 @@ public class EntryGateClient extends JFrame {
                     gate.vehicle_entered(date, time, txtReg.getText());
                 }
             });
-
+            orb.run();
         } catch (Exception e) {
             System.err.println("Entry Gate Exception");
             System.err.println(e);
         }
     }
 }
-

@@ -117,6 +117,30 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
+    public boolean change_entry_gate_state(String machine_name, boolean state) {
+
+
+
+        return false;
+    }
+
+    @Override
+    public boolean change_exit_gate_state(String machine_name, boolean state) {
+
+
+
+        return false;
+    }
+
+    @Override
+    public boolean change_pay_station_state(String machine_name, boolean state) {
+
+
+
+        return false;
+    }
+
+    @Override
     public void add_entry_gate(Machines machine) {
         machines.add(machine);
         System.out.println("Machine registered: " + machine.machine_name + "  " + machine.machine_type);
