@@ -1,7 +1,4 @@
-import CarPark.CompanyHQPOA;
-import CarPark.LocalServers;
-import CarPark.Machines;
-import CarPark.VehicleEvent;
+import CarPark.*;
 
 import java.util.ArrayList;
 
@@ -34,5 +31,49 @@ public class HeadquartersImpl extends CompanyHQPOA {
         Machines[] stations = new Machines[LocalServerImpl.machines.size()];
         LocalServerImpl.machines.toArray(stations);
         return stations;
+    }
+
+    @Override
+    public void turn_machine_on(String type) {
+        EntryGateImpl entryImpl = new EntryGateImpl();
+        ExitGateImpl exitImpl = new ExitGateImpl();
+        PayStationImpl payImpl = new PayStationImpl();
+
+        if (type.contains("Entry")) {
+            entryImpl.turn_on();
+        } else if (type.contains("Exit")) {
+            exitImpl.turn_on();
+        } else if (type.contains("Pay")) {
+            payImpl.turn_on();
+        }
+    }
+
+    @Override
+    public void turn_machine_off(String type) {
+        EntryGateImpl entryImpl = new EntryGateImpl();
+        ExitGateImpl exitImpl = new ExitGateImpl();
+        PayStationImpl payImpl = new PayStationImpl();
+
+        if (type.contains("Entry")) {
+            entryImpl.turn_off();
+        } else if (type.contains("Exit")) {
+            exitImpl.turn_off();
+        } else if (type.contains("Pay")) {
+            payImpl.turn_off();
+        }
+    }
+
+    @Override
+    public void reset_machine(String type) {
+        EntryGateImpl entryImpl = new EntryGateImpl();
+        ExitGateImpl exitImpl = new ExitGateImpl();
+        PayStationImpl payImpl = new PayStationImpl();
+        if (type.contains("Entry")) {
+            entryImpl.reset();
+        } else if (type.contains("Exit")) {
+            exitImpl.reset();
+        } else if (type.contains("Pay")) {
+            payImpl.reset();
+        }
     }
 }

@@ -116,29 +116,6 @@ public class LocalServerImpl extends LocalServerPOA {
         impl.register_local_server(servers);
     }
 
-    @Override
-    public boolean change_entry_gate_state(String machine_name, boolean state) {
-
-
-
-        return false;
-    }
-
-    @Override
-    public boolean change_exit_gate_state(String machine_name, boolean state) {
-
-
-
-        return false;
-    }
-
-    @Override
-    public boolean change_pay_station_state(String machine_name, boolean state) {
-
-
-
-        return false;
-    }
 
     @Override
     public void add_entry_gate(Machines machine) {

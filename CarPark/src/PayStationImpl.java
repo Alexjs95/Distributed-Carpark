@@ -3,6 +3,7 @@ import CarPark.*;
 public class PayStationImpl extends PayStationPOA {
     public static final String MACHINETYPE = "Pay Station";
     public static final String OPERATION = "Paid";
+    public static boolean enabled = true;
     private static String machine_name;
     public double cashTaken;
 
@@ -11,6 +12,11 @@ public class PayStationImpl extends PayStationPOA {
     @Override
     public String machine_name() {
         return machine_name;
+    }
+
+    @Override
+    public boolean status() {
+        return enabled;
     }
 
     @Override
@@ -28,17 +34,20 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public void turn_on() {
-
+        System.out.println("pay station turned on");
+        enabled = true;
     }
 
     @Override
     public void turn_off() {
-
+        System.out.println("pay station turned off");
+        enabled = false;
     }
 
     @Override
     public void reset() {
-
+        turn_on();
+        turn_off();
     }
 
     @Override

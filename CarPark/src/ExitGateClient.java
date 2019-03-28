@@ -69,6 +69,8 @@ public class ExitGateClient extends JFrame {
             String name = exitGateName;
             ExitGate gate = ExitGateHelper.narrow(nameService.resolve_str(name));
 
+
+
             // get reference to rootpoa & activate the POAManager
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
@@ -84,31 +86,31 @@ public class ExitGateClient extends JFrame {
 
 
 
+            // Get a reference to the Naming service
+            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
+            if (nameServiceObjHQ == null) {
+                System.out.println("nameServiceObj = null");
+                return;
+            }
 
-//            // Get a reference to the Naming service
-//            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
-//            if (nameServiceObjHQ == null) {
-//                System.out.println("nameServiceObj = null");
-//                return;
-//            }
-//
-//            // Use NamingContextExt instead of NamingContext. This is
-//            // part of the Interoperable naming Service.
-//            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
-//            if (nameServiceHQ == null) {
-//                System.out.println("nameService = null");
-//                return;
-//            }
-//
-//            // Create the HQ servant object
-//            HeadquartersImpl hq = new HeadquartersImpl();
-//
-//            // get object reference from the servant
-//            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
-//            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
-//
-//            NameComponent[] hqName = nameServiceHQ.to_name("HQ");
-//            nameServiceHQ.rebind(hqName, crefHq);
+            // Use NamingContextExt instead of NamingContext. This is
+            // part of the Interoperable naming Service.
+            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
+            if (nameServiceHQ == null) {
+                System.out.println("nameService = null");
+                return;
+            }
+
+            // Create the HQ servant object
+            HeadquartersImpl hq = new HeadquartersImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
+            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
+
+            NameComponent[] hqName = nameServiceHQ.to_name(exitGateName + "HQ");
+            nameServiceHQ.rebind(hqName, crefHq);
+
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override

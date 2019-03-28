@@ -7,12 +7,18 @@ public class ExitGateImpl extends ExitGatePOA {
     public static final String MACHINETYPE = "Exit Gate";
     public static final String OPERATION = "Exited";
     private static String machine_name;
+    public static boolean enabled = true;
 
     LocalServerImpl impl = new LocalServerImpl();
 
     @Override
     public String machine_name() {
         return machine_name;
+    }
+
+    @Override
+    public boolean status() {
+        return enabled;
     }
 
     @Override
@@ -43,18 +49,19 @@ public class ExitGateImpl extends ExitGatePOA {
 
     @Override
     public void turn_on() {
-
+        System.out.println("exit gate turned on");
+        enabled = true;
     }
 
     @Override
     public void turn_off() {
-
+        System.out.println("exit gate turned off");
+        enabled = false;
     }
 
     @Override
     public void reset() {
-
+        turn_on();
+        turn_off();
     }
-
-
 }

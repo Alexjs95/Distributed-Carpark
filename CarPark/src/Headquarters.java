@@ -37,7 +37,7 @@ public class Headquarters extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,600);
 
-        String[] columnNames = {"Local Server", "Connected Machine", "Machine Enabled"};
+        String[] columnNames = {"Local Server", "Connected Machine", "Machine Type","Machine Enabled"};
 
         model = new DefaultTableModel(null, columnNames);
         tblMachines = new JTable(model);
@@ -119,6 +119,7 @@ public class Headquarters extends JFrame {
                 nameService.rebind(lSeverName, crefServer);
             }
 
+
             // Register HQ as a client
 
             // Get a reference to the Naming service
@@ -136,24 +137,26 @@ public class Headquarters extends JFrame {
                 return;
             }
 
-            String name = "HQ";
-            CompanyHQ companyHQ = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(name));
-
-
 
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    model.setNumRows(0);
-                    for(int i = 0; i < HeadquartersImpl.servers.size(); i++) {
-                        for(int j = 0; j < companyHQ.return_machines().length; j++) {
-                            if (companyHQ.return_machines()[j].enabled == true) {
-                                model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name, "true"});
-                            } else {
-                                model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name, "false"});
+                    try {
+                        String name = "HQ";
+                        CompanyHQ companyHQ = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(name));
 
+                        model.setNumRows(0);
+                        for(int i = 0; i < HeadquartersImpl.servers.size(); i++) {
+                            for(int j = 0; j < companyHQ.return_machines().length; j++) {
+                                if (companyHQ.return_machines()[j].enabled == true) {
+                                    model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name,companyHQ.return_machines()[j].machine_type, "true"});
+                                } else {
+                                    model.addRow(new String[]{HeadquartersImpl.servers.get(i).location, companyHQ.return_machines()[j].machine_name,companyHQ.return_machines()[j].machine_type, "false"});
+                                }
                             }
                         }
+                    } catch (Exception e1 ) {
+                        e1.printStackTrace();
                     }
                 }
             });
@@ -172,48 +175,50 @@ public class Headquarters extends JFrame {
             btnTurnOn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String machine_name = tblMachines.getValueAt(row, 2).toString();
-//                    System.out.println(tblMachines.getValueAt(row, 3).toString());
+                    String machine_name = tblMachines.getValueAt(row, 1).toString();
+                    String machine_type = tblMachines.getValueAt(row, 2).toString();
                     try {
-                        EntryGate entryGate = EntryGateHelper.narrow(nameServiceHQ.resolve_str("HQ123"));
+                        CompanyHQ hq = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(machine_name + "HQ"));
+                        hq.turn_machine_on(machine_type);
                     } catch (Exception e1) {
                         System.out.println(e1);
                     }
-
-
-
-                    localServer.change_entry_gate_state(machine_name,true);
                 }
             });
 
             btnTurnOff.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String machine_name = tblMachines.getValueAt(row, 2).toString();
-
-                    localServer.change_entry_gate_state(machine_name, false);
-                }
-            });
-
-            btnReset.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String machine_name = tblMachines.getValueAt(row, 2).toString();
+                    String machine_name = tblMachines.getValueAt(row, 1).toString();
+                    String machine_type = tblMachines.getValueAt(row, 2).toString();
                     try {
-                        localServer.change_entry_gate_state(machine_name, false);
-                        Thread.sleep(1000);
-                        localServer.change_entry_gate_state(machine_name, true);
+                        CompanyHQ hq = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(machine_name + "HQ"));
+                        hq.turn_machine_off(machine_type);
                     } catch (Exception e1) {
                         System.out.println(e1);
                     }
                 }
             });
 
+            btnReset.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String machine_name = tblMachines.getValueAt(row, 1).toString();
+                    String machine_type = tblMachines.getValueAt(row, 2).toString();
+                    try {
+                        CompanyHQ hq = CompanyHQHelper.narrow(nameServiceHQ.resolve_str(machine_name + "HQ"));
+                        hq.reset_machine(machine_type);
+                    } catch (Exception e1) {
+                        System.out.println(e1);
+                    }
+                }
+            });
 
             //  wait for invocations from clients
             orb.run();
 
         } catch(Exception e) {
+            e.printStackTrace();
             System.err.println(e);
         }
     }

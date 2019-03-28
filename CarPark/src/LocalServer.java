@@ -71,47 +71,6 @@ public class LocalServer {
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
-
-
-            // Create the Entry servant object
-            EntryGateImpl entry = new EntryGateImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object entryRef = rootpoa.servant_to_reference(entry);
-            EntryGate crefEntry = EntryGateHelper.narrow(entryRef);
-
-
-
-            // Create the Exit gate servant object
-            ExitGateImpl exit = new ExitGateImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object exitRef = rootpoa.servant_to_reference(exit);
-            ExitGate crefExit = ExitGateHelper.narrow(exitRef);
-
-
-
-
-            // Create the Pay Station servant object
-            PayStationImpl pay = new PayStationImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object payRef = rootpoa.servant_to_reference(pay);
-            PayStation crefPay = PayStationHelper.narrow(payRef);
-
-
-
-
-            // Create the HQ servant object
-            HeadquartersImpl hq = new HeadquartersImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
-            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
-
-
-
-
             // Get a reference to the Naming service
             org.omg.CORBA.Object nameServiceObjMachines = orb.resolve_initial_references ("NameService");
             if (nameServiceObjMachines == null) {
@@ -127,12 +86,27 @@ public class LocalServer {
                 return;
             }
 
+            // Create the Entry servant object
+            EntryGateImpl entry = new EntryGateImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object entryRef = rootpoa.servant_to_reference(entry);
+            EntryGate crefEntry = EntryGateHelper.narrow(entryRef);
+
             for (int i = 0; i < numberOfEntry; i++) {
                 // bind the entry gate objects in the Naming service
                 String name = entryGates.get(i);
                 NameComponent[] entrygateName = nameServiceMachines.to_name(name);
                 nameServiceMachines.rebind(entrygateName, crefEntry);
             }
+
+
+            // Create the Exit gate servant object
+            ExitGateImpl exit = new ExitGateImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object exitRef = rootpoa.servant_to_reference(exit);
+            ExitGate crefExit = ExitGateHelper.narrow(exitRef);
 
             for (int i = 0; i < numberOfExit; i++) {
                 // bind the exit gate objects in the Naming service
@@ -141,6 +115,15 @@ public class LocalServer {
                 nameServiceMachines.rebind(exitgateName, crefExit);
             }
 
+
+            // Create the Pay Station servant object
+            PayStationImpl pay = new PayStationImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object payRef = rootpoa.servant_to_reference(pay);
+            PayStation crefPay = PayStationHelper.narrow(payRef);
+
+
             for (int i = 0; i < numberOfPay; i++) {
                 // bind the pay station objects in the Naming service
                 String name = payStations.get(i);
@@ -148,8 +131,33 @@ public class LocalServer {
                 nameServiceMachines.rebind(paystationName, crefPay);
             }
 
-            NameComponent[] hqName = nameServiceMachines.to_name("HQ");
-            nameServiceMachines.rebind(hqName, crefHq);
+
+
+            // Get a reference to the Naming service
+            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
+            if (nameServiceObjHQ == null) {
+                System.out.println("nameServiceObjHQ = null");
+                return;
+            }
+
+            // Use NamingContextExt instead of NamingContext. This is
+            // part of the Interoperable naming Service.
+            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
+            if (nameServiceHQ == null) {
+                System.out.println("nameServiceHQ = null");
+                return;
+            }
+
+            // Create the HQ servant object
+            HeadquartersImpl hq = new HeadquartersImpl();
+
+            // get object reference from the servant
+            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
+            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
+
+            NameComponent[] hqName = nameServiceHQ.to_name("HQ");
+            nameServiceHQ.rebind(hqName, crefHq);
+
 
 
             // Register local server as a client

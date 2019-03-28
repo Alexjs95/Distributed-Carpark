@@ -21,6 +21,8 @@ public class EntryGateClient extends JFrame {
 
     public static String entryGateName;
 
+    public static EntryGate gate;
+
     public EntryGateClient() {
         JFrame frame = new JFrame("Entry Gate");
         JPanel panel = new JPanel();
@@ -29,10 +31,10 @@ public class EntryGateClient extends JFrame {
         lblReg = new JLabel("Enter Registration:");
         txtReg = new JTextField(10);
         btnSubmit = new JButton("Submit");
-
         panel.add(lblReg);
         panel.add(txtReg);
         panel.add(btnSubmit);
+
         frame.add(panel);
         frame.setVisible(true);
     }
@@ -68,7 +70,9 @@ public class EntryGateClient extends JFrame {
             }
 
             String name = entryGateName;
-            EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(name));
+            gate = EntryGateHelper.narrow(nameService.resolve_str(name));
+
+
 
             // get reference to rootpoa & activate the POAManager
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
@@ -107,7 +111,7 @@ public class EntryGateClient extends JFrame {
             org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
             CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
 
-            NameComponent[] hqName = nameServiceHQ.to_name("HQ123");
+            NameComponent[] hqName = nameServiceHQ.to_name(entryGateName + "HQ");
             nameServiceHQ.rebind(hqName, crefHq);
 
 
@@ -127,12 +131,32 @@ public class EntryGateClient extends JFrame {
                     time.seconds = currDate.getSecond();
 
                     gate.vehicle_entered(date, time, txtReg.getText());
+
                 }
             });
+
+//            Thread t1 = new Thread(new EntryGateClient ());
+//
+//            t1.start();
+
+
             orb.run();
         } catch (Exception e) {
             System.err.println("Entry Gate Exception");
             System.err.println(e);
         }
     }
+
+//    @Override
+//    public void run() {
+//        while (true) {
+//            if (gate.status() == false) {
+//                btnSubmit.setEnabled(false);
+//                txtReg.setEnabled(false);
+//            } else {
+//                btnSubmit.setEnabled(true);
+//                txtReg.setEnabled(true);
+//            }
+//        }
+//    }
 }

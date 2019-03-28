@@ -7,12 +7,18 @@ public class EntryGateImpl extends EntryGatePOA {
     public static final String MACHINETYPE = "Entry Gate";
     public static final String OPERATION = "Entered";
     private static String machine_name;
+    public static boolean enabled = true;
 
     LocalServerImpl impl = new LocalServerImpl();
 
     @Override
     public String machine_name() {
         return machine_name;
+    }
+
+    @Override
+    public boolean status() {
+        return enabled;
     }
 
     @Override
@@ -38,22 +44,24 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-
         impl.vehicle_in(vehicleEvent);
     }
 
     @Override
     public void turn_on() {
-
+        System.out.println("entry gate turned on");
+        enabled = true;
     }
 
     @Override
     public void turn_off() {
-
+        System.out.println("entry gate turned off");
+        enabled = false;
     }
 
     @Override
     public void reset() {
-
+        turn_on();
+        turn_off();
     }
 }
