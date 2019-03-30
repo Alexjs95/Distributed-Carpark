@@ -47,14 +47,26 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public void vehicle_out(VehicleEvent event) {
-        boolean inCarPark = check_vehicle_out_car_park(event.registration_number);
-        if (inCarPark == false) {
-            events.add(event);
-            System.out.println(event.registration_number + " has exited the carpark");
-            System.out.println("Server " + serverName + " has events size:  "  + events.size());
+    public String vehicle_out(VehicleEvent event) {
+        boolean inCarPark = check_vehicle_in_car_park(event.registration_number);
+        boolean paid = vehicle_paid_for(event.registration_number);
+        boolean leftCarPark = check_vehicle_out_car_park(event.registration_number);
+
+        if (inCarPark == true) {
+            if (paid == true) {
+                if (leftCarPark == false) {
+                    events.add(event);
+                    System.out.println(event.registration_number + " has exited the carpark");
+                    System.out.println("Server " + serverName + " has events size:  "  + events.size());
+                    return "Vehicle has exited car park.";
+                } else {
+                    return "Vehicle has already left car park.";
+                }
+            } else {
+                return "Vehicle not paid for.";
+            }
         } else {
-            System.out.println(event.registration_number + "has already left the carpark");
+            return "Vehicle has not entered car park.";
         }
     }
 
@@ -121,6 +133,17 @@ public class LocalServerImpl extends LocalServerPOA {
     public VehicleEvent[] return_log() {
         return new VehicleEvent[0];
     }
+
+    @Override
+    public void change_machine_state(String machine_name, String machine_type, boolean state) {
+        for (int i = 0; i < machines.size(); i ++) {
+            if ((machines.get(i).machine_name.equals(machine_name)) && (machines.get(i).machine_type.equals(machine_type))) {
+                System.out.println("machine state changed");
+                machines.get(i).enabled = state;
+            }
+        }
+    }
+
 
     @Override
     public void add_entry_gate(Machines machine) {

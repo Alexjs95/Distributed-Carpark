@@ -75,18 +75,20 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public void turn_on() {
+    public void turn_on(String machine_name, String machine_type) {
         enabled = true;
+        lsImpl.change_machine_state(machine_name, machine_type, enabled);
     }
 
     @Override
-    public void turn_off() {
+    public void turn_off(String machine_name, String machine_type) {
         enabled = false;
+        lsImpl.change_machine_state(machine_name, machine_type, enabled);
     }
 
     @Override
-    public void reset() {
-        turn_off();
-        turn_on();
+    public void reset(String machine_name, String machine_type) {
+        turn_off(machine_name, machine_type);
+        turn_on(machine_name, machine_type);
     }
 }

@@ -34,8 +34,7 @@ public class ExitGateImpl extends ExitGatePOA {
     }
 
     @Override
-    public void vehicle_exited(Date date, Time time, String registration) {
-        System.out.println("Vehicle exited with registration: " + registration + " at " + date.days + "/" + date.months + "/" + date.years + "   " + time.hours + ":" + time.minutes + ":" + time.seconds);
+    public String vehicle_exited(Date date, Time time, String registration) {
         CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
         vehicleEvent.registration_number = registration;
@@ -43,22 +42,24 @@ public class ExitGateImpl extends ExitGatePOA {
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-        lsImpl.vehicle_out(vehicleEvent);
+        return lsImpl.vehicle_out(vehicleEvent);
     }
 
     @Override
-    public void turn_on() {
+    public void turn_on(String machine_name, String machine_type) {
         enabled = true;
+        lsImpl.change_machine_state(machine_name, machine_type, enabled);
     }
 
     @Override
-    public void turn_off() {
+    public void turn_off(String machine_name, String machine_type) {
         enabled = false;
+        lsImpl.change_machine_state(machine_name, machine_type, enabled);
     }
 
     @Override
-    public void reset() {
-        turn_off();
-        turn_on();
+    public void reset(String machine_name, String machine_type) {
+        turn_off(machine_name, machine_type);
+        turn_on(machine_name, machine_type);
     }
 }

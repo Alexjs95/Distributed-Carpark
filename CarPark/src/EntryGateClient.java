@@ -114,6 +114,7 @@ public class EntryGateClient extends JFrame {
                         if (!registration.isEmpty()) {
                             entryImpl.vehicle_entered(date, time, txtReg.getText());
                             JOptionPane.showMessageDialog(null, "Vehicle entered car park", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            txtReg.setText("");
                         } else {
                             JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
                         }

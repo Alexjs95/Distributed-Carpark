@@ -143,13 +143,13 @@ public class CompanyHQ extends JFrame {
                     try {
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
-                            entryGate.turn_on();
+                            entryGate.turn_on(machine_name, machine_type);
                         } else if (machine_type.contains("Exit")) {
                             ExitGate exitGate = ExitGateHelper.narrow(nameService.resolve_str(machine_name));
-                            exitGate.turn_on();
+                            exitGate.turn_on(machine_name, machine_type);
                         } else if (machine_type.contains("Pay")) {
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
-                            payStation.turn_on();
+                            payStation.turn_on(machine_name, machine_type);
                         }
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -165,13 +165,13 @@ public class CompanyHQ extends JFrame {
                     try {
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
-                            entryGate.turn_off();
+                            entryGate.turn_off(machine_name, machine_type);
                         } else if (machine_type.contains("Exit")) {
                             ExitGate exitGate = ExitGateHelper.narrow(nameService.resolve_str(machine_name));
-                            exitGate.turn_off();
+                            exitGate.turn_off(machine_name, machine_type);
                         } else if (machine_type.contains("Pay")) {
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
-                            payStation.turn_off();
+                            payStation.turn_off(machine_name, machine_type);
                         }
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -187,13 +187,13 @@ public class CompanyHQ extends JFrame {
                     try {
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
-                            entryGate.reset();
+                            entryGate.reset(machine_name, machine_type);
                         } else if (machine_type.contains("Exit")) {
                             ExitGate exitGate = ExitGateHelper.narrow(nameService.resolve_str(machine_name));
-                            exitGate.reset();
+                            exitGate.reset(machine_name, machine_type);
                         } else if (machine_type.contains("Pay")) {
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
-                            payStation.reset();
+                            payStation.reset(machine_name, machine_type);
                         }
                     } catch (Exception e1) {
                         e1.printStackTrace();

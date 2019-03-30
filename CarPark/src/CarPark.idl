@@ -38,7 +38,7 @@ module CarPark {
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
     	void vehicle_in(in VehicleEvent event);
-    	void vehicle_out(in VehicleEvent event);
+    	string vehicle_out(in VehicleEvent event);
     	boolean vehicle_pay(in VehicleEvent event);
     	boolean vehicle_paid_for(in string registration_number);
     	boolean check_vehicle_in_car_park(in string registration_number);
@@ -48,6 +48,7 @@ module CarPark {
     	void add_entry_gate(in Machines machine);
     	void add_exit_gate(in Machines machine);
     	void add_pay_station(in Machines machine);
+    	void change_machine_state(in string machine_name, in string machine_type, in boolean state);
     };
 
     struct LocalServers {
@@ -70,19 +71,19 @@ module CarPark {
 		readonly attribute boolean status;
 		void register_gate(in string name, in string ior, in LocalServer obj);
 		void vehicle_entered(in Date date, in Time time, in string registration);
-		void turn_on();
-		void turn_off();
-		void reset();
+		void turn_on(in string machine_name, in string machine_type);
+		void turn_off(in string machine_name, in string machine_type);
+		void reset(in string machine_name, in string machine_type);
 	};
 
 	interface ExitGate {
         readonly attribute string machine_name;
         readonly attribute boolean status;
         void register_gate(in string name, in string ior, in LocalServer obj);
-        void vehicle_exited(in Date date, in Time time, in string registration);
-        void turn_on();
-        void turn_off();
-        void reset();
+        string vehicle_exited(in Date date, in Time time, in string registration);
+        void turn_on(in string machine_name, in string machine_type);
+        void turn_off(in string machine_name, in string machine_type);
+        void reset(in string machine_name, in string machine_type);
     };
 
     interface PayStation {
@@ -92,8 +93,8 @@ module CarPark {
         boolean check_vehicle(in string registration);
         boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost);
         double return_cash_total();
-        void turn_on();
-        void turn_off();
-        void reset();
+        void turn_on(in string machine_name, in string machine_type);
+        void turn_off(in string machine_name, in string machine_type);
+        void reset(in string machine_name, in string machine_type);
      };
 };

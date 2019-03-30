@@ -35,7 +35,7 @@ public class PayStationClient extends JFrame {
 
     public static JComboBox<String> cbbDuration;
 
-    public static short duration;
+    public static short duration = 0;
     public static double cost;
 
     public static String payStationName;
@@ -141,12 +141,12 @@ public class PayStationClient extends JFrame {
             // Gets name of entry gate from arguments
             if (args[i].equals("-name")) {
                 payStationName = args[i + 1];
+                payStationName = args[i + 1];
             } else if (args[i].equals("-server")) {
                 // gets name of server to connect to.
                 serverName = args[i + 1];
             }
         }
-
 
         try {
             // Initialize the ORB
@@ -191,68 +191,75 @@ public class PayStationClient extends JFrame {
             btnPay.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: Validation on registration.
-                    String reg = txtReg.getText();
+                    String registration;
 
-                    LocalDateTime currDate = LocalDateTime.now();
-                    Date date = new CarPark.Date();
-                    date.days = currDate.getDayOfMonth();
-                    date.months = currDate.getMonthValue();
-                    date.years = currDate.getYear();
+                    if (payImpl.enabled) {
+                        registration = txtReg.getText();
 
-                    Time time = new CarPark.Time();
-                    time.hours = currDate.getHour();
-                    time.minutes = currDate.getMinute();
-                    time.seconds = currDate.getSecond();
+                        LocalDateTime currDate = LocalDateTime.now();
+                        Date date = new CarPark.Date();
+                        date.days = currDate.getDayOfMonth();
+                        date.months = currDate.getMonthValue();
+                        date.years = currDate.getYear();
 
-                    System.out.println("client Reg: " + reg);
+                        Time time = new CarPark.Time();
+                        time.hours = currDate.getHour();
+                        time.minutes = currDate.getMinute();
+                        time.seconds = currDate.getSecond();
 
-                    boolean paid = payImpl.pay(reg, date, time, duration, cost);
+                        if (registration.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                        } else if (duration == 0) {
+                            JOptionPane.showMessageDialog(null, "Please select a duration from the combo box", "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            boolean paid = payImpl.pay(registration, date, time, duration, cost);
 
-                    if (paid == true) {
-                        System.out.println("Paid");
+                            if (paid == true) {
+                                String directoryName = "Tickets";
+                                File directory = new File(directoryName);
 
-
-                        String directoryName = "Tickets";
-                        File directory = new File(directoryName);
-
-                        if (! directory.exists()) {
-                            directory.mkdir();
-                        }
-
-                        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                                new FileOutputStream(directoryName + "/" + reg + ".txt"), "utf-8"))) {
-                            writer.write("Car Registration: " + reg);
-                            ((BufferedWriter) writer).newLine();
-                            writer.write("Entered at: " + getDate(date, time));
-                            ((BufferedWriter) writer).newLine();
-                            writer.write("Paid: £" + duration );
-                            ((BufferedWriter) writer).newLine();
-                            writer.write("Ticket expiry: " + currDate.plusHours(duration));
-
-                            writer.close();
-
-                            txtTicket.setVisible(true);
-                            btnReset.setVisible(true);
-
-                            try {
-                                File file = new File(directoryName + "/" + reg + ".txt");
-                                BufferedReader in = new BufferedReader(new FileReader(file));
-                                String str;
-                                while ((str = in.readLine()) != null) {
-                                    txtTicket.append(str + "\n");
-
+                                if (! directory.exists()) {
+                                    directory.mkdir();
                                 }
-                            }catch (Exception e1) {
-                                e1.printStackTrace();
+
+                                try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                                        new FileOutputStream(directoryName + "/" + registration + ".txt"), "utf-8"))) {
+                                    writer.write("Car Registration: " + registration);
+                                    ((BufferedWriter) writer).newLine();
+                                    writer.write("Entered at: " + getDate(date, time));
+                                    ((BufferedWriter) writer).newLine();
+                                    writer.write("Paid: £" + duration );
+                                    ((BufferedWriter) writer).newLine();
+                                    writer.write("Ticket expiry: " + currDate.plusHours(duration));
+
+                                    writer.close();
+
+                                    txtTicket.setVisible(true);
+                                    btnReset.setVisible(true);
+
+                                    try {
+                                        File file = new File(directoryName + "/" + registration + ".txt");
+                                        BufferedReader in = new BufferedReader(new FileReader(file));
+                                        String str;
+                                        while ((str = in.readLine()) != null) {
+                                            txtTicket.append(str + "\n");
+                                        }
+                                    } catch (Exception e1) {
+                                        e1.printStackTrace();
+                                    }
+
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                }
+                                btnPay.setEnabled(false);
+                                JOptionPane.showMessageDialog(null, "Vehicle paid for.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Vehicle already paid for or not in car park.", "Error", JOptionPane.ERROR_MESSAGE);
+                                reset();
                             }
-
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
                         }
-
                     } else {
-                        // TODO: Error message
+                        JOptionPane.showMessageDialog(null, "Pay Station unavailable", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -263,9 +270,6 @@ public class PayStationClient extends JFrame {
                     reset();
                 }
             });
-
-
-
 
             orb.run();
         } catch (Exception e) {
@@ -281,6 +285,8 @@ public class PayStationClient extends JFrame {
     }
 
     public static void reset() {
+        duration = 0;
+        cost = 0;
         txtReg.setText("");
         cbbDuration.setSelectedIndex(0);
         txtCustDuration.setText("");
@@ -288,5 +294,6 @@ public class PayStationClient extends JFrame {
         txtTicket.replaceSelection("");
         txtTicket.setVisible(false);
         btnReset.setVisible(false);
+        btnPay.setEnabled(true);
     }
 }
