@@ -53,7 +53,6 @@ public class EntryGateClient extends JFrame {
             }
         }
 
-
         try {
             // Initialize the ORB
             System.out.println("Initializing the ORB");
@@ -80,6 +79,9 @@ public class EntryGateClient extends JFrame {
             EntryGateImpl entryImpl = new EntryGateImpl();
 
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(entryImpl);
+
+            String stringified_ior = orb.object_to_string(ref);
+
             EntryGate cref = EntryGateHelper.narrow(ref);
 
             // bind the entry gate object in the Naming service
@@ -88,26 +90,36 @@ public class EntryGateClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
-            entryImpl.register_gate(entryGateName, "ior", localServer);
+            entryImpl.register_gate(entryGateName, stringified_ior, localServer);
 
-            //EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(entryGateName));
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    LocalDateTime currDate = LocalDateTime.now();
+                    String registration;
+                    if (entryImpl.enabled) {
+                        LocalDateTime currDate = LocalDateTime.now();
 
-                    CarPark.Date date = new CarPark.Date();
-                    date.days = currDate.getDayOfMonth();
-                    date.months = currDate.getMonthValue();
-                    date.years = currDate.getYear();
+                        CarPark.Date date = new CarPark.Date();
+                        date.days = currDate.getDayOfMonth();
+                        date.months = currDate.getMonthValue();
+                        date.years = currDate.getYear();
 
-                    CarPark.Time time = new CarPark.Time();
-                    time.hours = currDate.getHour();
-                    time.minutes = currDate.getMinute();
-                    time.seconds = currDate.getSecond();
+                        CarPark.Time time = new CarPark.Time();
+                        time.hours = currDate.getHour();
+                        time.minutes = currDate.getMinute();
+                        time.seconds = currDate.getSecond();
 
-                    entryImpl.vehicle_entered(date, time, txtReg.getText());
+                        registration = txtReg.getText();
+                        if (!registration.isEmpty()) {
+                            entryImpl.vehicle_entered(date, time, txtReg.getText());
+                            JOptionPane.showMessageDialog(null, "Vehicle entered car park", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Entry Gate unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 

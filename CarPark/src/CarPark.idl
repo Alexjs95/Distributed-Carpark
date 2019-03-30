@@ -33,12 +33,10 @@ module CarPark {
     typedef sequence<Machines> Log_of_machines;
 
 
-
     interface LocalServer {
     	readonly attribute string server_name;
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
-    	void register_server(in string name, in string ior);
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
     	boolean vehicle_pay(in VehicleEvent event);
@@ -61,13 +59,10 @@ module CarPark {
     typedef sequence<LocalServers> Log_of_local_servers;
 
     interface CompanyHQ {
-           readonly attribute Log_of_local_servers server_log;
+        readonly attribute Log_of_local_servers server_log;
         void raise_alarm(in VehicleEvent event);
-        void register_local_server(in LocalServers server);
-        Log_of_machines return_machines();
-        void turn_machine_on(in string type);
-        void turn_machine_off(in string type);
-        void reset_machine(in string type);
+        void register_local_server(in string name, in string ior, in LocalServer obj);
+        Log_of_machines return_machines(in short server);
     };
 
     interface EntryGate {

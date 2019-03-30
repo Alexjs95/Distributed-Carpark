@@ -3,6 +3,7 @@ import CarPark.LocalServers;
 import CarPark.Machines;
 import CarPark.VehicleEvent;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class LocalServerImpl extends LocalServerPOA {
@@ -28,16 +29,9 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public Machines[] machine_log() {
-        return (Machines[])machines.toArray();
-    }
-
-    @Override
-    public void register_server(String name, String ior) {
-        serverName = name;
-
-        LocalServers server = new LocalServers();
-        server.ior = ior;
-        server.name = name;
+        Machines[] mach = new Machines[machines.size()];
+        machines.toArray(mach);
+        return mach;
     }
 
     @Override
@@ -110,7 +104,17 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public double return_cash_total() {
-        return 0;
+        double total = 0;
+        System.out.println("return cash total method called events size : " + events.size());
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).operation.equals("Paid")) {
+                LocalDateTime currDate = LocalDateTime.now();
+                if ((currDate.getDayOfMonth() == events.get(i).date.days) && (currDate.getMonthValue() == events.get(i).date.months) && (currDate.getYear() == events.get(i).date.years)) {
+                    total = total + events.get(i).cost;
+                }
+            }
+        }
+        return total;
     }
 
     @Override

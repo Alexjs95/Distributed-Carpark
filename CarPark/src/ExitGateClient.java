@@ -74,11 +74,12 @@ public class ExitGateClient extends JFrame {
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
-
-
             ExitGateImpl exitImpl = new ExitGateImpl();
 
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(exitImpl);
+
+            String stringified_ior = orb.object_to_string(ref);
+
             ExitGate cref = ExitGateHelper.narrow(ref);
 
             // bind the exit gate object in the Naming service
@@ -87,25 +88,37 @@ public class ExitGateClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
-            exitImpl.register_gate(exitGateName, "ior", localServer);
+            exitImpl.register_gate(exitGateName, stringified_ior, localServer);
 
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    LocalDateTime currDate = LocalDateTime.now();
+                    String registration;
 
-                    CarPark.Date date = new CarPark.Date();
-                    date.days = currDate.getDayOfMonth();
-                    date.months = currDate.getMonthValue();
-                    date.years = currDate.getYear();
+                    if (exitImpl.enabled) {
+                        LocalDateTime currDate = LocalDateTime.now();
 
-                    CarPark.Time time = new CarPark.Time();
-                    time.hours = currDate.getHour();
-                    time.minutes = currDate.getMinute();
-                    time.seconds = currDate.getSecond();
+                        CarPark.Date date = new CarPark.Date();
+                        date.days = currDate.getDayOfMonth();
+                        date.months = currDate.getMonthValue();
+                        date.years = currDate.getYear();
 
-                    exitImpl.vehicle_exited(date, time, txtReg.getText());
+                        CarPark.Time time = new CarPark.Time();
+                        time.hours = currDate.getHour();
+                        time.minutes = currDate.getMinute();
+                        time.seconds = currDate.getSecond();
+
+                        registration = txtReg.getText();
+                        if (!registration.isEmpty()) {
+                            exitImpl.vehicle_exited(date, time, txtReg.getText());
+                            JOptionPane.showMessageDialog(null, "Vehicle exited car park", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Exit Gate unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 
@@ -114,7 +127,5 @@ public class ExitGateClient extends JFrame {
             System.err.println("Exit Gate Exception");
             System.err.println(e);
         }
-
-
     }
 }

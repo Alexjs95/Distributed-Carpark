@@ -174,6 +174,9 @@ public class PayStationClient extends JFrame {
             PayStationImpl payImpl = new PayStationImpl();
 
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(payImpl);
+
+            String stringified_ior = orb.object_to_string(ref);
+
             PayStation cref = PayStationHelper.narrow(ref);
 
             // bind the pay station object in the Naming service
@@ -182,7 +185,7 @@ public class PayStationClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
-            payImpl.register_station(payStationName, "ior", localServer);
+            payImpl.register_station(payStationName, stringified_ior, localServer);
 
 
             btnPay.addActionListener(new ActionListener() {

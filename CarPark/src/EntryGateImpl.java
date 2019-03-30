@@ -48,16 +48,17 @@ public class EntryGateImpl extends EntryGatePOA {
 
     @Override
     public void turn_on() {
-
+        enabled = true;
     }
 
     @Override
     public void turn_off() {
-
+        enabled = false;
     }
 
     @Override
     public void reset() {
-
+        turn_on();
+        turn_off();
     }
 }

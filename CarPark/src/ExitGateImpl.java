@@ -48,16 +48,17 @@ public class ExitGateImpl extends ExitGatePOA {
 
     @Override
     public void turn_on() {
-
+        enabled = true;
     }
 
     @Override
     public void turn_off() {
-
+        enabled = false;
     }
 
     @Override
     public void reset() {
-
+        turn_off();
+        turn_on();
     }
 }
