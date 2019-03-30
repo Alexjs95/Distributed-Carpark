@@ -1,4 +1,0 @@
-Car Registration: asdfgh
-Entered at: 21-3-2019 10:51:41
-Paid: £5
-Ticket expiry: 2019-03-21T15:51:41.249

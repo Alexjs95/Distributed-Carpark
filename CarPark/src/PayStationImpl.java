@@ -1,4 +1,5 @@
 import CarPark.*;
+import CarPark.LocalServer;
 
 public class PayStationImpl extends PayStationPOA {
     public static final String MACHINETYPE = "Pay Station";
@@ -7,7 +8,7 @@ public class PayStationImpl extends PayStationPOA {
     private static String machine_name;
     public double cashTaken;
 
-    LocalServerImpl impl = new LocalServerImpl();
+    LocalServer lsImpl;
 
     @Override
     public String machine_name() {
@@ -20,44 +21,33 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public void register_station(String name, String ior) {
+    public void register_station(String name, String ior, LocalServer obj) {
+        lsImpl = obj;
+
         machine_name = name;
+        Machines machine = new Machines();
+        machine.ior = ior;
+        machine.machine_name = machine_name;
+        machine.machine_type = MACHINETYPE;
+        machine.enabled = true;
 
-        Machines machines = new Machines();
-        machines.ior = ior;
-        machines.machine_name = name;
-        machines.machine_type = MACHINETYPE;
-        machines.enabled = true;
-
-        impl.add_entry_gate(machines);
-    }
-
-    @Override
-    public void turn_on() {
-        System.out.println("pay station turned on");
-        enabled = true;
-    }
-
-    @Override
-    public void turn_off() {
-        System.out.println("pay station turned off");
-        enabled = false;
-    }
-
-    @Override
-    public void reset() {
-        turn_on();
-        turn_off();
+        lsImpl.add_pay_station(machine);
     }
 
     @Override
     public boolean check_vehicle(String registration) {
-        return impl.vehicle_in_car_park(registration);
+        // checks if the car is in the car park and checks if the car has not left the car park.
+        System.out.println("vehicle in carPark " + lsImpl.check_vehicle_in_car_park(registration));
+        System.out.println("vehicle out of carPark " + lsImpl.check_vehicle_out_car_park(registration));
+        System.out.println("vehicle paid: " + lsImpl.vehicle_paid_for(registration));
+        if (lsImpl.check_vehicle_in_car_park(registration) && !lsImpl.check_vehicle_out_car_park(registration) && !lsImpl.vehicle_paid_for(registration)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost) {
-        System.out.println("Pay method: " + registration);
         boolean found = check_vehicle(registration);
 
         if (found == true) {
@@ -72,7 +62,7 @@ public class PayStationImpl extends PayStationPOA {
 
             cashTaken += cost;
 
-            impl.vehicle_pay(vehicleEvent);
+            lsImpl.vehicle_pay(vehicleEvent);
         } else {
             System.out.println("Car not found in carPark");
         }
@@ -81,6 +71,21 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public double return_cash_total() {
-        return cashTaken;
+        return 0;
+    }
+
+    @Override
+    public void turn_on() {
+
+    }
+
+    @Override
+    public void turn_off() {
+
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

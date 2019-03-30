@@ -1,4 +1,5 @@
 import CarPark.*;
+import CarPark.LocalServer;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -38,7 +39,7 @@ public class PayStationClient extends JFrame {
     public static double cost;
 
     public static String payStationName;
-
+    public static String serverName;
 
     public PayStationClient() {
         JFrame frame = new JFrame("Pay Station");
@@ -133,15 +134,19 @@ public class PayStationClient extends JFrame {
         });
     }
 
-
     public static void main(String[] args) {
         PayStationClient payClient = new PayStationClient();
 
         for (int i = 0; i < args.length; i ++) {
+            // Gets name of entry gate from arguments
             if (args[i].equals("-name")) {
                 payStationName = args[i + 1];
+            } else if (args[i].equals("-server")) {
+                // gets name of server to connect to.
+                serverName = args[i + 1];
             }
         }
+
 
         try {
             // Initialize the ORB
@@ -163,51 +168,21 @@ public class PayStationClient extends JFrame {
                 return;
             }
 
-            String name = payStationName;
-            PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(name));
-
-
-
-            // get reference to rootpoa & activate the POAManager
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
-            // create servant and register it with the ORB
             PayStationImpl payImpl = new PayStationImpl();
 
-            // Get the 'stringified IOR'
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(payImpl);
-            String stringified_ior = orb.object_to_string(ref);
+            PayStation cref = PayStationHelper.narrow(ref);
 
-            payStation.register_station(payStationName, stringified_ior);
+            // bind the pay station object in the Naming service
+            NameComponent[] pName = nameService.to_name(payStationName);
+            nameService.rebind(pName, cref);
 
+            LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
-
-
-            // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
-            if (nameServiceObjHQ == null) {
-                System.out.println("nameServiceObj = null");
-                return;
-            }
-
-            // Use NamingContextExt instead of NamingContext. This is
-            // part of the Interoperable naming Service.
-            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
-            if (nameServiceHQ == null) {
-                System.out.println("nameService = null");
-                return;
-            }
-
-            // Create the HQ servant object
-            HeadquartersImpl hq = new HeadquartersImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
-            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
-
-            NameComponent[] hqName = nameServiceHQ.to_name(payStationName + "HQ");
-            nameServiceHQ.rebind(hqName, crefHq);
+            payImpl.register_station(payStationName, "ior", localServer);
 
 
             btnPay.addActionListener(new ActionListener() {
@@ -229,7 +204,7 @@ public class PayStationClient extends JFrame {
 
                     System.out.println("client Reg: " + reg);
 
-                    boolean paid = payStation.pay(reg, date, time, duration, cost);
+                    boolean paid = payImpl.pay(reg, date, time, duration, cost);
 
                     if (paid == true) {
                         System.out.println("Paid");
@@ -286,6 +261,10 @@ public class PayStationClient extends JFrame {
                 }
             });
 
+
+
+
+            orb.run();
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Paystation Exception");

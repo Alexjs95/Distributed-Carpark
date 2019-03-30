@@ -1,7 +1,7 @@
-import CarPark.CompanyHQ;
-import CarPark.CompanyHQHelper;
 import CarPark.ExitGate;
 import CarPark.ExitGateHelper;
+import CarPark.LocalServer;
+import CarPark.LocalServerHelper;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -19,6 +19,7 @@ public class ExitGateClient extends JFrame {
     public static JButton btnSubmit;
     private JLabel lblReg;
 
+    public static String serverName;
     public static String exitGateName;
 
     public ExitGateClient() {
@@ -38,11 +39,15 @@ public class ExitGateClient extends JFrame {
     }
 
     public static void main(String[] args) {
-        ExitGateClient gateClient = new ExitGateClient();
+        ExitGateClient exitGateClient = new ExitGateClient();
 
         for (int i = 0; i < args.length; i ++) {
+            // Gets name of exit gate from arguments
             if (args[i].equals("-name")) {
                 exitGateName = args[i + 1];
+            } else if (args[i].equals("-server")) {
+                // gets name of server to connect to.
+                serverName = args[i + 1];
             }
         }
 
@@ -66,50 +71,23 @@ public class ExitGateClient extends JFrame {
                 return;
             }
 
-            String name = exitGateName;
-            ExitGate gate = ExitGateHelper.narrow(nameService.resolve_str(name));
-
-
-
-            // get reference to rootpoa & activate the POAManager
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
-            // create servant and register it with the ORB
+
+
             ExitGateImpl exitImpl = new ExitGateImpl();
 
-            // Get the 'stringified IOR'
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(exitImpl);
-            String stringified_ior = orb.object_to_string(ref);
+            ExitGate cref = ExitGateHelper.narrow(ref);
 
-            gate.register_gate(exitGateName, stringified_ior);
+            // bind the exit gate object in the Naming service
+            NameComponent[] eName = nameService.to_name(exitGateName);
+            nameService.rebind(eName, cref);
 
+            LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
-
-            // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
-            if (nameServiceObjHQ == null) {
-                System.out.println("nameServiceObj = null");
-                return;
-            }
-
-            // Use NamingContextExt instead of NamingContext. This is
-            // part of the Interoperable naming Service.
-            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
-            if (nameServiceHQ == null) {
-                System.out.println("nameService = null");
-                return;
-            }
-
-            // Create the HQ servant object
-            HeadquartersImpl hq = new HeadquartersImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
-            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
-
-            NameComponent[] hqName = nameServiceHQ.to_name(exitGateName + "HQ");
-            nameServiceHQ.rebind(hqName, crefHq);
+            exitImpl.register_gate(exitGateName, "ior", localServer);
 
 
             btnSubmit.addActionListener(new ActionListener() {
@@ -127,13 +105,16 @@ public class ExitGateClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
-                    gate.vehicle_exited(date, time, txtReg.getText());
+                    exitImpl.vehicle_exited(date, time, txtReg.getText());
                 }
             });
 
+            orb.run();
         } catch (Exception e) {
             System.err.println("Exit Gate Exception");
             System.err.println(e);
         }
+
+
     }
 }

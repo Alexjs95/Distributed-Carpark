@@ -28,57 +28,23 @@ module CarPark {
         boolean enabled;
     };
 
-    struct LocalServers {
-        string location;
-        string ior;
-    };
 
     typedef sequence<VehicleEvent> Log_of_vehicle_events;
     typedef sequence<Machines> Log_of_machines;
-    typedef sequence<LocalServers> Log_of_local_servers;
 
-	interface EntryGate {
-		readonly attribute string machine_name;
-		readonly attribute boolean status;
-		void register_gate(in string machine_name, in string ior);
-		void turn_on();
-		void turn_off();
-		void reset();
-		void vehicle_entered(in Date date, in Time time, in string registration);
-	};
 
-	interface ExitGate {
-    	readonly attribute string machine_name;
-    	readonly attribute boolean status;
-    	void register_gate(in string machine_name, in string ior);
-    	void turn_on();
-     	void turn_off();
-     	void reset();
-    	void vehicle_exited(in Date date, in Time time, in string registration);
-    };
-
-	interface PayStation {
-    	readonly attribute string machine_name;
-    	readonly attribute boolean status;
-    	void register_station(in string machine_name, in string ior);
-    	void turn_on();
-     	void turn_off();
-     	void reset();
-    	boolean check_vehicle(in string registration);
-    	boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost);
-    	double return_cash_total();
-    };
 
     interface LocalServer {
-    	readonly attribute string location;
+    	readonly attribute string server_name;
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
-    	void register_server(in string location, in string ior);
+    	void register_server(in string name, in string ior);
     	void vehicle_in(in VehicleEvent event);
     	void vehicle_out(in VehicleEvent event);
     	boolean vehicle_pay(in VehicleEvent event);
     	boolean vehicle_paid_for(in string registration_number);
-    	boolean vehicle_in_car_park(in string registration_number);
+    	boolean check_vehicle_in_car_park(in string registration_number);
+    	boolean check_vehicle_out_car_park(in string registration_number);
     	double return_cash_total();
     	Log_of_vehicle_events return_log();
     	void add_entry_gate(in Machines machine);
@@ -86,13 +52,53 @@ module CarPark {
     	void add_pay_station(in Machines machine);
     };
 
-    interface CompanyHQ {
-        readonly attribute Log_of_local_servers server_log;
-    	void raise_alarm(in VehicleEvent event);
-    	void register_local_server(in LocalServers server);
-    	Log_of_machines return_machines();
-    	void turn_machine_on(in string type);
-    	void turn_machine_off(in string type);
-    	void reset_machine(in string type);
+    struct LocalServers {
+        string name;
+        string ior;
+        LocalServer obj;
     };
+
+    typedef sequence<LocalServers> Log_of_local_servers;
+
+    interface CompanyHQ {
+           readonly attribute Log_of_local_servers server_log;
+        void raise_alarm(in VehicleEvent event);
+        void register_local_server(in LocalServers server);
+        Log_of_machines return_machines();
+        void turn_machine_on(in string type);
+        void turn_machine_off(in string type);
+        void reset_machine(in string type);
+    };
+
+    interface EntryGate {
+		readonly attribute string machine_name;
+		readonly attribute boolean status;
+		void register_gate(in string name, in string ior, in LocalServer obj);
+		void vehicle_entered(in Date date, in Time time, in string registration);
+		void turn_on();
+		void turn_off();
+		void reset();
+	};
+
+	interface ExitGate {
+        readonly attribute string machine_name;
+        readonly attribute boolean status;
+        void register_gate(in string name, in string ior, in LocalServer obj);
+        void vehicle_exited(in Date date, in Time time, in string registration);
+        void turn_on();
+        void turn_off();
+        void reset();
+    };
+
+    interface PayStation {
+        readonly attribute string machine_name;
+        readonly attribute boolean status;
+        void register_station(in string name, in string ior, in LocalServer obj);
+        boolean check_vehicle(in string registration);
+        boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost);
+        double return_cash_total();
+        void turn_on();
+        void turn_off();
+        void reset();
+     };
 };

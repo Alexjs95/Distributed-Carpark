@@ -1,7 +1,5 @@
-import CarPark.Date;
-import CarPark.EntryGatePOA;
-import CarPark.Machines;
-import CarPark.Time;
+import CarPark.*;
+import CarPark.LocalServer;
 
 public class EntryGateImpl extends EntryGatePOA {
     public static final String MACHINETYPE = "Entry Gate";
@@ -9,7 +7,7 @@ public class EntryGateImpl extends EntryGatePOA {
     private static String machine_name;
     public static boolean enabled = true;
 
-    LocalServerImpl impl = new LocalServerImpl();
+    LocalServer lsImpl;
 
     @Override
     public String machine_name() {
@@ -22,16 +20,17 @@ public class EntryGateImpl extends EntryGatePOA {
     }
 
     @Override
-    public void register_gate(String name, String ior) {
+    public void register_gate(String name, String ior, LocalServer obj) {
+        lsImpl = obj;
+
         machine_name = name;
+        Machines machine = new Machines();
+        machine.ior = ior;
+        machine.machine_name = machine_name;
+        machine.machine_type = MACHINETYPE;
+        machine.enabled = true;
 
-        Machines machines = new Machines();
-        machines.ior = ior;
-        machines.machine_name = name;
-        machines.machine_type = MACHINETYPE;
-        machines.enabled = true;
-
-        impl.add_entry_gate(machines);
+        lsImpl.add_entry_gate(machine);
     }
 
     @Override
@@ -44,24 +43,21 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-        impl.vehicle_in(vehicleEvent);
+        lsImpl.vehicle_in(vehicleEvent);
     }
 
     @Override
     public void turn_on() {
-        System.out.println("entry gate turned on");
-        enabled = true;
+
     }
 
     @Override
     public void turn_off() {
-        System.out.println("entry gate turned off");
-        enabled = false;
+
     }
 
     @Override
     public void reset() {
-        turn_on();
-        turn_off();
+
     }
 }

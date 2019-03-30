@@ -1,7 +1,8 @@
-import CarPark.CompanyHQ;
-import CarPark.CompanyHQHelper;
 import CarPark.EntryGate;
 import CarPark.EntryGateHelper;
+import CarPark.LocalServer;
+import CarPark.LocalServerHelper;
+import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -19,9 +20,9 @@ public class EntryGateClient extends JFrame {
     public static JButton btnSubmit;
     private JLabel lblReg;
 
+    public static String serverName;
     public static String entryGateName;
 
-    public static EntryGate gate;
 
     public EntryGateClient() {
         JFrame frame = new JFrame("Entry Gate");
@@ -39,15 +40,19 @@ public class EntryGateClient extends JFrame {
         frame.setVisible(true);
     }
 
-
-    public static void main(String[] args) {
-        EntryGateClient gateClient = new EntryGateClient();
+    public static void main(String args[]) {// Initialize the ORB
+        EntryGateClient entryGateClient = new EntryGateClient();
 
         for (int i = 0; i < args.length; i ++) {
+            // Gets name of entry gate from arguments
             if (args[i].equals("-name")) {
                 entryGateName = args[i + 1];
+            } else if (args[i].equals("-server")) {
+                // gets name of server to connect to.
+                serverName = args[i + 1];
             }
         }
+
 
         try {
             // Initialize the ORB
@@ -55,7 +60,7 @@ public class EntryGateClient extends JFrame {
             ORB orb = ORB.init(args, null);
 
             // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObj = orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object nameServiceObj = orb.resolve_initial_references ("NameService");
             if (nameServiceObj == null) {
                 System.out.println("nameServiceObj = null");
                 return;
@@ -69,51 +74,23 @@ public class EntryGateClient extends JFrame {
                 return;
             }
 
-            String name = entryGateName;
-            gate = EntryGateHelper.narrow(nameService.resolve_str(name));
-
-
-
-            // get reference to rootpoa & activate the POAManager
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
-            // create servant and register it with the ORB
             EntryGateImpl entryImpl = new EntryGateImpl();
 
-            // Get the 'stringified IOR'
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(entryImpl);
-            String stringified_ior = orb.object_to_string(ref);
+            EntryGate cref = EntryGateHelper.narrow(ref);
 
-            gate.register_gate(entryGateName, stringified_ior);
+            // bind the entry gate object in the Naming service
+            NameComponent[] eName = nameService.to_name(entryGateName);
+            nameService.rebind(eName, cref);
 
+            LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
+            entryImpl.register_gate(entryGateName, "ior", localServer);
 
-            // Get a reference to the Naming service
-            org.omg.CORBA.Object nameServiceObjHQ = orb.resolve_initial_references("NameService");
-            if (nameServiceObjHQ == null) {
-                System.out.println("nameServiceObj = null");
-                return;
-            }
-
-            // Use NamingContextExt instead of NamingContext. This is
-            // part of the Interoperable naming Service.
-            NamingContextExt nameServiceHQ = NamingContextExtHelper.narrow(nameServiceObjHQ);
-            if (nameServiceHQ == null) {
-                System.out.println("nameService = null");
-                return;
-            }
-
-            // Create the HQ servant object
-            HeadquartersImpl hq = new HeadquartersImpl();
-
-            // get object reference from the servant
-            org.omg.CORBA.Object hqRef = rootpoa.servant_to_reference(hq);
-            CompanyHQ crefHq = CompanyHQHelper.narrow(hqRef);
-
-            NameComponent[] hqName = nameServiceHQ.to_name(entryGateName + "HQ");
-            nameServiceHQ.rebind(hqName, crefHq);
-
+            //EntryGate gate = EntryGateHelper.narrow(nameService.resolve_str(entryGateName));
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
@@ -130,33 +107,14 @@ public class EntryGateClient extends JFrame {
                     time.minutes = currDate.getMinute();
                     time.seconds = currDate.getSecond();
 
-                    gate.vehicle_entered(date, time, txtReg.getText());
-
+                    entryImpl.vehicle_entered(date, time, txtReg.getText());
                 }
             });
 
-//            Thread t1 = new Thread(new EntryGateClient ());
-//
-//            t1.start();
-
-
             orb.run();
-        } catch (Exception e) {
+       } catch (Exception e) {
             System.err.println("Entry Gate Exception");
-            System.err.println(e);
-        }
+            e.printStackTrace();
+       }
     }
-
-//    @Override
-//    public void run() {
-//        while (true) {
-//            if (gate.status() == false) {
-//                btnSubmit.setEnabled(false);
-//                txtReg.setEnabled(false);
-//            } else {
-//                btnSubmit.setEnabled(true);
-//                txtReg.setEnabled(true);
-//            }
-//        }
-//    }
 }
