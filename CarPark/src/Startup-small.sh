@@ -5,7 +5,11 @@ java CompanyHQ -ORBInitialPort 1075 &
 sleep .5
 java LocalServer -name server001 -ORBInitialPort 1075 &
 sleep .5
+java LocalServer -name server002 -ORBInitialPort 1075 &
+sleep .5
 java EntryGateClient -name Entry1 -server server001 -ORBInitialPort 1075 &
+sleep .5
+java EntryGateClient -name Entry2 -server server002 -ORBInitialPort 1075 &
 sleep .5
 java ExitGateClient -name Exit1 -server server001 -ORBInitialPort 1075 &
 sleep .5

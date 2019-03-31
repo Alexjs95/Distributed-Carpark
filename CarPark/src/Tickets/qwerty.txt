@@ -1,4 +1,0 @@
-Car Registration: qwerty
-Entered at: 30-3-2019 22:35:10
-Paid: £1
-Ticket expiry: 2019-03-30T23:35:10.752

@@ -71,7 +71,7 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public double return_cash_total() {
-        return 0;
+        return cashTaken;
     }
 
     @Override

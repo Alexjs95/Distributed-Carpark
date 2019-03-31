@@ -34,7 +34,7 @@ public class ExitGateImpl extends ExitGatePOA {
     }
 
     @Override
-    public String vehicle_exited(Date date, Time time, String registration) {
+    public void vehicle_exited(Date date, Time time, String registration) {
         CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
         vehicleEvent.registration_number = registration;
@@ -42,7 +42,7 @@ public class ExitGateImpl extends ExitGatePOA {
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-        return lsImpl.vehicle_out(vehicleEvent);
+        lsImpl.vehicle_out(vehicleEvent);
     }
 
     @Override

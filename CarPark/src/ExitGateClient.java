@@ -112,10 +112,8 @@ public class ExitGateClient extends JFrame {
                         registration = txtReg.getText();
 
                         if (!registration.isEmpty()) {
-                            String msg = exitImpl.vehicle_exited(date, time, txtReg.getText());
-
-
-                            JOptionPane.showMessageDialog(null, msg, "Information", JOptionPane.INFORMATION_MESSAGE);
+                            exitImpl.vehicle_exited(date, time, txtReg.getText());
+                            JOptionPane.showMessageDialog(null, "Vehicle Exited", "Information", JOptionPane.INFORMATION_MESSAGE);
                             txtReg.setText("");
                         } else {
                             JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);

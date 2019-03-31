@@ -90,6 +90,8 @@ public class EntryGateClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
+
+
             entryImpl.register_gate(entryGateName, stringified_ior, localServer);
 
 

@@ -44,8 +44,7 @@ public class CompanyHQImpl extends CompanyHQPOA {
         ArrayList<Machines> stations = new ArrayList<Machines>();
         LocalServer localServer = servers.get(server).obj;
 
-        Machines[] machines ;
-        machines = localServer.machine_log();
+        Machines[] machines = localServer.machine_log();
 
 
 //        Machines[] machines = new Machines[localServer.machine_log().length];

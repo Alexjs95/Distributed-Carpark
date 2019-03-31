@@ -44,17 +44,19 @@ module CarPark {
 
     interface LocalServer {
     	readonly attribute string server_name;
+    	readonly attribute long spaces;
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
+    	Log_of_vehicle_events return_log();
     	void vehicle_in(in VehicleEvent event);
-    	string vehicle_out(in VehicleEvent event);
-    	boolean vehicle_pay(in VehicleEvent event);
+    	void vehicle_out(in VehicleEvent event);
+    	void vehicle_pay(in VehicleEvent event);
     	boolean vehicle_paid_for(in string registration_number);
     	boolean check_vehicle_in_car_park(in string registration_number);
     	boolean check_vehicle_out_car_park(in string registration_number);
     	double return_cash_total();
-    	Log_of_vehicle_events return_log();
-    	void register_server(in string name, in CompanyHQ hq);
+    	long return_spaces();
+    	void register_server(in string name, in long spaces, in CompanyHQ hq);
     	void add_entry_gate(in Machines machine);
     	void add_exit_gate(in Machines machine);
     	void add_pay_station(in Machines machine);
@@ -91,7 +93,7 @@ module CarPark {
         readonly attribute string machine_name;
         readonly attribute boolean status;
         void register_gate(in string name, in string ior, in LocalServer obj);
-        string vehicle_exited(in Date date, in Time time, in string registration);
+        void vehicle_exited(in Date date, in Time time, in string registration);
         void turn_on(in string machine_name, in string machine_type);
         void turn_off(in string machine_name, in string machine_type);
         void reset(in string machine_name, in string machine_type);

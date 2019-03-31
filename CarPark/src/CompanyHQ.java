@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class CompanyHQ extends JFrame {
     public static JTable tblMachines;
@@ -20,55 +21,97 @@ public class CompanyHQ extends JFrame {
     public static JTable tblAlerts;
     public static DefaultTableModel alertsModel;
 
+    public static JTable tblEvents;
+    public static DefaultTableModel eventsModel;
+
+    public static JComboBox<String> cbbServers;
+    public static JButton btnReset;
     public static JButton btnRefresh;
+    public static JButton btnResetStation;
     public static JButton btnTurnOn;
     public static JButton btnTurnOff;
-    public static JButton btnReset;
     public static JLabel lblCashTotal;
+    public static JLabel lblVehiclesEntered;
+    public static JLabel lblVehiclesPaid;
+    public static JLabel lblVehiclesExited;
+    public static JLabel lblSpacesAvailable;
 
     public static int numberOfServers;
-    //    static ArrayList<String> servers = new ArrayList<String>();
+
+
     public static String companyHQName = "HQ";
+    public static String selectedServer;
     public static LocalServer localServer;
+    public static ArrayList<String> servers;
 
     public static int row;
     public static int col;
+
+    public static CompanyHQImpl hqImpl;
 
     public CompanyHQ() {
         JFrame frame = new JFrame("Headquarters");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,750);
+        frame.setSize(500,850);
 
         String[] machColNames = {"Local Server", "Connected Machine", "Machine Type","Machine Enabled"};
         String[] alertColNames = {"Local Server", "Alert Type", "Registration",  "Overstayed by:" };
+        String[] eventsColNames = {"Registration", "Date", "Time", "Operation", "Duration", "Cost"};
 
-
+        cbbServers = new JComboBox<String>();
         machModel = new DefaultTableModel(null, machColNames);
         tblMachines = new JTable(machModel);
         alertsModel = new DefaultTableModel(null, alertColNames);
         tblAlerts = new JTable(alertsModel);
+
+        eventsModel = new DefaultTableModel(null, eventsColNames);
+        tblEvents = new JTable(eventsModel);
+
+        btnReset =  new JButton("Get connected servers");
         btnRefresh = new JButton("Refresh");
         btnTurnOn = new JButton("Turn on");
         btnTurnOff = new JButton("Turn off");
-        btnReset = new JButton("Reset");
+        btnResetStation = new JButton("Reset Station");
         lblCashTotal = new JLabel("Cash Total: ");
+        lblVehiclesEntered = new JLabel("Vehicles Entered: ");
+        lblVehiclesPaid = new JLabel("Vehicles Paid: ");
+        lblVehiclesExited = new JLabel("Vehicles Exited: ");
+        lblSpacesAvailable = new JLabel("Spaces Available: ");
 
-        btnReset.setEnabled(false);
+        btnResetStation.setEnabled(false);
         btnTurnOn.setEnabled(false);
         btnTurnOff.setEnabled(false);
+        btnRefresh.setEnabled(false);
 
-
-        JScrollPane sp1 = new JScrollPane(tblMachines);
-        panel.add(sp1);
+        panel.add(cbbServers);
         panel.add(btnRefresh);
+        panel.add(btnReset);
+
+        JScrollPane spMachines = new JScrollPane(tblMachines);
+        spMachines.setPreferredSize(new Dimension(450, 200));
+        panel.add(spMachines);
+
         panel.add(btnTurnOn);
         panel.add(btnTurnOff);
-        panel.add(btnReset);
+        panel.add(btnResetStation);
         panel.add(lblCashTotal);
-        JScrollPane sp2 = new JScrollPane(tblAlerts);
-        sp2.setPreferredSize(new Dimension(450, 200));
-        panel.add(sp2);
+        panel.add(Box.createHorizontalStrut(50));
+        panel.add(lblVehiclesEntered);
+        panel.add(Box.createHorizontalStrut(50));
+        panel.add(lblVehiclesPaid);
+        panel.add(Box.createHorizontalStrut(50));
+        panel.add(lblVehiclesExited);
+        panel.add(Box.createHorizontalStrut(50));
+        panel.add(lblSpacesAvailable);
+
+        JScrollPane spEvents = new JScrollPane(tblEvents);
+        spEvents.setPreferredSize(new Dimension(450, 300));
+        panel.add(spEvents);
+
+        JScrollPane spAlerts = new JScrollPane(tblAlerts);
+        spAlerts.setPreferredSize(new Dimension(450, 200));
+        panel.add(spAlerts);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -100,7 +143,7 @@ public class CompanyHQ extends JFrame {
             POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootpoa.the_POAManager().activate();
 
-            CompanyHQImpl hqImpl = new CompanyHQImpl();
+            hqImpl = new CompanyHQImpl();
 
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(hqImpl);
             CarPark.CompanyHQ cref = CompanyHQHelper.narrow(ref);
@@ -109,52 +152,71 @@ public class CompanyHQ extends JFrame {
             NameComponent[] hqName = nameService.to_name(companyHQName);
             nameService.rebind(hqName, cref);
 
+
             tblMachines.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     row = tblMachines.getSelectedRow();
                     col = tblMachines.getSelectedColumn();
-                    System.out.println("current row: " + tblMachines.getValueAt(row, col));
 
-                    String selectedServer = tblMachines.getValueAt(row, 0).toString();
+                    btnResetStation.setEnabled(true);
+                    btnTurnOn.setEnabled(true);
+                    btnTurnOff.setEnabled(true);
+
+                }
+            });
+
+
+            cbbServers.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    selectedServer = cbbServers.getSelectedItem().toString();
 
                     try {
                         localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
+                    setDetails(selectedServer);
+                    btnRefresh.setEnabled(true);
+                }
+            });
 
-                    lblCashTotal.setText(tblMachines.getValueAt(row, 0) + "'s Cash Total: £" + localServer.return_cash_total());
+            btnReset.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String[] servers = new String[hqImpl.servers.size() + 1];
+                    servers[0] = "";
+                    for(int i = 0; i < hqImpl.servers.size(); i++) {
+                        servers[i + 1] = hqImpl.servers.get(i).name;
+                    }
+                    cbbServers.setModel(new DefaultComboBoxModel<>(servers));
 
-                    System.out.println("alerts  soze " + hqImpl.alerts.size());
+                    machModel.setNumRows(0);
+                    eventsModel.setNumRows(0);
                     alertsModel.setNumRows(0);
-                    for (int i = 0; i < hqImpl.alerts.size(); i ++) {
-                        if (hqImpl.alerts.get(i).serverName.equals(selectedServer)) {
-                            alertsModel.addRow(new String[]{hqImpl.alerts.get(i).serverName, hqImpl.alerts.get(i).alertType,
-                                    hqImpl.alerts.get(i).vehicleEvent.registration_number, hqImpl.alerts.get(i).overStayedBy});
-                        }
-                    }
 
+                    btnResetStation.setEnabled(false);
+                    btnTurnOn.setEnabled(false);
+                    btnTurnOff.setEnabled(false);
+                    btnRefresh.setEnabled(false);
+
+                    lblCashTotal.setText("Cash Total: ");
+                    lblVehiclesEntered.setText("Vehicles Entered: ");
+                    lblVehiclesPaid.setText("Vehicles Paid: ");
+                    lblVehiclesExited.setText("Vehicles Exited: ");
+                    lblSpacesAvailable.setText("Spaces Available: ");
                 }
             });
 
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    machModel.setNumRows(0);
-
-                    for(int i = 0; i < hqImpl.servers.size(); i++) {
-                        for(int j = 0; j < hqImpl.return_machines((short)i).length; j++) {
-                            if (hqImpl.return_machines((short)i)[j].enabled == true) {
-                                machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short)i)[j].machine_name,hqImpl.return_machines((short)i)[j].machine_type, "true"});
-                            } else {
-                                machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short)i)[j].machine_name,hqImpl.return_machines((short)i)[j].machine_type, "false"});
-                            }
-                        }
+                    try {
+                        localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
-                    btnReset.setEnabled(true);
-                    btnTurnOn.setEnabled(true);
-                    btnTurnOff.setEnabled(true);
+                    setDetails(selectedServer);
                 }
             });
 
@@ -202,7 +264,7 @@ public class CompanyHQ extends JFrame {
                 }
             });
 
-            btnReset.addActionListener(new ActionListener() {
+            btnResetStation.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String machine_name = tblMachines.getValueAt(row, 1).toString();
@@ -227,6 +289,75 @@ public class CompanyHQ extends JFrame {
         } catch (Exception e) {
             System.out.println("Headquarters Exception");
             e.printStackTrace();
+        }
+    }
+
+    public static void setDetails(String selectedServer) {
+        int vehiclesEntered = 0;
+        int vehiclesPaidFor = 0;
+        int vehiclesExited = 0;
+
+        machModel.setNumRows(0);
+        eventsModel.setNumRows(0);
+        alertsModel.setNumRows(0);
+
+        if (selectedServer.equals("")) {
+            return;
+        } else {
+            // Get machines connected to selected Server.
+            for (int i = 0; i < hqImpl.servers.size(); i++) {
+                if (hqImpl.servers.get(i).name.equals(selectedServer)) {
+                    for (int j = 0; j < hqImpl.return_machines((short) i).length; j++) {
+                        if (hqImpl.return_machines((short) i)[j].enabled == true) {
+                            machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "true"});
+                        } else {
+                            machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "false"});
+                        }
+                    }
+                }
+            }
+
+            lblCashTotal.setText(selectedServer + "'s Cash Total: £" + localServer.return_cash_total());
+
+
+            eventsModel.setNumRows(0);
+
+            VehicleEvent[] events = localServer.events_log();
+            ArrayList<VehicleEvent> vehicleEvents = new ArrayList<VehicleEvent>();
+
+            for (int i = 0; i < events.length; i++) {
+                vehicleEvents.add(events[i]);
+            }
+
+            for (int j = 0; j < vehicleEvents.size(); j++) {
+                if (vehicleEvents.get(j).operation.equals("Entered")) {
+                    vehiclesEntered++;
+                } else if (vehicleEvents.get(j).operation.equals("Paid")) {
+                    vehiclesPaidFor++;
+                } else if (vehicleEvents.get(j).operation.equals("Exited")) {
+                    vehiclesExited++;
+                }
+                String date = vehicleEvents.get(j).date.days + "-" + vehicleEvents.get(j).date.months + "-" + vehicleEvents.get(j).date.years;
+                String time = vehicleEvents.get(j).time.hours + ":" + vehicleEvents.get(j).time.minutes + ":" + vehicleEvents.get(j).time.seconds;
+                eventsModel.addRow(new String[]{vehicleEvents.get(j).registration_number, date, time,
+                        vehicleEvents.get(j).operation, vehicleEvents.get(j).duration + " hours", "£" + vehicleEvents.get(j).cost});
+            }
+
+            lblVehiclesEntered.setText("Vehicles Entered: " + vehiclesEntered);
+            lblVehiclesPaid.setText("Vehicles Paid: " + vehiclesPaidFor);
+            lblVehiclesExited.setText("Vehicles Exited: " + vehiclesExited);
+
+            lblSpacesAvailable.setText("Spaces Available: " + localServer.return_spaces());
+
+            alertsModel.setNumRows(0);
+
+            // Get alerts associated with the selected server.
+            for (int i = 0; i < hqImpl.alerts.size(); i++) {
+                if (hqImpl.alerts.get(i).serverName.equals(selectedServer)) {
+                    alertsModel.addRow(new String[]{hqImpl.alerts.get(i).serverName, hqImpl.alerts.get(i).alertType,
+                            hqImpl.alerts.get(i).vehicleEvent.registration_number, hqImpl.alerts.get(i).overStayedBy});
+                }
+            }
         }
     }
 }
