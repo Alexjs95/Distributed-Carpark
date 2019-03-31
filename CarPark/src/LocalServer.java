@@ -55,6 +55,7 @@ public class LocalServer {
 
             CompanyHQ hq = CompanyHQHelper.narrow(nameService.resolve_str("HQ"));
 
+            localServer.register_server(serverName, hq);
             hq.register_local_server(serverName, stringified_ior, localServer);
 
 

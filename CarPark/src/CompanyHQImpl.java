@@ -1,27 +1,32 @@
-import CarPark.CompanyHQPOA;
+import CarPark.*;
 import CarPark.LocalServer;
-import CarPark.LocalServers;
-import CarPark.Machines;
-import CarPark.VehicleEvent;
 
 import java.util.ArrayList;
 
 public class CompanyHQImpl extends CompanyHQPOA {
 
     public static ArrayList<LocalServers> servers;
+    public static ArrayList<Alerts> alerts;
 
     public CompanyHQImpl() {
         servers = new ArrayList<LocalServers>();
+        alerts = new ArrayList<Alerts>();
     }
 
     @Override
     public LocalServers[] server_log() {
-        return new LocalServers[0];
+        return (LocalServers[])servers.toArray();
     }
 
     @Override
-    public void raise_alarm(VehicleEvent event) {
+    public Alerts[] return_alerts() {
+        return (Alerts[])alerts.toArray();
+    }
 
+    @Override
+    public void raise_alarm(Alerts alert) {
+        alerts.add(alert);
+        System.out.println("alert added size: " + alerts.size());
     }
 
     @Override
@@ -39,9 +44,12 @@ public class CompanyHQImpl extends CompanyHQPOA {
         ArrayList<Machines> stations = new ArrayList<Machines>();
         LocalServer localServer = servers.get(server).obj;
 
+        Machines[] machines ;
+        machines = localServer.machine_log();
 
-        Machines[] machines = new Machines[localServer.machine_log().length];
-        machines = ( Machines[]) localServer.machine_log();
+
+//        Machines[] machines = new Machines[localServer.machine_log().length];
+//        machines = ( Machines[]) localServer.machine_log();
 
         for (int j =0; j < machines.length; j++){
             stations.add(machines[j]);

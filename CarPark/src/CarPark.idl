@@ -28,10 +28,19 @@ module CarPark {
         boolean enabled;
     };
 
+    struct Alerts {
+        string alertType;
+        string overStayedBy;
+        string serverName;
+        VehicleEvent vehicleEvent;
+    };
+
 
     typedef sequence<VehicleEvent> Log_of_vehicle_events;
     typedef sequence<Machines> Log_of_machines;
+    typedef sequence<Alerts> Log_of_alerts;
 
+ interface CompanyHQ;
 
     interface LocalServer {
     	readonly attribute string server_name;
@@ -45,6 +54,7 @@ module CarPark {
     	boolean check_vehicle_out_car_park(in string registration_number);
     	double return_cash_total();
     	Log_of_vehicle_events return_log();
+    	void register_server(in string name, in CompanyHQ hq);
     	void add_entry_gate(in Machines machine);
     	void add_exit_gate(in Machines machine);
     	void add_pay_station(in Machines machine);
@@ -61,8 +71,9 @@ module CarPark {
 
     interface CompanyHQ {
         readonly attribute Log_of_local_servers server_log;
-        void raise_alarm(in VehicleEvent event);
+        void raise_alarm(in Alerts alert);
         void register_local_server(in string name, in string ior, in LocalServer obj);
+        Log_of_alerts return_alerts();
         Log_of_machines return_machines(in short server);
     };
 

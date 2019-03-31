@@ -1,12 +1,19 @@
-import CarPark.LocalServerPOA;
-import CarPark.LocalServers;
-import CarPark.Machines;
-import CarPark.VehicleEvent;
+import CarPark.*;
+import CarPark.CompanyHQ;
+import CarPark.LocalServer;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class LocalServerImpl extends LocalServerPOA {
+
+    //CompanyHQImpl hqImpl = new CompanyHQImpl();
+    CompanyHQ hqImpl;
+
     private static String serverName;
 
     public static ArrayList<VehicleEvent> events;
@@ -55,6 +62,37 @@ public class LocalServerImpl extends LocalServerPOA {
         if (inCarPark == true) {
             if (paid == true) {
                 if (leftCarPark == false) {
+                    //TODO: once a vehicle leaves check the time against the entrance time + duration of in events with operation paid
+
+                    for (VehicleEvent logs : events) {
+                        if ((event.registration_number.equals(logs.registration_number)) && (logs.operation.contains("Paid"))) {
+                            // Get current date & time.
+                            LocalDateTime currDateTime = LocalDateTime.now();
+                            // Gets the dateTime for when vehicle was paid for.
+                            LocalDateTime paidDateTime = getDateTime(logs.date, logs.time);
+
+                            System.out.println("Time now " + currDateTime);
+                            System.out.println("Vehicle entered at " + paidDateTime);
+
+                            Duration duration = Duration.between(currDateTime, paidDateTime);
+                            int diff = (int) Math.abs(duration.toMinutes());
+
+                            if (diff >= 5) {
+                                int hours = diff / 60;
+                                int minutes = diff % 60;
+                                String overStayedBy =  hours + " : "  + minutes;
+
+                                Alerts alert = new Alerts();
+                                alert.alertType = "Overstayed Duration";
+                                alert.overStayedBy = overStayedBy;
+                                alert.vehicleEvent = event;
+                                alert.serverName = serverName;
+                                hqImpl.raise_alarm(alert);
+                            }
+                            System.out.println(diff);
+                        }
+                    }
+
                     events.add(event);
                     System.out.println(event.registration_number + " has exited the carpark");
                     System.out.println("Server " + serverName + " has events size:  "  + events.size());
@@ -62,7 +100,40 @@ public class LocalServerImpl extends LocalServerPOA {
                 } else {
                     return "Vehicle has already left car park.";
                 }
-            } else {
+            } else {    // user has left carpark and not paid.
+                //TODO: once this happens inform HQ if greater than 5 minute period
+
+                for (VehicleEvent logs : events) {
+                    if (event.registration_number.equals(logs.registration_number)) {
+                        // Get current date & time.
+                        LocalDateTime currDateTime = LocalDateTime.now();
+                        // Get Date time of vehicle entering car park.
+                        LocalDateTime enteredDateTime = getDateTime(logs.date, logs.time);
+
+                        System.out.println("Time now " + currDateTime);
+                        System.out.println("Vehicle entered at " + enteredDateTime);
+
+                        Duration duration = Duration.between(currDateTime, enteredDateTime);
+                        int diff = (int) Math.abs(duration.toMinutes());
+
+                        if (diff >= 5) {
+                            int hours = diff / 60;
+                            int minutes = diff % 60;
+                            String overStayedBy =  hours + " : "  + minutes;
+
+                            Alerts alert = new Alerts();
+                            alert.alertType = "Not Paid";
+                            alert.overStayedBy = overStayedBy;
+                            alert.vehicleEvent = event;
+                            alert.serverName = serverName;
+
+                            hqImpl.raise_alarm(alert);
+                        }
+                        System.out.println(diff);
+                    }
+                }
+
+
                 return "Vehicle not paid for.";
             }
         } else {
@@ -144,6 +215,12 @@ public class LocalServerImpl extends LocalServerPOA {
         }
     }
 
+    @Override
+    public void register_server(String name, CompanyHQ hq) {
+        serverName = name;
+        hqImpl = hq;
+    }
+
 
     @Override
     public void add_entry_gate(Machines machine) {
@@ -158,5 +235,14 @@ public class LocalServerImpl extends LocalServerPOA {
     @Override
     public void add_pay_station(Machines machine) {
         machines.add(machine);
+    }
+
+    public static LocalDateTime getDateTime(Date date, Time time) {
+        String temp = date.years + "-" + date.months + "-" + date.days + " " + time.hours + ":" + time.minutes + ":" + time.seconds;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m:s");
+        LocalDateTime dateTime = LocalDateTime.parse(temp, formatter);
+
+        return dateTime;
     }
 }

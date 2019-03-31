@@ -9,12 +9,17 @@ import org.omg.PortableServer.POAHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CompanyHQ extends JFrame {
     public static JTable tblMachines;
-    public static DefaultTableModel model;
+    public static DefaultTableModel machModel;
+
+    public static JTable tblAlerts;
+    public static DefaultTableModel alertsModel;
+
     public static JButton btnRefresh;
     public static JButton btnTurnOn;
     public static JButton btnTurnOff;
@@ -33,12 +38,16 @@ public class CompanyHQ extends JFrame {
         JFrame frame = new JFrame("Headquarters");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,600);
+        frame.setSize(500,750);
 
-        String[] columnNames = {"Local Server", "Connected Machine", "Machine Type","Machine Enabled"};
+        String[] machColNames = {"Local Server", "Connected Machine", "Machine Type","Machine Enabled"};
+        String[] alertColNames = {"Local Server", "Alert Type", "Registration",  "Overstayed by:" };
 
-        model = new DefaultTableModel(null, columnNames);
-        tblMachines = new JTable(model);
+
+        machModel = new DefaultTableModel(null, machColNames);
+        tblMachines = new JTable(machModel);
+        alertsModel = new DefaultTableModel(null, alertColNames);
+        tblAlerts = new JTable(alertsModel);
         btnRefresh = new JButton("Refresh");
         btnTurnOn = new JButton("Turn on");
         btnTurnOff = new JButton("Turn off");
@@ -49,13 +58,17 @@ public class CompanyHQ extends JFrame {
         btnTurnOn.setEnabled(false);
         btnTurnOff.setEnabled(false);
 
-        JScrollPane sp = new JScrollPane(tblMachines);
-        panel.add(sp);
+
+        JScrollPane sp1 = new JScrollPane(tblMachines);
+        panel.add(sp1);
         panel.add(btnRefresh);
         panel.add(btnTurnOn);
         panel.add(btnTurnOff);
         panel.add(btnReset);
         panel.add(lblCashTotal);
+        JScrollPane sp2 = new JScrollPane(tblAlerts);
+        sp2.setPreferredSize(new Dimension(450, 200));
+        panel.add(sp2);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -103,29 +116,39 @@ public class CompanyHQ extends JFrame {
                     col = tblMachines.getSelectedColumn();
                     System.out.println("current row: " + tblMachines.getValueAt(row, col));
 
-                    String serverName = tblMachines.getValueAt(row, 0).toString();
+                    String selectedServer = tblMachines.getValueAt(row, 0).toString();
 
                     try {
-                        localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
+                        localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     lblCashTotal.setText(tblMachines.getValueAt(row, 0) + "'s Cash Total: £" + localServer.return_cash_total());
+
+                    System.out.println("alerts  soze " + hqImpl.alerts.size());
+                    alertsModel.setNumRows(0);
+                    for (int i = 0; i < hqImpl.alerts.size(); i ++) {
+                        if (hqImpl.alerts.get(i).serverName.equals(selectedServer)) {
+                            alertsModel.addRow(new String[]{hqImpl.alerts.get(i).serverName, hqImpl.alerts.get(i).alertType,
+                                    hqImpl.alerts.get(i).vehicleEvent.registration_number, hqImpl.alerts.get(i).overStayedBy});
+                        }
+                    }
+
                 }
             });
 
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    model.setNumRows(0);
+                    machModel.setNumRows(0);
 
                     for(int i = 0; i < hqImpl.servers.size(); i++) {
                         for(int j = 0; j < hqImpl.return_machines((short)i).length; j++) {
                             if (hqImpl.return_machines((short)i)[j].enabled == true) {
-                                model.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short)i)[j].machine_name,hqImpl.return_machines((short)i)[j].machine_type, "true"});
+                                machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short)i)[j].machine_name,hqImpl.return_machines((short)i)[j].machine_type, "true"});
                             } else {
-                                model.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short)i)[j].machine_name,hqImpl.return_machines((short)i)[j].machine_type, "false"});
+                                machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short)i)[j].machine_name,hqImpl.return_machines((short)i)[j].machine_type, "false"});
                             }
                         }
                     }
