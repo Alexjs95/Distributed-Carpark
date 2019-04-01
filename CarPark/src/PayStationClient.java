@@ -20,7 +20,7 @@ public class PayStationClient extends JFrame {
     public static final double COSTPERHOUR = 1.00;
     public static final String OPERATION = "Paid";
 
-
+    public static JFrame frame;
     public static JTextField txtReg;
     public static JTextField txtCustDuration;
     public static JTextArea txtTicket;
@@ -29,6 +29,7 @@ public class PayStationClient extends JFrame {
     private JLabel lblDuration;
     private JLabel lblCustDuration;
     private JLabel lblCost;
+    public static JLabel lblServer;
 
     public static JButton btnPay;
     public static JButton btnReset;
@@ -42,10 +43,10 @@ public class PayStationClient extends JFrame {
     public static String serverName;
 
     public PayStationClient() {
-        JFrame frame = new JFrame("Pay Station");
+        frame = new JFrame("Pay Station");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 300);
+        frame.setSize(300, 200);
         lblReg = new JLabel("Enter Registration:");
         txtReg = new JTextField(10);
         lblDuration = new JLabel("Select Duration:");
@@ -56,6 +57,7 @@ public class PayStationClient extends JFrame {
         btnPay = new JButton("Pay");
         txtTicket = new JTextArea(5, 10);
         btnReset = new JButton("Next Customer");
+        lblServer = new JLabel("Connected to Server: ");
 
         panel.add(lblReg);
         panel.add(txtReg);
@@ -67,6 +69,9 @@ public class PayStationClient extends JFrame {
         panel.add(btnPay);
         panel.add(txtTicket);
         panel.add(btnReset);
+        panel.add(Box.createHorizontalStrut(100));
+        panel.add(lblServer);
+
         frame.add(panel);
 
         lblCustDuration.setVisible(false);
@@ -81,6 +86,7 @@ public class PayStationClient extends JFrame {
                 String item = cbbDuration.getSelectedItem().toString();
                 if (item == "Custom") {
                     lblCost.setText("Cost: ");
+                    btnPay.setEnabled(false);
                     lblCustDuration.setVisible(true);
                     txtCustDuration.setVisible(true);
                 } else {
@@ -186,6 +192,8 @@ public class PayStationClient extends JFrame {
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
             payImpl.register_station(payStationName, stringified_ior, localServer);
+            lblServer.setText("Connected to Server: " + serverName);
+            frame.setTitle(payStationName);
 
 
             btnPay.addActionListener(new ActionListener() {
@@ -208,14 +216,14 @@ public class PayStationClient extends JFrame {
                         time.seconds = currDate.getSecond();
 
                         if (registration.isEmpty()) {
-                            JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
                         } else if (duration == 0) {
-                            JOptionPane.showMessageDialog(null, "Please select a duration from the combo box", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "Please select a duration from the combo box or enter a custom duration.", "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
                             boolean paid = payImpl.pay(registration, date, time, duration, cost);
 
                             if (paid == true) {
-                                String directoryName = "Tickets";
+                                String directoryName = serverName + " Tickets";
                                 File directory = new File(directoryName);
 
                                 if (! directory.exists()) {
@@ -252,14 +260,14 @@ public class PayStationClient extends JFrame {
                                     exception.printStackTrace();
                                 }
                                 btnPay.setEnabled(false);
-                                JOptionPane.showMessageDialog(null, "Vehicle paid for.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle paid for.", "Success", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(null, "Vehicle already paid for or not in car park.", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle already paid for or not in car park.", "Error", JOptionPane.ERROR_MESSAGE);
                                 reset();
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Pay Station unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Pay Station unavailable", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -273,6 +281,7 @@ public class PayStationClient extends JFrame {
 
             orb.run();
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(frame, "Pay Station " + payStationName + " cannot connect to " + serverName, "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println(e);
             System.err.println("Paystation Exception");
         }
@@ -294,6 +303,6 @@ public class PayStationClient extends JFrame {
         txtTicket.replaceSelection("");
         txtTicket.setVisible(false);
         btnReset.setVisible(false);
-        btnPay.setEnabled(true);
+        btnPay.setEnabled(false);
     }
 }

@@ -15,26 +15,33 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 
 public class ExitGateClient extends JFrame {
+    public static JFrame frame;
     public static JTextField txtReg;
     public static JButton btnSubmit;
     private JLabel lblReg;
+    public static JLabel lblServer;
 
     public static String serverName;
     public static String exitGateName;
 
     public ExitGateClient() {
-        JFrame frame = new JFrame("Exit Gate");
+        frame = new JFrame("Exit Gate");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300,300);
+        frame.setSize(300,150);
         lblReg = new JLabel("Enter Registration:");
         txtReg = new JTextField(10);
         btnSubmit = new JButton("Submit");
+        lblServer = new JLabel("Connected to Server: ");
 
         panel.add(lblReg);
         panel.add(txtReg);
         panel.add(btnSubmit);
+        panel.add(Box.createHorizontalStrut(100));
+        panel.add(lblServer);
+
         frame.add(panel);
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 
@@ -88,7 +95,10 @@ public class ExitGateClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
+
             exitImpl.register_gate(exitGateName, stringified_ior, localServer);
+            lblServer.setText("Connected to Server: " + serverName);
+            frame.setTitle(exitGateName);
 
 
             btnSubmit.addActionListener(new ActionListener() {
@@ -112,20 +122,26 @@ public class ExitGateClient extends JFrame {
                         registration = txtReg.getText();
 
                         if (!registration.isEmpty()) {
-                            exitImpl.vehicle_exited(date, time, txtReg.getText());
-                            JOptionPane.showMessageDialog(null, "Vehicle Exited", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            boolean exited = exitImpl.vehicle_exited(date, time, txtReg.getText());
+                            if (exited) {
+                                JOptionPane.showMessageDialog(frame, "Vehicle exited car park", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(frame, "Vehicle has either already left or was never in the car park", "error", JOptionPane.ERROR_MESSAGE);
+                            }
+
                             txtReg.setText("");
                         } else {
-                            JOptionPane.showMessageDialog(null, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Exit Gate unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Exit Gate unavailable", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
 
             orb.run();
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(frame, "Exit Gate " + exitGateName + " cannot connect to " + serverName, "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println("Exit Gate Exception");
             System.err.println(e);
         }

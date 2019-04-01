@@ -35,38 +35,20 @@ public class PayStationImpl extends PayStationPOA {
     }
 
     @Override
-    public boolean check_vehicle(String registration) {
-        // checks if the car is in the car park and checks if the car has not left the car park.
-        System.out.println("vehicle in carPark " + lsImpl.check_vehicle_in_car_park(registration));
-        System.out.println("vehicle out of carPark " + lsImpl.check_vehicle_out_car_park(registration));
-        System.out.println("vehicle paid: " + lsImpl.vehicle_paid_for(registration));
-        if (lsImpl.check_vehicle_in_car_park(registration) && !lsImpl.check_vehicle_out_car_park(registration) && !lsImpl.vehicle_paid_for(registration)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost) {
-        boolean found = check_vehicle(registration);
 
-        if (found == true) {
-            CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
+        CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
-            vehicleEvent.registration_number = registration;
-            vehicleEvent.date = datePaid;
-            vehicleEvent.time = timePaid;
-            vehicleEvent.duration = duration;
-            vehicleEvent.cost = cost;
-            vehicleEvent.operation = OPERATION;
+        vehicleEvent.registration_number = registration;
+        vehicleEvent.date = datePaid;
+        vehicleEvent.time = timePaid;
+        vehicleEvent.duration = duration;
+        vehicleEvent.cost = cost;
+        vehicleEvent.operation = OPERATION;
 
-            cashTaken += cost;
+        cashTaken += cost;
 
-            lsImpl.vehicle_pay(vehicleEvent);
-        } else {
-            System.out.println("Car not found in carPark");
-        }
-        return found;
+        return lsImpl.vehicle_pay(vehicleEvent);
     }
 
     @Override

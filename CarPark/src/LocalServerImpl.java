@@ -48,26 +48,21 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public void vehicle_in(VehicleEvent event) {
+    public boolean vehicle_in(VehicleEvent event) {
         boolean inCarPark = check_vehicle_in_car_park(event.registration_number);
-        boolean outCarPark = check_vehicle_out_car_park(event.registration_number);
         if (inCarPark == false) {
             events.add(event);
             spacesAvailable--;
             System.out.println(event.registration_number + " has entered the carpark");
             System.out.println("Server " + serverName + " events size:  "  + events.size());
+            return true;
         } else {
-            if (outCarPark == true) {
-                events.add(event);
-                spacesAvailable --;
-            } else {
-                System.out.println(event.registration_number + " already in carpark");
-            }
+            return false;
         }
     }
 
     @Override
-    public void vehicle_out(VehicleEvent event) {
+    public boolean vehicle_out(VehicleEvent event) {
         boolean inCarPark = check_vehicle_in_car_park(event.registration_number);
         boolean paid = vehicle_paid_for(event.registration_number);
         boolean leftCarPark = check_vehicle_out_car_park(event.registration_number);
@@ -109,10 +104,9 @@ public class LocalServerImpl extends LocalServerPOA {
 
                         }
                     }
-
-                    System.out.println("Vehicle has exited car park.");
+                    return true;        // vehicle has left,
                 } else {
-                    System.out.println("Vehicle has already left car park.");
+                    return false;       // vehicle already left
                 }
             } else {    // user has left carpark and not paid.
                 //TODO: once this happens inform HQ if greater than 5 minute period
@@ -147,18 +141,29 @@ public class LocalServerImpl extends LocalServerPOA {
                         }
                     }
                 }
-
-
-                System.out.println("Vehicle not paid for.");
+                return true;    // vehicle left but not paid for
             }
         } else {
-            System.out.println("Vehicle has not entered car park.");
+            return false;       // vehicle not in car park.
         }
     }
 
     @Override
-    public void vehicle_pay(VehicleEvent event) {
-        events.add(event);
+    public boolean vehicle_pay(VehicleEvent event) {
+        boolean paidFor = vehicle_paid_for(event.registration_number);
+        boolean inCarPark = check_vehicle_in_car_park(event.registration_number);
+        if (inCarPark) {
+            if (paidFor == false) {
+                events.add(event);
+                System.out.println(event.registration_number + " has been paid for");
+                System.out.println("Server " + serverName + " events size:  "  + events.size());
+                return true;        // paid for.
+            } else {
+                return false;        // already paid for.
+            }
+        } else {
+            return false;       // not in car park
+        }
     }
 
     @Override

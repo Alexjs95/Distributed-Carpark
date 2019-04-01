@@ -34,7 +34,7 @@ public class EntryGateImpl extends EntryGatePOA {
     }
 
     @Override
-    public void vehicle_entered(Date date, Time time, String registration) {
+    public boolean vehicle_entered(Date date, Time time, String registration) {
         System.out.println("Vehicle entered with registration: " + registration + " at " + date.days + "/" + date.months + "/" + date.years + "   " + time.hours + ":" + time.minutes + ":" + time.seconds);
         CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
@@ -43,7 +43,7 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-        lsImpl.vehicle_in(vehicleEvent);
+        return lsImpl.vehicle_in(vehicleEvent);
     }
 
 

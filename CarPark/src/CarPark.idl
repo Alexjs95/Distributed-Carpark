@@ -48,9 +48,9 @@ module CarPark {
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
     	Log_of_vehicle_events return_log();
-    	void vehicle_in(in VehicleEvent event);
-    	void vehicle_out(in VehicleEvent event);
-    	void vehicle_pay(in VehicleEvent event);
+    	boolean vehicle_in(in VehicleEvent event);
+    	boolean vehicle_out(in VehicleEvent event);
+    	boolean vehicle_pay(in VehicleEvent event);
     	boolean vehicle_paid_for(in string registration_number);
     	boolean check_vehicle_in_car_park(in string registration_number);
     	boolean check_vehicle_out_car_park(in string registration_number);
@@ -83,7 +83,7 @@ module CarPark {
 		readonly attribute string machine_name;
 		readonly attribute boolean status;
 		void register_gate(in string name, in string ior, in LocalServer obj);
-		void vehicle_entered(in Date date, in Time time, in string registration);
+		boolean vehicle_entered(in Date date, in Time time, in string registration);
 		void turn_on(in string machine_name, in string machine_type);
 		void turn_off(in string machine_name, in string machine_type);
 		void reset(in string machine_name, in string machine_type);
@@ -93,7 +93,7 @@ module CarPark {
         readonly attribute string machine_name;
         readonly attribute boolean status;
         void register_gate(in string name, in string ior, in LocalServer obj);
-        void vehicle_exited(in Date date, in Time time, in string registration);
+        boolean vehicle_exited(in Date date, in Time time, in string registration);
         void turn_on(in string machine_name, in string machine_type);
         void turn_off(in string machine_name, in string machine_type);
         void reset(in string machine_name, in string machine_type);
@@ -103,7 +103,6 @@ module CarPark {
         readonly attribute string machine_name;
         readonly attribute boolean status;
         void register_station(in string name, in string ior, in LocalServer obj);
-        boolean check_vehicle(in string registration);
         boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost);
         double return_cash_total();
         void turn_on(in string machine_name, in string machine_type);

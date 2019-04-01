@@ -167,17 +167,26 @@ public class CompanyHQ extends JFrame {
             });
 
 
+
             cbbServers.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     selectedServer = cbbServers.getSelectedItem().toString();
 
-                    try {
-                        localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
+                    if (selectedServer.equals("")) {
+                        return;
+                    } else {
+
+                        try {
+                            localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+
+                        setDetails(selectedServer);
+                        btnRefresh.setEnabled(true);
                     }
-                    setDetails(selectedServer);
-                    btnRefresh.setEnabled(true);
+
+                    // when this method is called i want to start a timer that calls setDetails every 5 seconds.
                 }
             });
 
@@ -236,6 +245,7 @@ public class CompanyHQ extends JFrame {
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
                             payStation.turn_on(machine_name, machine_type);
                         }
+                        setDetails(selectedServer);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -258,6 +268,8 @@ public class CompanyHQ extends JFrame {
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
                             payStation.turn_off(machine_name, machine_type);
                         }
+                        setDetails(selectedServer);
+
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -280,6 +292,8 @@ public class CompanyHQ extends JFrame {
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
                             payStation.reset(machine_name, machine_type);
                         }
+                        setDetails(selectedServer);
+
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -301,62 +315,58 @@ public class CompanyHQ extends JFrame {
         eventsModel.setNumRows(0);
         alertsModel.setNumRows(0);
 
-        if (selectedServer.equals("")) {
-            return;
-        } else {
-            // Get machines connected to selected Server.
-            for (int i = 0; i < hqImpl.servers.size(); i++) {
-                if (hqImpl.servers.get(i).name.equals(selectedServer)) {
-                    for (int j = 0; j < hqImpl.return_machines((short) i).length; j++) {
-                        if (hqImpl.return_machines((short) i)[j].enabled == true) {
-                            machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "true"});
-                        } else {
-                            machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "false"});
-                        }
+
+        // Get machines connected to selected Server.
+        for (int i = 0; i < hqImpl.servers.size(); i++) {
+            if (hqImpl.servers.get(i).name.equals(selectedServer)) {
+                for (int j = 0; j < hqImpl.return_machines((short) i).length; j++) {
+                    if (hqImpl.return_machines((short) i)[j].enabled == true) {
+                        machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "true"});
+                    } else {
+                        machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "false"});
                     }
                 }
             }
+        }
 
-            lblCashTotal.setText(selectedServer + "'s Cash Total: £" + localServer.return_cash_total());
+        lblCashTotal.setText(selectedServer + "'s Cash Total: £" + localServer.return_cash_total());
 
+        eventsModel.setNumRows(0);
 
-            eventsModel.setNumRows(0);
+        VehicleEvent[] events = localServer.events_log();
+        ArrayList<VehicleEvent> vehicleEvents = new ArrayList<VehicleEvent>();
 
-            VehicleEvent[] events = localServer.events_log();
-            ArrayList<VehicleEvent> vehicleEvents = new ArrayList<VehicleEvent>();
+        for (int i = 0; i < events.length; i++) {
+            vehicleEvents.add(events[i]);
+        }
 
-            for (int i = 0; i < events.length; i++) {
-                vehicleEvents.add(events[i]);
+        for (int j = 0; j < vehicleEvents.size(); j++) {
+            if (vehicleEvents.get(j).operation.equals("Entered")) {
+                vehiclesEntered++;
+            } else if (vehicleEvents.get(j).operation.equals("Paid")) {
+                vehiclesPaidFor++;
+            } else if (vehicleEvents.get(j).operation.equals("Exited")) {
+                vehiclesExited++;
             }
+            String date = vehicleEvents.get(j).date.days + "-" + vehicleEvents.get(j).date.months + "-" + vehicleEvents.get(j).date.years;
+            String time = vehicleEvents.get(j).time.hours + ":" + vehicleEvents.get(j).time.minutes + ":" + vehicleEvents.get(j).time.seconds;
+            eventsModel.addRow(new String[]{vehicleEvents.get(j).registration_number, date, time,
+                    vehicleEvents.get(j).operation, vehicleEvents.get(j).duration + " hours", "£" + vehicleEvents.get(j).cost});
+        }
 
-            for (int j = 0; j < vehicleEvents.size(); j++) {
-                if (vehicleEvents.get(j).operation.equals("Entered")) {
-                    vehiclesEntered++;
-                } else if (vehicleEvents.get(j).operation.equals("Paid")) {
-                    vehiclesPaidFor++;
-                } else if (vehicleEvents.get(j).operation.equals("Exited")) {
-                    vehiclesExited++;
-                }
-                String date = vehicleEvents.get(j).date.days + "-" + vehicleEvents.get(j).date.months + "-" + vehicleEvents.get(j).date.years;
-                String time = vehicleEvents.get(j).time.hours + ":" + vehicleEvents.get(j).time.minutes + ":" + vehicleEvents.get(j).time.seconds;
-                eventsModel.addRow(new String[]{vehicleEvents.get(j).registration_number, date, time,
-                        vehicleEvents.get(j).operation, vehicleEvents.get(j).duration + " hours", "£" + vehicleEvents.get(j).cost});
-            }
+        lblVehiclesEntered.setText("Vehicles Entered: " + vehiclesEntered);
+        lblVehiclesPaid.setText("Vehicles Paid: " + vehiclesPaidFor);
+        lblVehiclesExited.setText("Vehicles Exited: " + vehiclesExited);
 
-            lblVehiclesEntered.setText("Vehicles Entered: " + vehiclesEntered);
-            lblVehiclesPaid.setText("Vehicles Paid: " + vehiclesPaidFor);
-            lblVehiclesExited.setText("Vehicles Exited: " + vehiclesExited);
+        lblSpacesAvailable.setText("Spaces Available: " + localServer.return_spaces());
 
-            lblSpacesAvailable.setText("Spaces Available: " + localServer.return_spaces());
+        alertsModel.setNumRows(0);
 
-            alertsModel.setNumRows(0);
-
-            // Get alerts associated with the selected server.
-            for (int i = 0; i < hqImpl.alerts.size(); i++) {
-                if (hqImpl.alerts.get(i).serverName.equals(selectedServer)) {
-                    alertsModel.addRow(new String[]{hqImpl.alerts.get(i).serverName, hqImpl.alerts.get(i).alertType,
-                            hqImpl.alerts.get(i).vehicleEvent.registration_number, hqImpl.alerts.get(i).overStayedBy});
-                }
+        // Get alerts associated with the selected server.
+        for (int i = 0; i < hqImpl.alerts.size(); i++) {
+            if (hqImpl.alerts.get(i).serverName.equals(selectedServer)) {
+                alertsModel.addRow(new String[]{hqImpl.alerts.get(i).serverName, hqImpl.alerts.get(i).alertType,
+                        hqImpl.alerts.get(i).vehicleEvent.registration_number, hqImpl.alerts.get(i).overStayedBy});
             }
         }
     }
