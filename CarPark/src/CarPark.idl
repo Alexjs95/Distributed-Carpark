@@ -19,6 +19,7 @@ module CarPark {
     	short duration;
     	double cost;
     	string operation;
+    	boolean exited;
     };
 
     struct Machines {

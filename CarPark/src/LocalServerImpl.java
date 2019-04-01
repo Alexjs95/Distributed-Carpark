@@ -138,15 +138,30 @@ public class LocalServerImpl extends LocalServerPOA {
                     events.add(event);
                     spacesAvailable++;      // vehicle left so increment spaces available.
 
-                    // Checks to see if vehicle hasn't overstayed duration
-                    for (VehicleEvent logs : events) {
-                        if ((event.registration_number.equals(logs.registration_number)) && (logs.operation.contains("Paid"))) {
+                    for (int i = 0; i < events.size(); i++) {
+
+                        // Set value exited to true for entered event so same vehicle can re-enter
+                        if ((event.registration_number.equals(events.get(i).registration_number) && (events.get(i).operation.contains("Entered")))) {
+                            if (events.get(i).exited == false) {
+                                events.get(i).exited = true;
+                            }
+                        }
+
+                        // Checks to see if vehicle hasn't overstayed duration
+                        if ((event.registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.contains("Paid"))) {
+
+                            // Set value exited to true for paid event so same vehicle can re-pay.
+                            if (events.get(i).exited == false) {
+                                events.get(i).exited = true;
+                            }
+
+
                             // Get current date & time.
                             LocalDateTime currDateTime = LocalDateTime.now();
                             // Gets the dateTime for when vehicle was paid for.
-                            LocalDateTime paidDateTime = getDateTime(logs.date, logs.time);
+                            LocalDateTime paidDateTime = getDateTime(events.get(i).date, events.get(i).time);
                             // DateTime vehicle should have left by.
-                            LocalDateTime leftByDatetime = paidDateTime.plusHours(logs.duration);
+                            LocalDateTime leftByDatetime = paidDateTime.plusHours(events.get(i).duration);
 
                             // Calculate difference between the current time and the
                             Duration duration = Duration.between(currDateTime, leftByDatetime);
@@ -178,12 +193,17 @@ public class LocalServerImpl extends LocalServerPOA {
                 spacesAvailable++;      // increment spaces available as vehicle left.
 
                 //
-                for (VehicleEvent logs : events) {
-                    if (event.registration_number.equals(logs.registration_number)) {
+                for (int i = 0; i < events.size(); i++) {
+                    if ((event.registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.contains("Entered"))) {
+                        // Set value exited to true for entered event so same vehicle can re-enter
+                        if (events.get(i).exited == false) {
+                            events.get(i).exited = true;
+                        }
+
                         // Get current date & time.
                         LocalDateTime currDateTime = LocalDateTime.now();
                         // Get Date time of vehicle entering car park.
-                        LocalDateTime enteredDateTime = getDateTime(logs.date, logs.time);
+                        LocalDateTime enteredDateTime = getDateTime(events.get(i).date, events.get(i).time);
 
                         System.out.println("Time now " + currDateTime);
                         System.out.println("Vehicle entered at " + enteredDateTime);
@@ -218,7 +238,7 @@ public class LocalServerImpl extends LocalServerPOA {
     public boolean check_vehicle_in_car_park(String registration_number) {
         for (int i = 0; i < events.size(); i++) {
             // check if vehicle event matches registration and Entered.
-            if ((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Entered"))) {
+            if ((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Entered") && (events.get(i).exited == false))) {
                 return true;        // vehicle has entered car park.
             }
         }
@@ -229,7 +249,7 @@ public class LocalServerImpl extends LocalServerPOA {
     public boolean vehicle_paid_for(String registration_number) {
         for (int i = 0; i < events.size(); i++) {
             // check if vehicle event matches registration and Paid.
-            if((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Paid"))) {
+            if((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Paid")) && (events.get(i).exited == false)) {
                 return true;        // vehicle has been paid for
             }
         }
@@ -240,7 +260,7 @@ public class LocalServerImpl extends LocalServerPOA {
     public boolean check_vehicle_out_car_park(String registration_number) {
         for (int i = 0; i < events.size(); i++) {
             // check if vehicle event matches registration and Exited.
-            if ((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Exited"))) {
+            if ((registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.equals("Exited")) && (events.get(i).exited == false)) {
                 return true;        // vehicle has left car park
             }
         }
@@ -260,7 +280,7 @@ public class LocalServerImpl extends LocalServerPOA {
 
     public static LocalDateTime getDateTime(Date date, Time time) {
         // Convert Date and Time to string.
-        String temp = date.years + "-" + date.months + "-" + date.days + "T" + time.hours + ":" + time.minutes + ":" + time.seconds;
+        String temp = date.years + "-" + date.months + "-" + date.days + " " + time.hours + ":" + time.minutes + ":" + time.seconds;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m:s");    // format for LocalDateTime.
         LocalDateTime dateTime = LocalDateTime.parse(temp, formatter);      // Convert string to the format.

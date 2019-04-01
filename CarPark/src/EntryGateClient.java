@@ -112,16 +112,16 @@ public class EntryGateClient extends JFrame {
                         if (!registration.isEmpty()) {
                             boolean entered = entryImpl.vehicle_entered(registration);
                             if (entered) {
-                                JOptionPane.showMessageDialog(frame, "Vehicle entered car park", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle entered car park.", "Success", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(frame, "Vehicle already in car park (1 entry per day)", "error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle couldn't enter car park.", "error", JOptionPane.ERROR_MESSAGE);
                             }
                             txtReg.setText("");
                         } else {
-                            JOptionPane.showMessageDialog(frame, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "Please enter a vehicle registration.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(frame, "Entry Gate unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Entry Gate unavailable.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

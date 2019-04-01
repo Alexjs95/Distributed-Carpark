@@ -362,6 +362,7 @@ public class CompanyHQ extends JFrame {
         }
 
         for (int j = 0; j < vehicleEvents.size(); j++) {
+            System.out.println(vehicleEvents.get(j).exited);
             if (vehicleEvents.get(j).operation.equals("Entered")) {
                 vehiclesEntered++;
             } else if (vehicleEvents.get(j).operation.equals("Paid")) {

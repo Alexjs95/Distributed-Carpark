@@ -112,17 +112,17 @@ public class ExitGateClient extends JFrame {
                         if (!registration.isEmpty()) {
                             boolean exited = exitImpl.vehicle_exited(registration);
                             if (exited) {
-                                JOptionPane.showMessageDialog(frame, "Vehicle exited car park", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle exited car park.", "Success", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(frame, "Vehicle has either already left or was never in the car park", "error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle is not in the car park.", "error", JOptionPane.ERROR_MESSAGE);
                             }
 
                             txtReg.setText("");
                         } else {
-                            JOptionPane.showMessageDialog(frame, "Please enter a vehicle registration", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "Please enter a vehicle registration.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(frame, "Exit Gate unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Exit Gate unavailable.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

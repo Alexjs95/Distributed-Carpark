@@ -57,6 +57,7 @@ public class EntryGateImpl extends EntryGatePOA {
         vehicleEvent.registration_number = registration;
         vehicleEvent.date = date;
         vehicleEvent.time = time;
+        vehicleEvent.exited = false;
         vehicleEvent.operation = OPERATION;
 
         return lsImpl.vehicle_in(vehicleEvent);     //  add vehicle event to local server.

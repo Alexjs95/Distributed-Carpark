@@ -289,7 +289,7 @@ public class PayStationClient extends JFrame {
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(frame, "Pay Station unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Pay Station unavailable.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

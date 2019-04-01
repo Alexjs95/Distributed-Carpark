@@ -60,6 +60,7 @@ public class PayStationImpl extends PayStationPOA {
         vehicleEvent.duration = duration;
         vehicleEvent.cost = cost;
         vehicleEvent.operation = OPERATION;
+        vehicleEvent.exited = false;
 
         cashTaken += cost;          // increment the cash taken.
 

@@ -56,6 +56,7 @@ public class ExitGateImpl extends ExitGatePOA {
         vehicleEvent.date = date;
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
+        vehicleEvent.exited = true;
 
         return lsImpl.vehicle_out(vehicleEvent);           //  add vehicle event to local server.
     }
