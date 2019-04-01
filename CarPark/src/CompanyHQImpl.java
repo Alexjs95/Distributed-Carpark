@@ -46,10 +46,6 @@ public class CompanyHQImpl extends CompanyHQPOA {
 
         Machines[] machines = localServer.machine_log();
 
-
-//        Machines[] machines = new Machines[localServer.machine_log().length];
-//        machines = ( Machines[]) localServer.machine_log();
-
         for (int j =0; j < machines.length; j++){
             stations.add(machines[j]);
         }

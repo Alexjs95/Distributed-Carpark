@@ -97,7 +97,9 @@ public class EntryGateClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
+            // Register entry gate
             entryImpl.register_gate(entryGateName, stringified_ior, localServer);
+
             lblServer.setText("Connected to Server: " + serverName);
             frame.setTitle(entryGateName);
 
@@ -106,21 +108,9 @@ public class EntryGateClient extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     String registration;
                     if (entryImpl.enabled) {
-                        LocalDateTime currDate = LocalDateTime.now();
-
-                        CarPark.Date date = new CarPark.Date();
-                        date.days = currDate.getDayOfMonth();
-                        date.months = currDate.getMonthValue();
-                        date.years = currDate.getYear();
-
-                        CarPark.Time time = new CarPark.Time();
-                        time.hours = currDate.getHour();
-                        time.minutes = currDate.getMinute();
-                        time.seconds = currDate.getSecond();
-
                         registration = txtReg.getText();
                         if (!registration.isEmpty()) {
-                            boolean entered = entryImpl.vehicle_entered(date, time, txtReg.getText());
+                            boolean entered = entryImpl.vehicle_entered(registration);
                             if (entered) {
                                 JOptionPane.showMessageDialog(frame, "Vehicle entered car park", "Success", JOptionPane.INFORMATION_MESSAGE);
                             } else {

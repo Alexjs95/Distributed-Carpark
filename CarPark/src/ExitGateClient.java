@@ -107,22 +107,10 @@ public class ExitGateClient extends JFrame {
                     String registration;
 
                     if (exitImpl.enabled) {
-                        LocalDateTime currDate = LocalDateTime.now();
-
-                        CarPark.Date date = new CarPark.Date();
-                        date.days = currDate.getDayOfMonth();
-                        date.months = currDate.getMonthValue();
-                        date.years = currDate.getYear();
-
-                        CarPark.Time time = new CarPark.Time();
-                        time.hours = currDate.getHour();
-                        time.minutes = currDate.getMinute();
-                        time.seconds = currDate.getSecond();
-
                         registration = txtReg.getText();
 
                         if (!registration.isEmpty()) {
-                            boolean exited = exitImpl.vehicle_exited(date, time, txtReg.getText());
+                            boolean exited = exitImpl.vehicle_exited(registration);
                             if (exited) {
                                 JOptionPane.showMessageDialog(frame, "Vehicle exited car park", "Success", JOptionPane.INFORMATION_MESSAGE);
                             } else {

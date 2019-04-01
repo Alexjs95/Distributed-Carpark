@@ -40,14 +40,13 @@ module CarPark {
     typedef sequence<Machines> Log_of_machines;
     typedef sequence<Alerts> Log_of_alerts;
 
- interface CompanyHQ;
+    interface CompanyHQ;
 
     interface LocalServer {
     	readonly attribute string server_name;
-    	readonly attribute long spaces;
+    	readonly attribute double cost_per_hour;
     	readonly attribute Log_of_vehicle_events events_log;
     	readonly attribute Log_of_machines machine_log;
-    	Log_of_vehicle_events return_log();
     	boolean vehicle_in(in VehicleEvent event);
     	boolean vehicle_out(in VehicleEvent event);
     	boolean vehicle_pay(in VehicleEvent event);
@@ -57,6 +56,7 @@ module CarPark {
     	double return_cash_total();
     	long return_spaces();
     	void register_server(in string name, in long spaces, in CompanyHQ hq);
+    	void change_rate(in double cost);
     	void add_entry_gate(in Machines machine);
     	void add_exit_gate(in Machines machine);
     	void add_pay_station(in Machines machine);
@@ -83,7 +83,7 @@ module CarPark {
 		readonly attribute string machine_name;
 		readonly attribute boolean status;
 		void register_gate(in string name, in string ior, in LocalServer obj);
-		boolean vehicle_entered(in Date date, in Time time, in string registration);
+		boolean vehicle_entered(in string registration);
 		void turn_on(in string machine_name, in string machine_type);
 		void turn_off(in string machine_name, in string machine_type);
 		void reset(in string machine_name, in string machine_type);
@@ -93,7 +93,7 @@ module CarPark {
         readonly attribute string machine_name;
         readonly attribute boolean status;
         void register_gate(in string name, in string ior, in LocalServer obj);
-        boolean vehicle_exited(in Date date, in Time time, in string registration);
+        boolean vehicle_exited(in string registration);
         void turn_on(in string machine_name, in string machine_type);
         void turn_off(in string machine_name, in string machine_type);
         void reset(in string machine_name, in string machine_type);
@@ -103,7 +103,7 @@ module CarPark {
         readonly attribute string machine_name;
         readonly attribute boolean status;
         void register_station(in string name, in string ior, in LocalServer obj);
-        boolean pay(in string registration, in Date datePaid, in Time timePaid, in short duration, in double cost);
+        boolean pay(in string registration, in short duration, in double cost);
         double return_cash_total();
         void turn_on(in string machine_name, in string machine_type);
         void turn_off(in string machine_name, in string machine_type);

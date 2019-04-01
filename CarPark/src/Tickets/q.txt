@@ -1,0 +1,4 @@
+Car Registration: q
+Entered at: 29-3-2019 10:46:16
+Paid: £2
+Ticket expiry: 2019-03-29T12:46:16.030

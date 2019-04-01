@@ -14,11 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PayStationClient extends JFrame {
     String[] durations = {"", "1 Hour", "2 Hours", "3 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours", "11 Hours", "12 Hours", "Custom"};
-    public static final double COSTPERHOUR = 1.00;
-    public static final String OPERATION = "Paid";
+    public static double costPerHour;
 
     public static JFrame frame;
     public static JTextField txtReg;
@@ -27,8 +27,8 @@ public class PayStationClient extends JFrame {
 
     private JLabel lblReg;
     private JLabel lblDuration;
-    private JLabel lblCustDuration;
-    private JLabel lblCost;
+    private static JLabel lblCustDuration;
+    private static JLabel lblCost;
     public static JLabel lblServer;
 
     public static JButton btnPay;
@@ -46,7 +46,7 @@ public class PayStationClient extends JFrame {
         frame = new JFrame("Pay Station");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 200);
+        frame.setSize(290, 300);
         lblReg = new JLabel("Enter Registration:");
         txtReg = new JTextField(10);
         lblDuration = new JLabel("Select Duration:");
@@ -80,64 +80,6 @@ public class PayStationClient extends JFrame {
         btnReset.setVisible(false);
 
         frame.setVisible(true);
-
-        cbbDuration.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String item = cbbDuration.getSelectedItem().toString();
-                if (item == "Custom") {
-                    lblCost.setText("Cost: ");
-                    btnPay.setEnabled(false);
-                    lblCustDuration.setVisible(true);
-                    txtCustDuration.setVisible(true);
-                } else {
-                    if (!item.isEmpty()) {
-                        lblCustDuration.setVisible(false);
-                        txtCustDuration.setVisible(false);
-                        item = item.replaceAll("[^\\d.]", "");
-                        duration = Short.parseShort(item);
-                        cost = duration * COSTPERHOUR;
-                        lblCost.setText("Cost: £" + cost);
-                        btnPay.setEnabled(true);
-                    } else {
-                        lblCost.setText("Cost: ");
-                        btnPay.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        txtCustDuration.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                String custDuration = txtCustDuration.getText();
-
-                try {
-                    duration = Short.parseShort(custDuration);
-                    if (duration > 48) {        // limit duration to 48 hours to not exceed max short value.
-                        JOptionPane.showMessageDialog(panel,"You are not permitted to park for longer than 48 Hours");
-                        btnPay.setEnabled(false);
-                        lblCost.setText("Cost: INVALID");
-
-                    } else {
-                        cost = duration * COSTPERHOUR;
-                        lblCost.setText("Cost: £" + cost);
-                        btnPay.setEnabled(true);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(panel,"Custom duration not whole number");
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
     }
 
     public static void main(String[] args) {
@@ -193,7 +135,85 @@ public class PayStationClient extends JFrame {
 
             payImpl.register_station(payStationName, stringified_ior, localServer);
             lblServer.setText("Connected to Server: " + serverName);
+            costPerHour = localServer.cost_per_hour();
+
             frame.setTitle(payStationName);
+
+            cbbDuration.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String item = cbbDuration.getSelectedItem().toString();
+                    costPerHour = localServer.cost_per_hour();
+
+                    if (item == "Custom") {
+                        lblCost.setText("Cost: ");
+                        btnPay.setEnabled(false);
+                        lblCustDuration.setVisible(true);
+                        txtCustDuration.setVisible(true);
+                    } else {
+                        if (!item.isEmpty()) {
+                            lblCustDuration.setVisible(false);
+                            txtCustDuration.setVisible(false);
+                            item = item.replaceAll("[^\\d.]", "");
+                            duration = Short.parseShort(item);
+                            cost = duration * costPerHour;
+                            lblCost.setText("Cost: £" + cost);
+                            btnPay.setEnabled(true);
+                        } else {
+                            lblCost.setText("Cost: ");
+                            btnPay.setEnabled(false);
+                        }
+                    }
+                }
+            });
+
+            txtCustDuration.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    String custDuration = txtCustDuration.getText();
+
+                    try {
+                        duration = Short.parseShort(custDuration);
+                        if (duration > 24) {        // limit duration to 24 hours to not exceed max short value.
+                            JOptionPane.showMessageDialog(frame,"You are not permitted to park for longer than 24 Hours");
+                            btnPay.setEnabled(false);
+                            lblCost.setText("Cost: INVALID");
+
+                        } else {
+                            cost = duration * costPerHour;
+                            lblCost.setText("Cost: £" + cost);
+                            btnPay.setEnabled(true);
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(frame,"Custom duration not whole number");
+                    }
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    String custDuration = txtCustDuration.getText();
+
+                    try {
+                        duration = Short.parseShort(custDuration);
+                        if (duration > 24) {        // limit duration to 24 hours to not exceed max short value.
+                            JOptionPane.showMessageDialog(frame,"You are not permitted to park for longer than 24 Hours");
+                            btnPay.setEnabled(false);
+                            lblCost.setText("Cost: INVALID");
+
+                        } else {
+                            cost = duration * costPerHour;
+                            lblCost.setText("Cost: £" + cost);
+                            btnPay.setEnabled(true);
+                        }
+                    } catch (NumberFormatException ex) {
+                        lblCost.setText("Cost: ");
+                    }
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+
+                }
+            });
 
 
             btnPay.addActionListener(new ActionListener() {
@@ -220,7 +240,7 @@ public class PayStationClient extends JFrame {
                         } else if (duration == 0) {
                             JOptionPane.showMessageDialog(frame, "Please select a duration from the combo box or enter a custom duration.", "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            boolean paid = payImpl.pay(registration, date, time, duration, cost);
+                            boolean paid = payImpl.pay(registration, duration, cost);
 
                             if (paid == true) {
                                 String directoryName = serverName + " Tickets";
@@ -232,13 +252,15 @@ public class PayStationClient extends JFrame {
 
                                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                                         new FileOutputStream(directoryName + "/" + registration + ".txt"), "utf-8"))) {
+                                    LocalDateTime enteredTime = getDateTime(date, time);
+
                                     writer.write("Car Registration: " + registration);
                                     ((BufferedWriter) writer).newLine();
-                                    writer.write("Entered at: " + getDate(date, time));
+                                    writer.write("Entered at: " + enteredTime);
                                     ((BufferedWriter) writer).newLine();
                                     writer.write("Paid: £" + duration );
                                     ((BufferedWriter) writer).newLine();
-                                    writer.write("Ticket expiry: " + currDate.plusHours(duration));
+                                    writer.write("Ticket expiry: " + enteredTime.plusHours(duration));
 
                                     writer.close();
 
@@ -287,9 +309,12 @@ public class PayStationClient extends JFrame {
         }
     }
 
-    public static String getDate(Date date, Time time) {
-        String dateTime;
-        dateTime = date.days + "-" + date.months + "-" + date.years + " " + time.hours + ":" + time.minutes + ":" + time.seconds;
+    public static LocalDateTime getDateTime(Date date, Time time) {
+        String temp = date.years + "-" + date.months + "-" + date.days + " " + time.hours + ":" + time.minutes + ":" + time.seconds;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m:s");
+        LocalDateTime dateTime = LocalDateTime.parse(temp, formatter);
+
         return dateTime;
     }
 
@@ -301,6 +326,8 @@ public class PayStationClient extends JFrame {
         txtCustDuration.setText("");
         txtTicket.selectAll();
         txtTicket.replaceSelection("");
+        lblCustDuration.setEnabled(false);
+        txtCustDuration.setEnabled(false);
         txtTicket.setVisible(false);
         btnReset.setVisible(false);
         btnPay.setEnabled(false);

@@ -1,6 +1,8 @@
 import CarPark.*;
 import CarPark.LocalServer;
 
+import java.time.LocalDateTime;
+
 public class PayStationImpl extends PayStationPOA {
     public static final String MACHINETYPE = "Pay Station";
     public static final String OPERATION = "Paid";
@@ -22,33 +24,46 @@ public class PayStationImpl extends PayStationPOA {
 
     @Override
     public void register_station(String name, String ior, LocalServer obj) {
-        lsImpl = obj;
-
+        lsImpl = obj;       // get reference to local server.
         machine_name = name;
+
+        // Create a new machine instance.
         Machines machine = new Machines();
         machine.ior = ior;
         machine.machine_name = machine_name;
         machine.machine_type = MACHINETYPE;
         machine.enabled = true;
 
-        lsImpl.add_pay_station(machine);
+        lsImpl.add_pay_station(machine);        //  add machine to local server.
     }
 
     @Override
-    public boolean pay(String registration, Date datePaid, Time timePaid, short duration, double cost) {
+    public boolean pay(String registration,  short duration, double cost) {
+        LocalDateTime currDate = LocalDateTime.now();
 
+        CarPark.Date date = new CarPark.Date();
+        date.days = currDate.getDayOfMonth();
+        date.months = currDate.getMonthValue();
+        date.years = currDate.getYear();
+
+        CarPark.Time time = new CarPark.Time();
+        time.hours = currDate.getHour();
+        time.minutes = currDate.getMinute();
+        time.seconds = currDate.getSecond();
+
+        // Create an instance of vehicle event.
         CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
 
         vehicleEvent.registration_number = registration;
-        vehicleEvent.date = datePaid;
-        vehicleEvent.time = timePaid;
+        vehicleEvent.date = date;
+        vehicleEvent.time = time;
         vehicleEvent.duration = duration;
         vehicleEvent.cost = cost;
         vehicleEvent.operation = OPERATION;
 
-        cashTaken += cost;
+        cashTaken += cost;          // increment the cash taken.
 
-        return lsImpl.vehicle_pay(vehicleEvent);
+        return lsImpl.vehicle_pay(vehicleEvent);         //  add vehicle event to local server.
     }
 
     @Override

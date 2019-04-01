@@ -1,5 +1,6 @@
 import CarPark.*;
 import CarPark.LocalServer;
+import jdk.nashorn.internal.scripts.JO;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class CompanyHQ extends JFrame {
+    public static JFrame frame;
     public static JTable tblMachines;
     public static DefaultTableModel machModel;
 
@@ -25,6 +27,7 @@ public class CompanyHQ extends JFrame {
     public static DefaultTableModel eventsModel;
 
     public static JComboBox<String> cbbServers;
+    public static JButton btnUpdateCost;
     public static JButton btnReset;
     public static JButton btnRefresh;
     public static JButton btnResetStation;
@@ -50,13 +53,13 @@ public class CompanyHQ extends JFrame {
     public static CompanyHQImpl hqImpl;
 
     public CompanyHQ() {
-        JFrame frame = new JFrame("Headquarters");
+        frame = new JFrame("Headquarters");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,850);
+        frame.setSize(510,900);
 
-        String[] machColNames = {"Local Server", "Connected Machine", "Machine Type","Machine Enabled"};
-        String[] alertColNames = {"Local Server", "Alert Type", "Registration",  "Overstayed by:" };
+        String[] machColNames = {"Connected Machine", "Machine Type","Machine Enabled"};
+        String[] alertColNames = {"Alert Type", "Registration",  "Overstayed by:" };
         String[] eventsColNames = {"Registration", "Date", "Time", "Operation", "Duration", "Cost"};
 
         cbbServers = new JComboBox<String>();
@@ -67,7 +70,8 @@ public class CompanyHQ extends JFrame {
 
         eventsModel = new DefaultTableModel(null, eventsColNames);
         tblEvents = new JTable(eventsModel);
-
+        
+        btnUpdateCost = new JButton("Update Server Rate");
         btnReset =  new JButton("Get connected servers");
         btnRefresh = new JButton("Refresh");
         btnTurnOn = new JButton("Turn on");
@@ -79,6 +83,7 @@ public class CompanyHQ extends JFrame {
         lblVehiclesExited = new JLabel("Vehicles Exited: ");
         lblSpacesAvailable = new JLabel("Spaces Available: ");
 
+        btnUpdateCost.setEnabled(false);
         btnResetStation.setEnabled(false);
         btnTurnOn.setEnabled(false);
         btnTurnOff.setEnabled(false);
@@ -92,6 +97,7 @@ public class CompanyHQ extends JFrame {
         spMachines.setPreferredSize(new Dimension(450, 200));
         panel.add(spMachines);
 
+        panel.add(btnUpdateCost);
         panel.add(btnTurnOn);
         panel.add(btnTurnOff);
         panel.add(btnResetStation);
@@ -162,20 +168,17 @@ public class CompanyHQ extends JFrame {
                     btnResetStation.setEnabled(true);
                     btnTurnOn.setEnabled(true);
                     btnTurnOff.setEnabled(true);
-
                 }
             });
-
-
 
             cbbServers.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     selectedServer = cbbServers.getSelectedItem().toString();
+                    btnUpdateCost.setEnabled(true);
 
                     if (selectedServer.equals("")) {
                         return;
                     } else {
-
                         try {
                             localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
                         } catch (Exception e1) {
@@ -185,7 +188,6 @@ public class CompanyHQ extends JFrame {
                         setDetails(selectedServer);
                         btnRefresh.setEnabled(true);
                     }
-
                     // when this method is called i want to start a timer that calls setDetails every 5 seconds.
                 }
             });
@@ -204,6 +206,7 @@ public class CompanyHQ extends JFrame {
                     eventsModel.setNumRows(0);
                     alertsModel.setNumRows(0);
 
+                    btnUpdateCost.setEnabled(false);
                     btnResetStation.setEnabled(false);
                     btnTurnOn.setEnabled(false);
                     btnTurnOff.setEnabled(false);
@@ -220,12 +223,30 @@ public class CompanyHQ extends JFrame {
             btnRefresh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    btnTurnOn.setEnabled(false);
+                    btnTurnOff.setEnabled(false);
+                    btnResetStation.setEnabled(false);
                     try {
                         localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                     setDetails(selectedServer);
+                }
+            });
+
+            btnUpdateCost.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //show dialog...
+
+                    try {
+                        double rate = Double.parseDouble(JOptionPane.showInputDialog(frame, "Current Rate: £" + localServer.cost_per_hour() + "    Enter new cost: " ));
+                        localServer.change_rate(rate);
+
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(frame,"Please make sure new cost is a double.");
+                    }
                 }
             });
 
@@ -321,9 +342,9 @@ public class CompanyHQ extends JFrame {
             if (hqImpl.servers.get(i).name.equals(selectedServer)) {
                 for (int j = 0; j < hqImpl.return_machines((short) i).length; j++) {
                     if (hqImpl.return_machines((short) i)[j].enabled == true) {
-                        machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "true"});
+                        machModel.addRow(new String[]{hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "true"});
                     } else {
-                        machModel.addRow(new String[]{hqImpl.servers.get(i).name, hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "false"});
+                        machModel.addRow(new String[]{hqImpl.return_machines((short) i)[j].machine_name, hqImpl.return_machines((short) i)[j].machine_type, "false"});
                     }
                 }
             }
@@ -365,7 +386,7 @@ public class CompanyHQ extends JFrame {
         // Get alerts associated with the selected server.
         for (int i = 0; i < hqImpl.alerts.size(); i++) {
             if (hqImpl.alerts.get(i).serverName.equals(selectedServer)) {
-                alertsModel.addRow(new String[]{hqImpl.alerts.get(i).serverName, hqImpl.alerts.get(i).alertType,
+                alertsModel.addRow(new String[]{hqImpl.alerts.get(i).alertType,
                         hqImpl.alerts.get(i).vehicleEvent.registration_number, hqImpl.alerts.get(i).overStayedBy});
             }
         }

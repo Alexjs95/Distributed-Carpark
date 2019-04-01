@@ -1,6 +1,8 @@
 import CarPark.*;
 import CarPark.LocalServer;
 
+import java.time.LocalDateTime;
+
 public class ExitGateImpl extends ExitGatePOA {
     public static final String MACHINETYPE = "Exit Gate";
     public static final String OPERATION = "Exited";
@@ -21,28 +23,41 @@ public class ExitGateImpl extends ExitGatePOA {
 
     @Override
     public void register_gate(String name, String ior, LocalServer obj) {
-        lsImpl = obj;
-
+        lsImpl = obj;       // get reference to local server.
         machine_name = name;
+
+        // Create a new machine instance.
         Machines machine = new Machines();
         machine.ior = ior;
         machine.machine_name = machine_name;
         machine.machine_type = MACHINETYPE;
         machine.enabled = true;
 
-        lsImpl.add_exit_gate(machine);
+        lsImpl.add_exit_gate(machine);      //  add machine to local server.
     }
 
     @Override
-    public boolean vehicle_exited(Date date, Time time, String registration) {
-        CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
+    public boolean vehicle_exited(String registration) {
+        LocalDateTime currDate = LocalDateTime.now();
 
+        CarPark.Date date = new CarPark.Date();
+        date.days = currDate.getDayOfMonth();
+        date.months = currDate.getMonthValue();
+        date.years = currDate.getYear();
+
+        CarPark.Time time = new CarPark.Time();
+        time.hours = currDate.getHour();
+        time.minutes = currDate.getMinute();
+        time.seconds = currDate.getSecond();
+
+        // Create an instance of vehicle event.
+        CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
         vehicleEvent.registration_number = registration;
         vehicleEvent.date = date;
         vehicleEvent.time = time;
         vehicleEvent.operation = OPERATION;
 
-        return lsImpl.vehicle_out(vehicleEvent);
+        return lsImpl.vehicle_out(vehicleEvent);           //  add vehicle event to local server.
     }
 
     @Override
