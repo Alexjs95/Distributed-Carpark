@@ -54,7 +54,8 @@ module CarPark {
     	boolean vehicle_paid_for(in string registration_number);
     	boolean check_vehicle_in_car_park(in string registration_number);
     	boolean check_vehicle_out_car_park(in string registration_number);
-    	double return_cash_total();
+    	void update_cash_total(in double cash);
+    	double return_car_park_total();
     	long return_spaces();
     	void register_server(in string name, in long spaces, in CompanyHQ hq);
     	void change_rate(in double cost);
@@ -105,7 +106,7 @@ module CarPark {
         readonly attribute boolean status;
         void register_station(in string name, in string ior, in LocalServer obj);
         boolean pay(in string registration, in short duration, in double cost);
-        double return_cash_total();
+        double return_car_park_total();
         void turn_on(in string machine_name, in string machine_type);
         void turn_off(in string machine_name, in string machine_type);
         void reset(in string machine_name, in string machine_type);

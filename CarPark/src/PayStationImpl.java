@@ -62,13 +62,18 @@ public class PayStationImpl extends PayStationPOA {
         vehicleEvent.operation = OPERATION;
         vehicleEvent.exited = false;
 
-        cashTaken += cost;          // increment the cash taken.
+
+
+        // increment the cash taken for the pay station.
+        cashTaken += cost;
+        // increment the cash total stored in lsImpl.
+        lsImpl.update_cash_total(cost);
 
         return lsImpl.vehicle_pay(vehicleEvent);         //  add vehicle event to local server.
     }
 
     @Override
-    public double return_cash_total() {
+    public double return_car_park_total() {
         return cashTaken;
     }
 

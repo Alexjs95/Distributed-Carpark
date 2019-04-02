@@ -1,0 +1,4 @@
+Car Registration: qwe
+Entered at: 2019-04-02T23:07:11
+Paid: £1
+Ticket expiry: 2019-04-03T00:07:11

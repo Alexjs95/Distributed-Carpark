@@ -114,7 +114,7 @@ public class EntryGateClient extends JFrame {
                             if (entered) {
                                 JOptionPane.showMessageDialog(frame, "Vehicle entered car park.", "Success", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(frame, "Vehicle couldn't enter car park.", "error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Vehicle already in car park", "error", JOptionPane.ERROR_MESSAGE);
                             }
                             txtReg.setText("");
                         } else {

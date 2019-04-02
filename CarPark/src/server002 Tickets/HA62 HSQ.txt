@@ -1,0 +1,4 @@
+Car Registration: HA62 HSQ
+Entered at: 2019-04-01T19:51:06
+Paid: £2
+Ticket expiry: 2019-04-01T21:51:06

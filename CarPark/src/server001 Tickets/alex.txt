@@ -1,0 +1,4 @@
+Car Registration: alex
+Entered at: 2019-04-02T23:07:35
+Paid: £24
+Ticket expiry: 2019-04-03T23:07:35

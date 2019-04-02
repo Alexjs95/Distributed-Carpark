@@ -34,6 +34,7 @@ public class CompanyHQ extends JFrame {
     public static JButton btnTurnOn;
     public static JButton btnTurnOff;
     public static JLabel lblCashTotal;
+    public static JLabel lblPayStationTotal;
     public static JLabel lblVehiclesEntered;
     public static JLabel lblVehiclesPaid;
     public static JLabel lblVehiclesExited;
@@ -56,7 +57,7 @@ public class CompanyHQ extends JFrame {
         frame = new JFrame("Headquarters");
         JPanel panel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(510,900);
+        frame.setSize(530,900);
 
         String[] machColNames = {"Connected Machine", "Machine Type","Machine Enabled"};
         String[] alertColNames = {"Alert Type", "Registration",  "Overstayed by:" };
@@ -77,7 +78,8 @@ public class CompanyHQ extends JFrame {
         btnTurnOn = new JButton("Turn on");
         btnTurnOff = new JButton("Turn off");
         btnResetStation = new JButton("Reset Station");
-        lblCashTotal = new JLabel("Cash Total: ");
+        lblCashTotal = new JLabel("Car Park Total: ");
+        lblPayStationTotal = new JLabel("Pay Station Total: ");
         lblVehiclesEntered = new JLabel("Vehicles Entered: ");
         lblVehiclesPaid = new JLabel("Vehicles Paid: ");
         lblVehiclesExited = new JLabel("Vehicles Exited: ");
@@ -102,6 +104,8 @@ public class CompanyHQ extends JFrame {
         panel.add(btnTurnOff);
         panel.add(btnResetStation);
         panel.add(lblCashTotal);
+        panel.add(Box.createHorizontalStrut(50));
+        panel.add(lblPayStationTotal);
         panel.add(Box.createHorizontalStrut(50));
         panel.add(lblVehiclesEntered);
         panel.add(Box.createHorizontalStrut(50));
@@ -165,6 +169,17 @@ public class CompanyHQ extends JFrame {
                     row = tblMachines.getSelectedRow();
                     col = tblMachines.getSelectedColumn();
 
+                    if (tblMachines.getValueAt(row, 1).toString().contains("Pay")) {
+                        String machine_name = tblMachines.getValueAt(row, 0).toString();
+                        try {
+                            PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
+                            double total = payStation.return_car_park_total();
+                            lblPayStationTotal.setText(machine_name + " Station Total: £" + total);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     btnResetStation.setEnabled(true);
                     btnTurnOn.setEnabled(true);
                     btnTurnOff.setEnabled(true);
@@ -212,7 +227,8 @@ public class CompanyHQ extends JFrame {
                     btnTurnOff.setEnabled(false);
                     btnRefresh.setEnabled(false);
 
-                    lblCashTotal.setText("Cash Total: ");
+                    lblCashTotal.setText("Car Park Total: ");
+                    lblPayStationTotal.setText("Pay Station Total: ");
                     lblVehiclesEntered.setText("Vehicles Entered: ");
                     lblVehiclesPaid.setText("Vehicles Paid: ");
                     lblVehiclesExited.setText("Vehicles Exited: ");
@@ -253,8 +269,8 @@ public class CompanyHQ extends JFrame {
             btnTurnOn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String machine_name = tblMachines.getValueAt(row, 1).toString();
-                    String machine_type = tblMachines.getValueAt(row, 2).toString();
+                    String machine_name = tblMachines.getValueAt(row, 0).toString();
+                    String machine_type = tblMachines.getValueAt(row, 1).toString();
                     try {
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
@@ -276,8 +292,8 @@ public class CompanyHQ extends JFrame {
             btnTurnOff.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String machine_name = tblMachines.getValueAt(row, 1).toString();
-                    String machine_type = tblMachines.getValueAt(row, 2).toString();
+                    String machine_name = tblMachines.getValueAt(row, 0).toString();
+                    String machine_type = tblMachines.getValueAt(row, 1).toString();
                     try {
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
@@ -300,8 +316,8 @@ public class CompanyHQ extends JFrame {
             btnResetStation.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String machine_name = tblMachines.getValueAt(row, 1).toString();
-                    String machine_type = tblMachines.getValueAt(row, 2).toString();
+                    String machine_name = tblMachines.getValueAt(row, 0).toString();
+                    String machine_type = tblMachines.getValueAt(row, 1).toString();
                     try {
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
@@ -350,7 +366,7 @@ public class CompanyHQ extends JFrame {
             }
         }
 
-        lblCashTotal.setText(selectedServer + "'s Cash Total: £" + localServer.return_cash_total());
+        lblCashTotal.setText(selectedServer + "'s Car Park Total: £" + localServer.return_car_park_total());
 
         eventsModel.setNumRows(0);
 

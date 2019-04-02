@@ -12,6 +12,7 @@ public class LocalServerImpl extends LocalServerPOA {
     private static String serverName;
     public static double costPerHour = 1.00;
     private static int spacesAvailable;
+    public double cashTotal;
 
     public static ArrayList<VehicleEvent> events;
     public static ArrayList<Machines> machines;
@@ -46,19 +47,27 @@ public class LocalServerImpl extends LocalServerPOA {
     }
 
     @Override
-    public double return_cash_total() {
-        double total = 0;
-        System.out.println("return cash total method called events size : " + events.size());
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i).operation.equals("Paid")) {
-                LocalDateTime currDate = LocalDateTime.now();
-                if ((currDate.getDayOfMonth() == events.get(i).date.days) && (currDate.getMonthValue() == events.get(i).date.months) && (currDate.getYear() == events.get(i).date.years)) {
-                    total = total + events.get(i).cost;
-                }
-            }
-        }
-        System.out.println("Total " + total);
-        return total;
+    public void update_cash_total(double cash) {
+        cashTotal += cash;
+    }
+
+    @Override
+    public double return_car_park_total() {
+        return cashTotal;
+
+
+//        double total = 0;
+//        System.out.println("return cash total method called events size : " + events.size());
+//        for (int i = 0; i < events.size(); i++) {
+//            if (events.get(i).operation.equals("Paid")) {
+//                LocalDateTime currDate = LocalDateTime.now();
+//                if ((currDate.getDayOfMonth() == events.get(i).date.days) && (currDate.getMonthValue() == events.get(i).date.months) && (currDate.getYear() == events.get(i).date.years)) {
+//                    total = total + events.get(i).cost;
+//                }
+//            }
+//        }
+//        System.out.println("Total " + total);
+//        return total;
     }
 
     @Override
