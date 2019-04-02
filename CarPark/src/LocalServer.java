@@ -9,7 +9,7 @@ import org.omg.PortableServer.POAHelper;
 
 public class LocalServer {
     public static String serverName;
-    public static long spaces;
+    public static int spaces = 0;
 
     public static void main(String args[]) {
         try {
@@ -18,11 +18,16 @@ public class LocalServer {
                     serverName = args[i + 1];
                 }
                 if (args[i].equals("-spaces")) {
-                    spaces = args[i + 1];
+                    try {
+                        spaces = Integer.parseInt(args[i + 1]);
+                    } catch (Exception e) {
+                        spaces = 200;
+                        System.out.println("Spaces must be a string");
+                    }
                 }
             }
 
-            if (spaces == null) {
+            if (spaces == 0) {
                 // Default number of spaces to 200;
                 spaces = 200;
             }
