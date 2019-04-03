@@ -64,7 +64,6 @@ public class LocalServerImpl extends LocalServerPOA {
 
     @Override
     public int return_spaces() {
-        System.out.println(spacesAvailable);
         return spacesAvailable;
     }
     @Override
@@ -96,8 +95,6 @@ public class LocalServerImpl extends LocalServerPOA {
         if (inCarPark == false) {
             events.add(event);
             spacesAvailable--;
-            System.out.println(event.registration_number + " has entered the carpark");
-            System.out.println("Server " + serverName + " events size:  "  + events.size());
             return true;        // vehicle sucessfully added.
         } else {
             return false;       // vehicle already in car park
@@ -111,8 +108,6 @@ public class LocalServerImpl extends LocalServerPOA {
         if (inCarPark) {
             if (paidFor == false) {
                 events.add(event);
-                System.out.println(event.registration_number + " has been paid for");
-                System.out.println("Server " + serverName + " events size:  "  + events.size());
                 return true;        // paid for.
             } else {
                 return false;        // already paid for.
@@ -154,7 +149,7 @@ public class LocalServerImpl extends LocalServerPOA {
 
                             // Get current date & time.
                             LocalDateTime currDateTime = LocalDateTime.now();
-                            currDateTime = currDateTime.plusMinutes(90);
+
                             // Gets the dateTime for when vehicle was paid for.
                             LocalDateTime paidDateTime = getDateTime(events.get(i).date, events.get(i).time);
                             // DateTime vehicle should have left by.
@@ -165,7 +160,7 @@ public class LocalServerImpl extends LocalServerPOA {
                             int diff = (int) Math.abs(duration.toMinutes());
 
 
-                            // if the difference is greater than 0 then they have overstayed
+                            // if the current date time is greater than the time they should have left by then they have overstayed
                             if (currDateTime.compareTo(leftByDatetime) > 0) {
                                 int hours = diff / 60;
                                 int minutes = diff % 60;
@@ -197,23 +192,20 @@ public class LocalServerImpl extends LocalServerPOA {
                         if (events.get(i).exited == false) {
                             events.get(i).exited = true;
                         }
-
                         // Get current date & time.
                         LocalDateTime currDateTime = LocalDateTime.now();
                         // Get Date time of vehicle entering car park.
                         LocalDateTime enteredDateTime = getDateTime(events.get(i).date, events.get(i).time);
 
-                        System.out.println("Time now " + currDateTime);
-                        System.out.println("Vehicle entered at " + enteredDateTime);
 
                         Duration duration = Duration.between(currDateTime, enteredDateTime);
                         int diff = (int) Math.abs(duration.toMinutes());
 
+                        // if difference between current date time and entered date time is more than 5 then they have overstayed grace period.
                         if (diff >= 5) {
                             int hours = diff / 60;
                             int minutes = diff % 60;
                             String overStayedBy =  hours + "hours "  + minutes + "mins";
-
 
                             Alerts alert = new Alerts();
                             alert.alertType = "Not Paid";

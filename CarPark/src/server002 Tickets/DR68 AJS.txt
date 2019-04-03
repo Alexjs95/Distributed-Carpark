@@ -1,0 +1,4 @@
+Car Registration: DR68 AJS
+Entered at: 2019-04-03T13:41:02
+Paid: £5
+Ticket expiry: 2019-04-03T18:41:02

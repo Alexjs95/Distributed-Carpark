@@ -169,11 +169,13 @@ public class CompanyHQ extends JFrame {
                     row = tblMachines.getSelectedRow();
                     col = tblMachines.getSelectedColumn();
 
+                    // if the selected row is a pay machine then retrieve pay stations cash taken
                     if (tblMachines.getValueAt(row, 1).toString().contains("Pay")) {
                         String machine_name = tblMachines.getValueAt(row, 0).toString();
                         try {
+                            // create connection to pay station.
                             PayStation payStation = PayStationHelper.narrow(nameService.resolve_str(machine_name));
-                            double total = payStation.return_car_park_total();
+                            double total = payStation.return_pay_station_total();
                             lblPayStationTotal.setText(machine_name + " Station Total: £" + total);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -189,12 +191,13 @@ public class CompanyHQ extends JFrame {
             cbbServers.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     selectedServer = cbbServers.getSelectedItem().toString();
-                    btnUpdateCost.setEnabled(true);
+
 
                     if (selectedServer.equals("")) {
                         return;
                     } else {
                         try {
+                            // create connection to local server,
                             localServer = LocalServerHelper.narrow(nameService.resolve_str(selectedServer));
                         } catch (Exception e1) {
                             e1.printStackTrace();
@@ -202,8 +205,8 @@ public class CompanyHQ extends JFrame {
 
                         setDetails(selectedServer);
                         btnRefresh.setEnabled(true);
+                        btnUpdateCost.setEnabled(true);
                     }
-                    // when this method is called i want to start a timer that calls setDetails every 5 seconds.
                 }
             });
 
@@ -254,12 +257,10 @@ public class CompanyHQ extends JFrame {
             btnUpdateCost.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //show dialog...
-
                     try {
+                        // take double input from JOptionPane, change value in local server.
                         double rate = Double.parseDouble(JOptionPane.showInputDialog(frame, "Current Rate: £" + localServer.cost_per_hour() + "    Enter new cost: " ));
                         localServer.change_rate(rate);
-
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(frame,"Please make sure new cost is a double.");
                     }
@@ -272,6 +273,7 @@ public class CompanyHQ extends JFrame {
                     String machine_name = tblMachines.getValueAt(row, 0).toString();
                     String machine_type = tblMachines.getValueAt(row, 1).toString();
                     try {
+                        // creates connection to relevant machine.
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
                             entryGate.turn_on(machine_name, machine_type);
@@ -295,6 +297,7 @@ public class CompanyHQ extends JFrame {
                     String machine_name = tblMachines.getValueAt(row, 0).toString();
                     String machine_type = tblMachines.getValueAt(row, 1).toString();
                     try {
+                        // creates connection to relevant machine.
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
                             entryGate.turn_off(machine_name, machine_type);
@@ -319,6 +322,7 @@ public class CompanyHQ extends JFrame {
                     String machine_name = tblMachines.getValueAt(row, 0).toString();
                     String machine_type = tblMachines.getValueAt(row, 1).toString();
                     try {
+                        // creates connection to relevant machine.
                         if (machine_type.contains("Entry")) {
                             EntryGate entryGate = EntryGateHelper.narrow(nameService.resolve_str(machine_name));
                             entryGate.reset(machine_name, machine_type);
@@ -377,8 +381,8 @@ public class CompanyHQ extends JFrame {
             vehicleEvents.add(events[i]);
         }
 
+        // display all vehicle events for the selected server and work out totals.
         for (int j = 0; j < vehicleEvents.size(); j++) {
-            System.out.println(vehicleEvents.get(j).exited);
             if (vehicleEvents.get(j).operation.equals("Entered")) {
                 vehiclesEntered++;
             } else if (vehicleEvents.get(j).operation.equals("Paid")) {
@@ -395,7 +399,6 @@ public class CompanyHQ extends JFrame {
         lblVehiclesEntered.setText("Vehicles Entered: " + vehiclesEntered);
         lblVehiclesPaid.setText("Vehicles Paid: " + vehiclesPaidFor);
         lblVehiclesExited.setText("Vehicles Exited: " + vehiclesExited);
-
         lblSpacesAvailable.setText("Spaces Available: " + localServer.return_spaces());
 
         alertsModel.setNumRows(0);

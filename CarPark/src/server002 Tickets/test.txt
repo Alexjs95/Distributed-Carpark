@@ -1,0 +1,4 @@
+Car Registration: test
+Entered at: 2019-04-03T13:45
+Paid: £5
+Ticket expiry: 2019-04-03T18:45

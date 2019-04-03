@@ -106,7 +106,7 @@ module CarPark {
         readonly attribute boolean status;
         void register_station(in string name, in string ior, in LocalServer obj);
         boolean pay(in string registration, in short duration, in double cost);
-        double return_car_park_total();
+        double return_pay_station_total();
         void turn_on(in string machine_name, in string machine_type);
         void turn_off(in string machine_name, in string machine_type);
         void reset(in string machine_name, in string machine_type);

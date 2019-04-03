@@ -40,6 +40,7 @@ public class ExitGateImpl extends ExitGatePOA {
     public boolean vehicle_exited(String registration) {
         LocalDateTime currDate = LocalDateTime.now();
 
+
         CarPark.Date date = new CarPark.Date();
         date.days = currDate.getDayOfMonth();
         date.months = currDate.getMonthValue();

@@ -72,10 +72,12 @@ public class PayStationImpl extends PayStationPOA {
         return lsImpl.vehicle_pay(vehicleEvent);         //  add vehicle event to local server.
     }
 
+
     @Override
-    public double return_car_park_total() {
+    public double return_pay_station_total() {
         return cashTaken;
     }
+
 
     @Override
     public void turn_on(String machine_name, String machine_type) {

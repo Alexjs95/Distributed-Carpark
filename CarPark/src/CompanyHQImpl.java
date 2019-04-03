@@ -26,7 +26,6 @@ public class CompanyHQImpl extends CompanyHQPOA {
     @Override
     public void raise_alarm(Alerts alert) {
         alerts.add(alert);
-        System.out.println("alert added size: " + alerts.size());
     }
 
     @Override
