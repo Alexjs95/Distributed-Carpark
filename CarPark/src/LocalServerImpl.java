@@ -2,6 +2,7 @@ import CarPark.*;
 import CarPark.CompanyHQ;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -54,20 +55,6 @@ public class LocalServerImpl extends LocalServerPOA {
     @Override
     public double return_car_park_total() {
         return cashTotal;
-
-
-//        double total = 0;
-//        System.out.println("return cash total method called events size : " + events.size());
-//        for (int i = 0; i < events.size(); i++) {
-//            if (events.get(i).operation.equals("Paid")) {
-//                LocalDateTime currDate = LocalDateTime.now();
-//                if ((currDate.getDayOfMonth() == events.get(i).date.days) && (currDate.getMonthValue() == events.get(i).date.months) && (currDate.getYear() == events.get(i).date.years)) {
-//                    total = total + events.get(i).cost;
-//                }
-//            }
-//        }
-//        System.out.println("Total " + total);
-//        return total;
     }
 
     @Override
@@ -167,6 +154,7 @@ public class LocalServerImpl extends LocalServerPOA {
 
                             // Get current date & time.
                             LocalDateTime currDateTime = LocalDateTime.now();
+                            currDateTime = currDateTime.plusMinutes(90);
                             // Gets the dateTime for when vehicle was paid for.
                             LocalDateTime paidDateTime = getDateTime(events.get(i).date, events.get(i).time);
                             // DateTime vehicle should have left by.
@@ -176,8 +164,9 @@ public class LocalServerImpl extends LocalServerPOA {
                             Duration duration = Duration.between(currDateTime, leftByDatetime);
                             int diff = (int) Math.abs(duration.toMinutes());
 
+
                             // if the difference is greater than 0 then they have overstayed
-                            if (diff > 0) {
+                            if (currDateTime.compareTo(leftByDatetime) > 0) {
                                 int hours = diff / 60;
                                 int minutes = diff % 60;
                                 String overStayedBy =  hours + "hours "  + minutes + "mins";

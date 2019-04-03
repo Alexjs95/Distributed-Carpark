@@ -9,7 +9,7 @@ import org.omg.PortableServer.POAHelper;
 
 public class LocalServer {
     public static String serverName;
-
+    public static int spaces = 0;
 
     public static void main(String args[]) {
         try {
@@ -17,7 +17,21 @@ public class LocalServer {
                 if (args[i].equals("-name")) {
                     serverName = args[i + 1];
                 }
+                if (args[i].equals("-spaces")) {
+                    try {
+                        spaces = Integer.parseInt(args[i + 1]);
+                    } catch (Exception e) {
+                        spaces = 200;
+                        System.out.println("Spaces must be a string");
+                    }
+                }
             }
+
+            if (spaces == 0) {
+                // Default number of spaces to 200;
+                spaces = 200;
+            }
+
 
             ORB orb = ORB.init(args, null);
 
@@ -55,7 +69,7 @@ public class LocalServer {
 
             CompanyHQ hq = CompanyHQHelper.narrow(nameService.resolve_str("HQ"));
 
-            localServer.register_server(serverName,200, hq);
+            localServer.register_server(serverName, spaces, hq);
             hq.register_local_server(serverName, stringified_ior, localServer);
 
 

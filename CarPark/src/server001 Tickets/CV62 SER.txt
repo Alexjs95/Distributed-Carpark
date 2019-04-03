@@ -1,0 +1,4 @@
+Car Registration: CV62 SER
+Entered at: 2019-04-03T12:20:16
+Paid: £5
+Ticket expiry: 2019-04-03T17:20:16

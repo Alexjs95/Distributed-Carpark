@@ -1,0 +1,4 @@
+Car Registration: CA62 DFV
+Entered at: 2019-04-03T12:39:06
+Paid: £3
+Ticket expiry: 2019-04-03T15:39:06
