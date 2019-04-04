@@ -12,7 +12,6 @@ import org.omg.PortableServer.POAHelper;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 
 public class ExitGateClient extends JFrame {
     public static JFrame frame;
@@ -95,11 +94,10 @@ public class ExitGateClient extends JFrame {
 
             LocalServer localServer = LocalServerHelper.narrow(nameService.resolve_str(serverName));
 
-
+            // Register exit gate with local server
             exitImpl.register_gate(exitGateName, stringified_ior, localServer);
             lblServer.setText("Connected to Server: " + serverName);
             frame.setTitle(exitGateName);
-
 
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
@@ -110,6 +108,7 @@ public class ExitGateClient extends JFrame {
                         registration = txtReg.getText();
 
                         if (!registration.isEmpty()) {
+                            // inform local server of vehicle exiting car park
                             boolean exited = exitImpl.vehicle_exited(registration);
                             if (exited) {
                                 JOptionPane.showMessageDialog(frame, "Vehicle exited car park.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -126,7 +125,6 @@ public class ExitGateClient extends JFrame {
                     }
                 }
             });
-
             orb.run();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Exit Gate " + exitGateName + " cannot connect to " + serverName, "Error", JOptionPane.ERROR_MESSAGE);

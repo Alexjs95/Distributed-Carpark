@@ -4,7 +4,6 @@ import CarPark.LocalServer;
 import java.util.ArrayList;
 
 public class CompanyHQImpl extends CompanyHQPOA {
-
     public static ArrayList<LocalServers> servers;
     public static ArrayList<Alerts> alerts;
 
@@ -25,6 +24,7 @@ public class CompanyHQImpl extends CompanyHQPOA {
 
     @Override
     public void raise_alarm(Alerts alert) {
+        // store alert received from local server
         alerts.add(alert);
     }
 
@@ -35,6 +35,7 @@ public class CompanyHQImpl extends CompanyHQPOA {
         localServer.ior = ior;
         localServer.obj = obj;
 
+        // store local server
         servers.add(localServer);
     }
 

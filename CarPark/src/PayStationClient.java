@@ -314,7 +314,6 @@ public class PayStationClient extends JFrame {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m:s");
         LocalDateTime dateTime = LocalDateTime.parse(temp, formatter);
-
         return dateTime;
     }
 

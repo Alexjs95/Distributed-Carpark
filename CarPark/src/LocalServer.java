@@ -26,12 +26,10 @@ public class LocalServer {
                     }
                 }
             }
-
             if (spaces == 0) {
                 // Default number of spaces to 100;
                 spaces = 100;
             }
-
 
             ORB orb = ORB.init(args, null);
 
@@ -71,7 +69,6 @@ public class LocalServer {
 
             localServer.register_server(serverName, spaces, hq);
             hq.register_local_server(serverName, stringified_ior, localServer);
-
 
             orb.run();
         } catch (Exception e) {

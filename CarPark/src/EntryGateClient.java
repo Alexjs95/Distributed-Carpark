@@ -2,7 +2,6 @@ import CarPark.EntryGate;
 import CarPark.EntryGateHelper;
 import CarPark.LocalServer;
 import CarPark.LocalServerHelper;
-import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -13,7 +12,6 @@ import org.omg.PortableServer.POAHelper;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 
 public class EntryGateClient extends JFrame {
     public static JFrame frame;
@@ -110,6 +108,7 @@ public class EntryGateClient extends JFrame {
                     if (entryImpl.enabled) {
                         registration = txtReg.getText();
                         if (!registration.isEmpty()) {
+                            // inform server of vehicle entry
                             boolean entered = entryImpl.vehicle_entered(registration);
                             if (entered) {
                                 JOptionPane.showMessageDialog(frame, "Vehicle entered car park.", "Success", JOptionPane.INFORMATION_MESSAGE);

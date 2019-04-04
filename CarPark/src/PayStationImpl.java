@@ -9,7 +9,6 @@ public class PayStationImpl extends PayStationPOA {
     public static boolean enabled = true;
     private static String machine_name;
     public double cashTaken;
-
     LocalServer lsImpl;
 
     @Override
@@ -61,8 +60,6 @@ public class PayStationImpl extends PayStationPOA {
         vehicleEvent.cost = cost;
         vehicleEvent.operation = OPERATION;
         vehicleEvent.exited = false;
-
-
 
         // increment the cash taken for the pay station.
         cashTaken += cost;

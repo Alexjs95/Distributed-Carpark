@@ -1,6 +1,5 @@
 import CarPark.*;
 import CarPark.LocalServer;
-import jdk.nashorn.internal.scripts.JO;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -40,13 +39,9 @@ public class CompanyHQ extends JFrame {
     public static JLabel lblVehiclesExited;
     public static JLabel lblSpacesAvailable;
 
-    public static int numberOfServers;
-
-
     public static String companyHQName = "HQ";
     public static String selectedServer;
     public static LocalServer localServer;
-    public static ArrayList<String> servers;
 
     public static int row;
     public static int col;
@@ -134,7 +129,6 @@ public class CompanyHQ extends JFrame {
             // Initialize the ORB
             ORB orb = ORB.init(args, null);
 
-
             // Get a reference to the Naming service
             org.omg.CORBA.Object nameServiceObj = orb.resolve_initial_references ("NameService");
             if (nameServiceObj == null) {
@@ -161,7 +155,6 @@ public class CompanyHQ extends JFrame {
             // bind the entry gate object in the Naming service
             NameComponent[] hqName = nameService.to_name(companyHQName);
             nameService.rebind(hqName, cref);
-
 
             tblMachines.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
@@ -191,7 +184,6 @@ public class CompanyHQ extends JFrame {
             cbbServers.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     selectedServer = cbbServers.getSelectedItem().toString();
-
 
                     if (selectedServer.equals("")) {
                         return;
@@ -356,7 +348,6 @@ public class CompanyHQ extends JFrame {
         eventsModel.setNumRows(0);
         alertsModel.setNumRows(0);
 
-
         // Get machines connected to selected Server.
         for (int i = 0; i < hqImpl.servers.size(); i++) {
             if (hqImpl.servers.get(i).name.equals(selectedServer)) {
@@ -372,11 +363,13 @@ public class CompanyHQ extends JFrame {
 
         lblCashTotal.setText(selectedServer + "'s Car Park Total: £" + localServer.return_car_park_total());
 
+        // reset vehicle events table
         eventsModel.setNumRows(0);
 
         VehicleEvent[] events = localServer.events_log();
         ArrayList<VehicleEvent> vehicleEvents = new ArrayList<VehicleEvent>();
 
+        // display all vehicle events
         for (int i = 0; i < events.length; i++) {
             vehicleEvents.add(events[i]);
         }

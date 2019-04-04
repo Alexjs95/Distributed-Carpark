@@ -51,7 +51,6 @@ public class EntryGateImpl extends EntryGatePOA {
         time.minutes = currDate.getMinute();
         time.seconds = currDate.getSecond();
 
-
         // Create an instance of vehicle event.
         CarPark.VehicleEvent vehicleEvent = new CarPark.VehicleEvent();
         vehicleEvent.registration_number = registration;

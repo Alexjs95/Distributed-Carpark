@@ -2,7 +2,6 @@ import CarPark.*;
 import CarPark.CompanyHQ;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -159,7 +158,6 @@ public class LocalServerImpl extends LocalServerPOA {
                             Duration duration = Duration.between(currDateTime, leftByDatetime);
                             int diff = (int) Math.abs(duration.toMinutes());
 
-
                             // if the current date time is greater than the time they should have left by then they have overstayed
                             if (currDateTime.compareTo(leftByDatetime) > 0) {
                                 int hours = diff / 60;
@@ -185,7 +183,6 @@ public class LocalServerImpl extends LocalServerPOA {
                 events.add(event);
                 spacesAvailable++;      // increment spaces available as vehicle left.
 
-                //
                 for (int i = 0; i < events.size(); i++) {
                     if ((event.registration_number.equals(events.get(i).registration_number)) && (events.get(i).operation.contains("Entered"))) {
                         // Set value exited to true for entered event so same vehicle can re-enter
@@ -271,10 +268,8 @@ public class LocalServerImpl extends LocalServerPOA {
     public static LocalDateTime getDateTime(Date date, Time time) {
         // Convert Date and Time to string.
         String temp = date.years + "-" + date.months + "-" + date.days + " " + time.hours + ":" + time.minutes + ":" + time.seconds;
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m:s");    // format for LocalDateTime.
         LocalDateTime dateTime = LocalDateTime.parse(temp, formatter);      // Convert string to the format.
-
         return dateTime;
     }
 }
