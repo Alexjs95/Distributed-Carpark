@@ -74,7 +74,7 @@ module CarPark {
     typedef sequence<LocalServers> Log_of_local_servers;
 
     interface CompanyHQ {
-        readonly attribute Log_of_local_servers server_log;
+        readonly attribute Log_of_local_seVehiclervers server_log;
         void raise_alarm(in Alerts alert);
         void register_local_server(in string name, in string ior, in LocalServer obj);
         Log_of_alerts return_alerts();

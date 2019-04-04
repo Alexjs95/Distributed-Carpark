@@ -21,15 +21,15 @@ public class LocalServer {
                     try {
                         spaces = Integer.parseInt(args[i + 1]);
                     } catch (Exception e) {
-                        spaces = 200;
+                        spaces = 100;
                         System.out.println("Spaces must be a string");
                     }
                 }
             }
 
             if (spaces == 0) {
-                // Default number of spaces to 200;
-                spaces = 200;
+                // Default number of spaces to 100;
+                spaces = 100;
             }
 
 
